@@ -2,6 +2,8 @@
 
 namespace App\Models\Users;
 
+use App\Models\Salons\SalonStaff;
+use App\Models\Salons\UserSalonPermission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -60,6 +62,18 @@ class User extends Model
         );
     }
 
+    // user salon permissions
+    public function salonPermissions()
+    {
+        return $this->hasMany(UserSalonPermission::class, 'user_id');
+    }
+
+    // salon staff
+    // public function salonStaff()
+    // {
+    //     return $this->hasMany(SalonStaff::class, 'user_id');
+    // }
+
     public function wallet()
     {
         return $this->hasOne(Wallet::class)->withTrashed();
@@ -67,12 +81,12 @@ class User extends Model
 
     public function walletTransactions()
     {
-        return $this->hasMany(WalletTransaction::class)->withTrashed();
+        return $this->hasMany(WalletTransaction::class);
     }
 
     public function refunds()
     {
-        return $this->hasMany(Refund::class)->withTrashed();
+        return $this->hasMany(Refund::class);
     }
 
     public function getAgeAttribute(): ?int

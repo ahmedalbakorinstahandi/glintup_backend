@@ -38,7 +38,6 @@ class Salon extends Model
         'deleted_at'  => 'datetime',
     ];
 
-    // ✅ العلاقات
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id')->withTrashed();
@@ -59,7 +58,6 @@ class Salon extends Model
         return $this->hasMany(\App\Models\Services\GroupService::class);
     }
 
-    // ✅ خصائص مخصصة
     public function getIconUrlAttribute(): string
     {
         return asset('storage/' . $this->icon);
