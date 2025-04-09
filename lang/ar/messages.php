@@ -36,4 +36,13 @@ return [
         'failed_delete_item'        => 'فشل في حذف الخدمة',
         'item_not_found'            => 'الخدمة غير موجودة',
     ],
+
+
+    'group' => [
+        'item_created_successfully' => 'تم إنشاء المجموعة بنجاح',
+        'item_updated_successfully' => 'تم تحديث المجموعة بنجاح',
+        'item_deleted_successfully' => 'تم حذف المجموعة بنجاح',
+        'failed_delete_item'        => 'فشل في حذف المجموعة',
+        'item_not_found'            => 'المجموعة غير موجودة',
+    ],
 ];

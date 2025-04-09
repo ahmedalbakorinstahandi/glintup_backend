@@ -17,12 +17,14 @@ class Group extends Model
     protected $fillable = [
         'name',
         'salon_id',
+        'key',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'key'       => 'string',
     ];
 
     protected $translatable = ['name'];

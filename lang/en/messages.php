@@ -36,4 +36,12 @@ return [
         'failed_delete_item'        => 'Failed to delete service',
         'item_not_found'            => 'Service not found',
     ],
+
+    'group' => [
+        'item_created_successfully' => 'Group created successfully',
+        'item_updated_successfully' => 'Group updated successfully',
+        'item_deleted_successfully' => 'Group deleted successfully',
+        'failed_delete_item'        => 'Failed to delete group',
+        'item_not_found'            => 'Group not found',
+    ],
 ];

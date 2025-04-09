@@ -14,10 +14,12 @@ class GroupResource extends JsonResource
             'id'          => $this->id,
             'salon_id'    => $this->salon_id,
             'name'        => $this->name,
+            'key'         => $this->key,
 
             // العلاقات
             'salon'          => new SalonResource($this->whenLoaded('salon')),
             'group_services' => GroupServiceResource::collection($this->whenLoaded('groupServices')),
+            
 
             // الوقت
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

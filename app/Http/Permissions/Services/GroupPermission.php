@@ -1,35 +1,31 @@
 <?php
 
-
 namespace App\Http\Permissions\Services;
 
-use App\Models\Services\Service;
+use App\Models\Services\Group;
 use App\Models\Users\User;
 use App\Services\MessageService;
 
-class ServicePermission
+class GroupPermission
 {
     public static function filterIndex($query)
     {
-
         $user = User::auth();
 
-
         if ($user->isUserSalon()) {
-            $query->where('salon_id', $user->salon->id);
+            $query->where('salon_id', $user->salon->id)->orWhereNull('salon_id');
         }
-
 
         return $query;
     }
 
-    public static function canShow(Service $service)
+    public static function canShow(Group $group)
     {
 
         $user = User::auth();
 
         if ($user->isUserSalon()) {
-            if ($service->salon_id != $user->salon->id) {
+            if ($group->salon_id != $user->salon->id && $group->salon_id != null) {
                 MessageService::abort(403, 'messages.permission_error');
             }
         }
@@ -49,13 +45,13 @@ class ServicePermission
         return $data;
     }
 
-    public static function canUpdate(Service $service, $data)
+    public static function canUpdate(Group $group, $data)
     {
 
         $user = User::auth();
 
         if ($user->isUserSalon()) {
-            if ($service->salon_id != $user->salon->id) {
+            if ($group->salon_id != $user->salon->id && $group->salon_id != null) {
                 MessageService::abort(403, 'messages.permission_error');
             }
         }
@@ -63,13 +59,13 @@ class ServicePermission
         return true;
     }
 
-    public static function canDelete(Service $service)
+    // canDelete
+    public static function canDelete(Group $group)
     {
-
         $user = User::auth();
 
         if ($user->isUserSalon()) {
-            if ($service->salon_id != $user->salon->id) {
+            if ($group->salon_id != $user->salon->id && $group->salon_id != null) {
                 MessageService::abort(403, 'messages.permission_error');
             }
         }

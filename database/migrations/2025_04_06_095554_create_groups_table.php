@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger('salon_id')->nullable();
             $table->foreign('salon_id')->references('id')->on('salons');
+            $table->string('key')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
