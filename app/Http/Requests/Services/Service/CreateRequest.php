@@ -2,27 +2,33 @@
 
 namespace App\Http\Requests\Services\Service;
 
+use App\Http\Requests\BaseFormRequest;
+use App\Models\Users\User;
+use App\Services\LanguageService;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        return [
-            //
+        $user = User::auth();
+
+        $rules = [
+            'name' => LanguageService::translatableFieldRules('required|string|max:255'),
+            'description' => LanguageService::translatableFieldRules('nullable|string|max:1000'),
+            'icon' => 'required|string|max:110',
+            'duration_minutes' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100',
+            'gender' => 'required|in:male,female,both',
+            'is_active' => 'required|boolean',
+            'currency' => 'required|string|max:3',
         ];
+
+        if ($user->isAdmin()) {
+            $rules['salon_id'] = 'required|exists:salons,id,deleted_at,NULL';
+        }
+
+        return $rules;
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Services;
+namespace App\Http\Services\Services;
 
+use App\Http\Permissions\Services\ServicePermission;
 use App\Models\Services\Service;
 use App\Services\FilterService;
 use App\Services\LanguageService;
@@ -18,6 +19,8 @@ class ServiceService
         $dateFields = ['created_at'];
         $exactMatchFields = ['salon_id', 'is_active', 'gender', 'type'];
         $inFields = ['id'];
+
+        $query = ServicePermission::filterIndex($query);
 
 
         return FilterService::applyFilters(
@@ -45,9 +48,14 @@ class ServiceService
     public function create($validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, new Service);
-        $Service = Service::create($validatedData);
 
-        return $Service;
+        $validatedData['order'] = rand(1, 1000);
+
+        $service = Service::create($validatedData);
+
+        $service->update(['order' => $service->id]);
+
+        return $service;
     }
 
     public function update($service, $validatedData)

@@ -4,39 +4,76 @@
 namespace App\Http\Permissions\Services;
 
 use App\Models\Services\Service;
-
+use App\Models\Users\User;
+use App\Services\MessageService;
 
 class ServicePermission
 {
     public static function filterIndex($query)
     {
+
+        $user = User::auth();
+
+
+        if ($user->isUserSalon()) {
+            $query->where('salon_id', $user->salon->id);
+        }
+
+
         return $query;
     }
 
-    // can show
-    public static function canShow($data)
+    public static function canShow(Service $service)
     {
 
+        $user = User::auth();
 
+        if ($user->isUserSalon()) {
+            if ($service->salon_id != $user->salon->id) {
+                MessageService::abort(403, 'messages.permission_error');
+            }
+        }
 
         return true;
     }
 
-    // can create
-    public static function canCreate()
+    public static function create($data)
     {
+
+        $user = User::auth();
+
+        if ($user->isUserSalon()) {
+            $data['salon_id'] = $user->salon->id;
+        }
+
+        return $data;
+    }
+
+    public static function canUpdate(Service $service, $data)
+    {
+
+        $user = User::auth();
+
+        if ($user->isUserSalon()) {
+            if ($service->salon_id != $user->salon->id) {
+                return false;
+            }
+        }
+
         return true;
     }
 
-    // can update
-    public static function canUpdate()
+    public static function canDelete(Service $service)
     {
-        return true;
-    }
 
-    // can delete
-    public static function canDelete()
-    {
+        $user = User::auth();
+
+        if ($user->isUserSalon()) {
+            if ($service->salon_id != $user->salon->id) {
+                return false;
+            }
+        }
+
         return true;
     }
 }

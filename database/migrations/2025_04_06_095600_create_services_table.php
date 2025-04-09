@@ -20,7 +20,6 @@ return new class extends Migration
             $table->text('name');
             $table->text('description');
             $table->string('icon', 110);
-            $table->unsignedBigInteger('service_id');
             $table->integer('duration_minutes');
             $table->decimal('price', 10, 2);
             $table->string('currency');

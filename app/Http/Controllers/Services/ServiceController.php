@@ -8,7 +8,7 @@ use App\Http\Requests\Services\Service\CreateRequest;
 use App\Http\Requests\Services\Service\UpdateRequest;
 use App\Http\Resources\Services\ServiceResource;
 use App\Services\ResponseService;
-use App\Services\Services\ServiceService;
+use App\Http\Services\Services\ServiceService;
 
 class ServiceController extends Controller
 {
@@ -34,8 +34,10 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        ServicePermission::canShow();
         $service = $this->serviceService->show($id);
+
+        ServicePermission::canShow($service);
+
         return response()->json([
             'success' => true,
             'data' => new ServiceResource($service),
@@ -44,10 +46,12 @@ class ServiceController extends Controller
 
     public function create(CreateRequest $request)
     {
-        ServicePermission::canCreate($request->validated());
+        $data =  ServicePermission::create($request->validated());
 
 
-        $service = $this->serviceService->create($request->validated());
+        $service = $this->serviceService->create($data);
+
+
         return response()->json([
             'success' => true,
             'message' => trans('messages.service.item_created_successfully'),
@@ -57,12 +61,10 @@ class ServiceController extends Controller
 
     public function update($id, UpdateRequest $request)
     {
-        ServicePermission::canUpdate();
-
-
         $service = $this->serviceService->show($id);
 
-        
+        ServicePermission::canUpdate($service, $request->validated());
+
         $service = $this->serviceService->update($service, $request->validated());
         return response()->json([
             'success' => true,
@@ -73,8 +75,8 @@ class ServiceController extends Controller
 
     public function destroy($id)
     {
-        ServicePermission::canDelete();
         $service = $this->serviceService->show($id);
+        ServicePermission::canDelete($service);
         $deleted = $this->serviceService->destroy($service);
         return response()->json([
             'success' => $deleted,

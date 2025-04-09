@@ -28,4 +28,12 @@ return [
     'invalid_or_expired_verification_code' => 'رمز التحقق غير صالح أو منتهي الصلاحية.',
     'unauthorized' => 'غير مسجل الدخول.',
     'user_logged_out_successfully' => 'تم تسجيل الخروج بنجاح.',
+
+    'service' => [
+        'item_created_successfully' => 'تم إنشاء الخدمة بنجاح',
+        'item_updated_successfully' => 'تم تحديث الخدمة بنجاح',
+        'item_deleted_successfully' => 'تم حذف الخدمة بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الخدمة',
+        'item_not_found'            => 'الخدمة غير موجودة',
+    ],
 ];

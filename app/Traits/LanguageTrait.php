@@ -16,4 +16,9 @@ trait LanguageTrait
 
         return $result;
     }
+
+    // public function getTranslatableAttributes(): array
+    // {
+    //     return $this->translatable;
+    // }
 }

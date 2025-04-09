@@ -2,27 +2,24 @@
 
 namespace App\Http\Requests\Services\Service;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
+use App\Services\LanguageService;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'name' => LanguageService::translatableFieldRules('nullable|string|max:255'),
+            'description' => LanguageService::translatableFieldRules('nullable|string|max:1000'),
+            'icon' => 'nullable|string|max:110',
+            'duration_minutes' => 'nullable|integer|min:1',
+            'price' => 'nullable|numeric|min:0',
+            'currency' => 'nullable|string|max:10',
+            'discount_percentage' => 'nullable|numeric|min:0|max:100',
+            'gender' => 'nullable|in:male,female,both',
+            'is_active' => 'nullable|boolean',
+            'order' => 'nullable|integer',
         ];
     }
 }

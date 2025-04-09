@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Salons\Salon;
 use App\Models\Salons\SalonStaff;
 use App\Models\Salons\UserSalonPermission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,6 +61,80 @@ class User extends Model
                 'message' => 'Unauthorized',
             ]),
         );
+    }
+
+
+    // // salon
+    // public function salon()
+    // {
+    //     $staff = SalonStaff::where('user_id', $this->id)->first();
+
+    //     if (!$staff) {
+    //         return null;
+    //     }
+
+    //     $salon = Salon::where('id', $this->staff->salon_id)->first();
+
+    //     if (!$salon) {
+    //         return null;
+    //     }
+
+    //     return $salon;
+
+    // }
+
+
+    // public function staff()
+    // {
+    //     return $this->hasOne(\App\Models\Salons\SalonStaff::class, 'user_id')->withTrashed();
+    // }
+
+    public function salon()
+    {
+        return $this->hasOneThrough(
+            Salon::class,   // النهاية المطلوبة
+            SalonStaff::class, // الجدول الوسيط
+            'user_id',     // Foreign key in SalonStaff pointing to User
+            'id',          // Foreign key in Salon pointing to Salon
+            'id',          // Local key on User
+            'salon_id'     // Local key on SalonStaff pointing to Salon
+        )->withTrashed();
+    }
+
+
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
+    }
+
+    public function isStaff()
+    {
+        return $this->role === 'staff';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isSalonOwner()
+    {
+        return $this->role === 'salon_owner';
+    }
+
+    public function isUserSalon()
+    {
+        return $this->isSalonOwner() || $this->isStaff();
+    }
+
+    public function getSalonId()
+    {
+
+        if ($this->isUserSalon()) {
+            return $this->staff->salon_id;
+        }
+
+        return null;
     }
 
     // user salon permissions

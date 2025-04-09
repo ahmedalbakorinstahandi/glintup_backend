@@ -28,4 +28,12 @@ return [
     'invalid_or_expired_verification_code' => 'Invalid or expired verification code.',
     'unauthorized' => 'Unauthorized access.',
     'user_logged_out_successfully' => 'User logged out successfully.',
+
+    'service' => [
+        'item_created_successfully' => 'Service created successfully',
+        'item_updated_successfully' => 'Service updated successfully',
+        'item_deleted_successfully' => 'Service deleted successfully',
+        'failed_delete_item'        => 'Failed to delete service',
+        'item_not_found'            => 'Service not found',
+    ],
 ];

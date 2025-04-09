@@ -10,7 +10,7 @@ use App\Traits\LanguageTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\LaravelPackageTools\Concerns\Package\HasTranslations;
+use Spatie\Translatable\HasTranslations;
 
 class Service extends Model
 {
@@ -21,7 +21,6 @@ class Service extends Model
         'name',
         'description',
         'icon',
-        'service_id',
         'duration_minutes',
         'price',
         'currency',
@@ -102,6 +101,4 @@ class Service extends Model
             get: fn(string $value) => $Get_Multi_Language ? $this->getAllTranslations('description') : $value,
         );
     }
-
-    
 }
