@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'welcome' => 'مرحبًا بك!',
+    'goodbye' => 'وداعًا!',
+    'error_occurred' => 'حدث خطأ ما.',
+    'item_not_found' => 'العنصر غير موجود.',
+    'item_deleted_successfully' => 'تم حذف العنصر بنجاح.',
+    'failed_delete_item' => 'فشل في حذف العنصر.',
+    'item_updated_successfully' => 'تم تحديث العنصر بنجاح.',
+    'item_created_successfully' => 'تم إنشاء العنصر بنجاح.',
+    'permission_error' => 'ليس لديك صلاحية.',
+    'request_filter_status_error' => 'خطأ في حالة تصفية الطلب.',
+    'service_request_already_hired' => 'تم توظيف مقدم الخدمة بالفعل لهذا الطلب.',
+    'status_updated_successfully' => 'تم تحديث الحالة بنجاح.',
+    'invalid_cancel_request' => 'طلب إلغاء غير صالح.',
+    'invalid_request_status' => 'حالة الطلب غير صالحة.',
+    'invalid_request' => 'طلب غير صالح.',
+    'invalid_credentials' => 'بيانات اعتماد غير صالحة.',
+    'user_not_found' => 'المستخدم غير موجود.',
+    'user_already_exists' => 'المستخدم موجود بالفعل.',
+
+    'account_created_verify_phone' => 'تم إنشاء الحساب بنجاح. يرجى التحقق من رقم هاتفك.',
+    'phone_not_found' => 'رقم الهاتف غير موجود.',
+    'account_verified_successfully' => 'تم التحقق من الحساب بنجاح.',
+    'otp_sent_successfully' => 'تم إرسال رمز التحقق بنجاح إلى رقم هاتفك: :phone.',
+    'password_reset_successfully' => 'تم إعادة تعيين كلمة المرور بنجاح.',
+    'invalid_or_expired_verification_code' => 'رمز التحقق غير صالح أو منتهي الصلاحية.',
+    'unauthorized' => 'غير مسجل الدخول.',
+    'user_logged_out_successfully' => 'تم تسجيل الخروج بنجاح.',
+];

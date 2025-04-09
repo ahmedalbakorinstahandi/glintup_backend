@@ -1,0 +1,212 @@
+Users:users,wallets,wallet_transactions,refunds
+Salons:salons,salon_staff,working_hours,social_midia_sites,salon_social_midia_sites,salon_holidays,salon_customers,salon_permissions,user_salon_permissions
+Booking: bookings,booking_payments,booking_services,booking_dates,coupons,coupon_usages,invoices,
+Services: reviews,groups,group_services,services,
+Rewards:gift_cards_table,loyalty_points,gifts,free_services
+Statisics:promotion_ads,ad_statisics,
+General:activity_logs,seetings,notifications,images,
+
+
+  
+ 
+ 
+
+
+
+php artisan make:model Users/User
+php artisan make:model Users/Wallet
+php artisan make:model Users/WalletTransaction
+php artisan make:model Users/Refund
+
+php artisan make:model Salons/Salon
+php artisan make:model Salons/SalonStaff
+php artisan make:model Salons/WorkingHour
+php artisan make:model Salons/SalonHoliday
+php artisan make:model Salons/SalonCustomer
+php artisan make:model Salons/SalonPermission
+php artisan make:model Salons/UserSalonPermission
+php artisan make:model Salons/SocialMidiaSite
+php artisan make:model Salons/SalonSocialMidiaSite
+
+
+php artisan make:model Booking/Booking
+php artisan make:model Booking/BookingPayment
+php artisan make:model Booking/BookingService
+php artisan make:model Booking/BookingDate
+php artisan make:model Booking/Coupon
+php artisan make:model Booking/CouponUsage
+php artisan make:model Booking/Invoice
+
+php artisan make:model Services/Review
+php artisan make:model Services/Group
+php artisan make:model Services/GroupService
+php artisan make:model Services/Service
+
+php artisan make:model Rewards/LoyaltyPoint
+php artisan make:model Rewards/Gift
+php artisan make:model Rewards/FreeService
+php artisan make:model Rewards/GiftCard
+
+php artisan make:model Statistics/PromotionAd
+php artisan make:model Statistics/AdStatisic
+
+php artisan make:model General/ActivityLog
+php artisan make:model General/Notification
+php artisan make:model General/Image
+php artisan make:model General/Seeting
+
+
+
+php artisan make:controller Users/UserController
+php artisan make:controller Users/WalletController
+php artisan make:controller Users/WalletTransactionController
+php artisan make:controller Users/RefundController
+
+php artisan make:controller Salons/SalonController
+php artisan make:controller Salons/SalonStaffController
+php artisan make:controller Salons/WorkingHourController
+php artisan make:controller Salons/SalonHolidayController
+php artisan make:controller Salons/SalonCustomerController
+php artisan make:controller Salons/SalonPermissionController
+php artisan make:controller Salons/UserSalonPermissionController
+php artisan make:controller Salons/SocialMidiaSiteController
+php artisan make:controller Salons/SalonSocialMidiaSiteController
+
+php artisan make:controller Booking/BookingController
+php artisan make:controller Booking/BookingPaymentController
+php artisan make:controller Booking/BookingServiceController
+php artisan make:controller Booking/BookingDateController
+php artisan make:controller Booking/CouponController
+php artisan make:controller Booking/CouponUsageController
+php artisan make:controller Booking/InvoiceController
+
+php artisan make:controller Services/ReviewController
+php artisan make:controller Services/GroupController
+php artisan make:controller Services/GroupServiceController
+php artisan make:controller Services/ServiceController
+
+php artisan make:controller Rewards/LoyaltyPointController
+php artisan make:controller Rewards/GiftController
+php artisan make:controller Rewards/FreeServiceController
+php artisan make:controller Rewards/GiftCardController
+
+php artisan make:controller Statistics/PromotionAdController
+php artisan make:controller Statistics/AdStatisicController
+
+php artisan make:controller General/ActivityLogController
+php artisan make:controller General/NotificationController
+php artisan make:controller General/ImageController
+php artisan make:controller General/SeetingController
+
+
+
+
+php artisan make:request Users/User/CreateRequest
+php artisan make:request Users/User/UpdateRequest
+
+php artisan make:request Users/Wallet/CreateRequest
+php artisan make:request Users/Wallet/UpdateRequest
+
+php artisan make:request Users/WalletTransaction/CreateRequest
+php artisan make:request Users/WalletTransaction/UpdateRequest
+
+php artisan make:request Users/Refund/CreateRequest
+php artisan make:request Users/Refund/UpdateRequest
+
+
+php artisan make:request Salons/Salon/CreateRequest
+php artisan make:request Salons/Salon/UpdateRequest
+
+php artisan make:request Salons/SalonStaff/CreateRequest
+php artisan make:request Salons/SalonStaff/UpdateRequest
+
+php artisan make:request Salons/WorkingHour/CreateRequest
+php artisan make:request Salons/WorkingHour/UpdateRequest
+
+php artisan make:request Salons/SalonHoliday/CreateRequest
+php artisan make:request Salons/SalonHoliday/UpdateRequest
+
+php artisan make:request Salons/SalonCustomer/CreateRequest
+php artisan make:request Salons/SalonCustomer/UpdateRequest
+
+php artisan make:request Salons/SalonPermission/CreateRequest
+php artisan make:request Salons/SalonPermission/UpdateRequest
+
+php artisan make:request Salons/UserSalonPermission/CreateRequest
+php artisan make:request Salons/UserSalonPermission/UpdateRequest
+
+php artisan make:request Salons/SocialMidiaSite/CreateRequest
+php artisan make:request Salons/SocialMidiaSite/UpdateRequest
+
+php artisan make:request Salons/SalonSocialMidiaSite/CreateRequest
+php artisan make:request Salons/SalonSocialMidiaSite/UpdateRequest
+
+
+php artisan make:request Booking/Booking/CreateRequest
+php artisan make:request Booking/Booking/UpdateRequest
+
+php artisan make:request Booking/BookingPayment/CreateRequest
+php artisan make:request Booking/BookingPayment/UpdateRequest
+
+php artisan make:request Booking/BookingService/CreateRequest
+php artisan make:request Booking/BookingService/UpdateRequest
+
+php artisan make:request Booking/BookingDate/CreateRequest
+php artisan make:request Booking/BookingDate/UpdateRequest
+
+php artisan make:request Booking/Coupon/CreateRequest
+php artisan make:request Booking/Coupon/UpdateRequest
+
+php artisan make:request Booking/CouponUsage/CreateRequest
+php artisan make:request Booking/CouponUsage/UpdateRequest
+
+php artisan make:request Booking/Invoice/CreateRequest
+php artisan make:request Booking/Invoice/UpdateRequest
+
+
+php artisan make:request Services/Review/CreateRequest
+php artisan make:request Services/Review/UpdateRequest
+
+php artisan make:request Services/Group/CreateRequest
+php artisan make:request Services/Group/UpdateRequest
+
+php artisan make:request Services/GroupService/CreateRequest
+php artisan make:request Services/GroupService/UpdateRequest
+
+php artisan make:request Services/Service/CreateRequest
+php artisan make:request Services/Service/UpdateRequest
+
+
+
+php artisan make:request Rewards/LoyaltyPoint/CreateRequest
+php artisan make:request Rewards/LoyaltyPoint/UpdateRequest
+
+php artisan make:request Rewards/Gift/CreateRequest
+php artisan make:request Rewards/Gift/UpdateRequest
+
+php artisan make:request Rewards/FreeService/CreateRequest
+php artisan make:request Rewards/FreeService/UpdateRequest
+
+php artisan make:request Rewards/GiftCard/CreateRequest
+php artisan make:request Rewards/GiftCard/UpdateRequest
+
+
+
+php artisan make:request Statistics/PromotionAd/CreateRequest
+php artisan make:request Statistics/PromotionAd/UpdateRequest
+
+php artisan make:request Statistics/AdStatisic/CreateRequest
+php artisan make:request Statistics/AdStatisic/UpdateRequest
+
+
+php artisan make:request General/ActivityLog/CreateRequest
+php artisan make:request General/ActivityLog/UpdateRequest
+
+php artisan make:request General/Notification/CreateRequest
+php artisan make:request General/Notification/UpdateRequest
+
+php artisan make:request General/Image/CreateRequest
+php artisan make:request General/Image/UpdateRequest
+
+php artisan make:request General/Seeting/CreateRequest
+php artisan make:request General/Seeting/UpdateRequest

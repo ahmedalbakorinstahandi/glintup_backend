@@ -1,0 +1,38 @@
+<?php
+
+return [
+    'genders' => [
+        'male' => 'Male',
+        'female' => 'Female',
+    ],
+    'roles' => [
+        'customer'     => 'Customer',
+        'salon_owner'  => 'Salon Owner',
+        'admin'        => 'Admin',
+        'staff'        => 'Staff',
+    ],
+    'booking_statuses' => [
+        'pending'   => 'Pending Approval',
+        'confirmed' => 'Confirmed',
+        'completed' => 'Completed',
+        'cancelled' => 'Cancelled',
+    ],
+    'payment_statuses' => [
+        'unpaid'         => 'Unpaid',
+        'partially_paid' => 'Partially Paid',
+        'paid'           => 'Paid',
+    ],
+    'created_by' => [
+        'customer' => 'Customer',
+        'salon'    => 'Salon',
+    ],
+    'ad_type' => [
+        'amount'   => 'Monetary Amount',
+        'custom'   => 'Custom Gift',
+    ],
+    'service_gender' => [
+        'male'   => 'Men',
+        'female' => 'Women',
+        'both'   => 'Both',
+    ],
+];
