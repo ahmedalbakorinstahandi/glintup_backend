@@ -19,7 +19,7 @@ class SalonStaffSeeder extends Seeder
         // first  add 6 users as staff after that add 6 salon staff
         // add 6 salon staff to 3 salons 1,2,3
 
-        $salonIds = [4, 5, 6];
+        $salonIds = [1, 2, 3];
 
         // Create 6 users as staff
         $staffUsers = [];
