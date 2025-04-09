@@ -2,27 +2,28 @@
 
 namespace App\Http\Requests\Salons\Salon;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'owner_id'     => 'nullable|exists:users,id',
+            'name'         => 'required|string|max:255',
+            'icon'         => 'required|string|max:110',
+            'phone_code'   => 'required|string|max:7',
+            'phone'        => 'required|string|max:12',
+            'email'        => 'nullable|email',
+            'description'  => 'nullable|string',
+            'location'     => 'required|string|max:255',
+            'is_approved'  => 'nullable|boolean',
+            'is_active'    => 'required|boolean',
+            'type'         => 'required|in:salon,home_service,beautician,clinic',
+            'latitude'     => 'nullable|numeric',
+            'longitude'    => 'nullable|numeric',
+            'country'      => 'required|string|max:255',
+            'city'         => 'required|string|max:255',
         ];
     }
 }

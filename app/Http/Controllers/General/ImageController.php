@@ -12,7 +12,7 @@ class ImageController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:8192',
-            'folder' => 'required|string|in:games,questions,answers',
+            'folder' => 'required|string|in:services,users',
         ]);
 
         $imageName = ImageService::storeImage($request->image, $request->folder);
