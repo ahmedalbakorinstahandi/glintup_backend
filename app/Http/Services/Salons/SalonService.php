@@ -2,8 +2,9 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Http\Permissions\Salons\SalonPermission;
 use App\Models\Salons\Salon;
-use App\Models\Salons\SalonPermission;
+use App\Models\Salons\SalonPermission as SalonPermissionModel;
 use App\Models\Salons\UserSalonPermission;
 use App\Models\Users\User;
 use App\Services\FilterService;
@@ -19,7 +20,7 @@ class SalonService
             ->with('permission')
             ->get();
 
-        $permissions = SalonPermission::whereIn('id', $userPermissions->pluck('permission_id'))->get();
+        $permissions = SalonPermissionModel::whereIn('id', $userPermissions->pluck('permission_id'))->get();
 
         return $permissions;
     }
