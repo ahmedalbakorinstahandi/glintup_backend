@@ -20,7 +20,7 @@ class GroupService
         $exactMatchFields = ['salon_id'];
         $inFields = ['id'];
 
-        $group = GroupPermission::filterIndex($data);
+        $query = GroupPermission::filterIndex($query);
 
         return FilterService::applyFilters(
             $query,

@@ -45,4 +45,20 @@ return [
         'failed_delete_item'        => 'فشل في حذف المجموعة',
         'item_not_found'            => 'المجموعة غير موجودة',
     ],
+
+    'group_service' => [
+        'item_created_successfully' => 'تم ربط الخدمة بالمجموعة بنجاح',
+        'item_updated_successfully' => 'تم تحديث الربط بنجاح',
+        'item_deleted_successfully' => 'تم حذف الربط بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الربط',
+        'item_not_found'            => 'الربط غير موجود',
+    ],
+
+    'salon' => [
+        'item_created_successfully' => 'تم إنشاء الصالون بنجاح',
+        'item_updated_successfully' => 'تم تحديث الصالون بنجاح',
+        'item_deleted_successfully' => 'تم حذف الصالون بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الصالون',
+        'item_not_found'            => 'الصالون غير موجود',
+    ],
 ];

@@ -44,4 +44,20 @@ return [
         'failed_delete_item'        => 'Failed to delete group',
         'item_not_found'            => 'Group not found',
     ],
+
+    'group_service' => [
+        'item_created_successfully' => 'Group service created successfully',
+        'item_updated_successfully' => 'Group service updated successfully',
+        'item_deleted_successfully' => 'Group service deleted successfully',
+        'failed_delete_item'        => 'Failed to delete group service',
+        'item_not_found'            => 'Group service not found',
+    ],
+
+    'salon' => [
+        'item_created_successfully' => 'Salon created successfully',
+        'item_updated_successfully' => 'Salon updated successfully',
+        'item_deleted_successfully' => 'Salon deleted successfully',
+        'failed_delete_item'        => 'Failed to delete salon',
+        'item_not_found'            => 'Salon not found',
+    ],
 ];

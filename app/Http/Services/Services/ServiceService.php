@@ -12,7 +12,7 @@ class ServiceService
 {
     public function index($data)
     {
-        $query = Service::query()->with('salon');
+        $query = Service::query()->with(['salon', 'groupServices.group']);
 
         $searchFields = ['name', 'description'];
         $numericFields = [];
@@ -42,6 +42,8 @@ class ServiceService
             MessageService::abort(404, 'messages.service.item_not_found');
         }
 
+        $service->load(['salon', 'groupServices.group']);
+
         return $service;
     }
 
@@ -55,6 +57,9 @@ class ServiceService
 
         $service->update(['order' => $service->id]);
 
+        $service->load(['salon', 'groupServices.group']);
+
+
         return $service;
     }
 
@@ -62,6 +67,9 @@ class ServiceService
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $service);
         $service->update($validatedData);
+
+        $service->load(['salon', 'groupServices.group']);
+
         return $service;
     }
 

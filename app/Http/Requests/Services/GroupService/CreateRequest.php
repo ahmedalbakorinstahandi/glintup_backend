@@ -2,27 +2,26 @@
 
 namespace App\Http\Requests\Services\GroupService;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
+use App\Models\Users\User;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        return [
-            //
+
+        $user = User::auth();
+
+
+        $rules = [
+            'group_id' => 'required|exists:groups,id,deleted_at,NULL',
+            'service_id' => 'required|exists:services,id,deleted_at,NULL',
         ];
+
+        if ($user->isAdmin()) {
+            $rules['salon_id'] = 'required|exists:salons,id,deleted_at,NULL';
+        }
+
+        return $rules;
     }
 }

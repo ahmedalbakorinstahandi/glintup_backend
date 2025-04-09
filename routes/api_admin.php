@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Services\GroupController;
+use App\Http\Controllers\Services\GroupServiceController;
 use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\Users\AdminAuthController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +28,22 @@ Route::prefix('admin')->group(function () {
         // });
 
         Route::prefix('groups')->controller(GroupController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('group-services')->controller(GroupServiceController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('salons')->controller(SalonController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');
