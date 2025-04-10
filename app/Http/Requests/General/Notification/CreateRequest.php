@@ -2,27 +2,21 @@
 
 namespace App\Http\Requests\General\Notification;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'user_id'               => 'required|exists:users,id',
+            'title'                 => 'required|string|max:255',
+            'message'               => 'nullable|string',
+            'notificationable_id'   => 'nullable|integer',
+            'notificationable_type' => 'nullable|string|max:255',
+            'metadata'              => 'nullable|array',
+            'read_at'               => 'nullable|date',
         ];
     }
 }

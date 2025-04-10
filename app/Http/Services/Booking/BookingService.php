@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Services\Bookings;
+namespace App\Http\Services\Booking;
 
+use App\Http\Permissions\Booking\BookingPermission;
 use App\Models\Booking\Booking;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -17,6 +18,8 @@ class BookingService
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status', 'payment_status'];
         $inFields = ['id'];
+
+        $query = BookingPermission::filterIndex($query);
 
         return FilterService::applyFilters(
             $query,

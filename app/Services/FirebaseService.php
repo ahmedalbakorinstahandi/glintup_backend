@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Services\General\NotificationService;
 use App\Models\Users\User;
-use App\Services\General\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
@@ -104,36 +104,38 @@ class FirebaseService
             return self::handleException($e);
         }
     }
-    // public static function sendToTopicAndStorage($topic, $title, $body, $replace, $data = [], $type, $users_ids, $channelId = null)
-    // {
-    //     $messaging = self::getFirebaseMessaging()->createMessaging();
+    public static function sendToTopicAndStorage($topic, $users_ids, $notificationable, $title, $body, $replace, $data = [], $channelId = null)
+    {
+        $messaging = self::getFirebaseMessaging()->createMessaging();
 
-    //     NotificationService::storeNotification(
-    //         $users_ids,
-    //         $type,
-    //         $title,
-    //         $body,
-    //         $replace,
-    //         $data,
-    //     );
+        NotificationService::storeNotification(
+            $users_ids,
+            $notificationable,
+            $title,
+            $body,
+            $replace,
+            $data,
+        );
 
-    //     $data['type2'] = $type;
+        $data['notificationable_id'] = $notificationable['id'] ?? null;
+        $data['notificationable_type'] = $notificationable['type'] ?? 'Custom';
+        $data['notificationable'] = $notificationable;
 
-    //     $messageConfig = self::createMessageConfig($topic, __($title, $replace), __($body, $replace), $data, $channelId);
-    //     $message = CloudMessage::fromArray($messageConfig);
+        $messageConfig = self::createMessageConfig($topic, __($title, $replace), __($body, $replace), $data, $channelId);
+        $message = CloudMessage::fromArray($messageConfig);
 
 
-    //     try {
-    //         $response = $messaging->send($message);
-    //         return [
-    //             'success' => true,
-    //             'message' => 'Notification sent successfully',
-    //             'response' => $response,
-    //         ];
-    //     } catch (\Throwable $e) {
-    //         return self::handleException($e);
-    //     }
-    // }
+        try {
+            $response = $messaging->send($message);
+            return [
+                'success' => true,
+                'message' => 'Notification sent successfully',
+                'response' => $response,
+            ];
+        } catch (\Throwable $e) {
+            return self::handleException($e);
+        }
+    }
 
     /**
      * Unsubscribe from a specific topic.
@@ -238,7 +240,7 @@ class FirebaseService
      */
     protected static function loadServiceAccount()
     {
-        $serviceAccountPath = storage_path('firebase/masbar-717dd-firebase-adminsdk-55zju-57d932a692.json');
+        $serviceAccountPath = storage_path('firebase/glint-up-firebase-adminsdk-fbsvc-f7a7261316.json');
 
         if (!file_exists($serviceAccountPath)) {
             throw new \Exception("Firebase service account file not found.");

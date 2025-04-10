@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Permissions\Bookings;
+namespace App\Http\Permissions\Booking;
 
 use App\Models\Booking\Booking;
 use App\Models\Users\User;

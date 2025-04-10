@@ -2,27 +2,22 @@
 
 namespace App\Http\Requests\Booking\Booking;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'code'           => 'required|string|unique:bookings,code',
+            'user_id'        => 'required|exists:users,id',
+            'salon_id'       => 'required|exists:salons,id',
+            'date'           => 'required|date',
+            'time'           => 'required|date_format:H:i:s',
+            'status'         => 'required|in:pending,confirmed,completed,cancelled',
+            'payment_status' => 'required|in:unpaid,partially_paid,paid',
+            'notes'          => 'nullable|string',
+            'salon_notes'    => 'nullable|string',
         ];
     }
 }

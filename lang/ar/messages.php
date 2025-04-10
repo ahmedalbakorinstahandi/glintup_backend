@@ -61,4 +61,12 @@ return [
         'failed_delete_item'        => 'فشل في حذف الصالون',
         'item_not_found'            => 'الصالون غير موجود',
     ],
+
+    'booking' => [
+        'item_created_successfully' => 'تم إنشاء الحجز بنجاح',
+        'item_updated_successfully' => 'تم تحديث الحجز بنجاح',
+        'item_deleted_successfully' => 'تم حذف الحجز بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الحجز',
+        'item_not_found'            => 'الحجز غير موجود',
+    ],
 ];

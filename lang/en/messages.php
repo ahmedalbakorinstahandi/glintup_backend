@@ -60,4 +60,14 @@ return [
         'failed_delete_item'        => 'Failed to delete salon',
         'item_not_found'            => 'Salon not found',
     ],
+
+
+    'booking' => [
+        'item_created_successfully' => 'Booking created successfully',
+        'item_updated_successfully' => 'Booking updated successfully',
+        'item_deleted_successfully' => 'Booking deleted successfully',
+        'failed_delete_item'        => 'Failed to delete booking',
+        'item_not_found'            => 'Booking not found',
+    ],
+
 ];
