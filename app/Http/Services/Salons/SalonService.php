@@ -3,9 +3,11 @@
 namespace App\Http\Services\Salons;
 
 use App\Http\Permissions\Salons\SalonPermission;
+use App\Http\Resources\Services\GroupResource;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPermission as SalonPermissionModel;
 use App\Models\Salons\UserSalonPermission;
+use App\Models\Services\Group;
 use App\Models\Users\User;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -43,7 +45,7 @@ class SalonService
         $numericFields = [];
         $dateFields = ['created_at'];
         $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country'];
-        $inFields = ['id','type'];
+        $inFields = ['id', 'type'];
 
         $query = SalonPermission::filterIndex($query);
 
@@ -67,7 +69,17 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites','images']);
+        $groups = Group::where('salon_id', $salon->id)->orWhereNull('salon_id')->get();
+
+        // get group services for each group
+        foreach ($groups as $group) {
+            $group->groupServices = $group->groupServices()->with('service')->get();
+        }
+
+        $salon->groups = GroupResource::collection($groups);
+
+
+        $salon->load(['socialMediaSites', 'images']);
 
         return $salon;
     }

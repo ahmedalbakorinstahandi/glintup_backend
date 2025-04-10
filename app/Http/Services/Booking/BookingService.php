@@ -14,11 +14,13 @@ class BookingService
     {
         $query = Booking::query()->with(['user', 'salon']);
 
+        
+
         $searchFields = ['code', 'notes'];
         $numericFields = [];
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status', 'payment_status'];
-        $inFields = ['id'];
+        $inFields = ['id', 'bookingServices.service_id'];
 
         $query = BookingPermission::filterIndex($query);
 

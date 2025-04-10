@@ -7,6 +7,7 @@ use App\Http\Requests\Users\User\CreateRequest;
 use App\Http\Requests\Users\User\UpdateProfileRequest;
 use App\Http\Requests\Users\User\UpdateRequest;
 use App\Http\Permissions\Users\UserPermission;
+use App\Http\Resources\Salons\SalonResource;
 use App\Http\Resources\Statistics\PromotionAdResource;
 use App\Http\Services\Users\UserService;
 use App\Http\Resources\Users\UserResource;
@@ -141,9 +142,9 @@ class UserController extends Controller
             'success' => true,
             'data' => [
                 'promotion_ads' => PromotionAdResource::collection($prmomtionAds),
-                'trending_salons' => UserResource::collection($trendingSalons),
-                'salons_have_discount' => UserResource::collection($salons_have_discount),
-                'nearby_salons' => UserResource::collection($nearby_salons),
+                'trending_salons' => SalonResource::collection($trendingSalons),
+                'salons_have_discount' => SalonResource::collection($salons_have_discount),
+                'nearby_salons' => SalonResource::collection($nearby_salons),
             ],
         ]);
     }

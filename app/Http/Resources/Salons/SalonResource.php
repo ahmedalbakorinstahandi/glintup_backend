@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Salons;
 
 use App\Http\Resources\General\ImageResource;
+use App\Http\Resources\Services\GroupResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Salons\Salon;
@@ -43,12 +44,12 @@ class SalonResource extends JsonResource
             'working_status' => "مفتوح (8:00 AM - 10:00 PM)",
             'rating_percentage' => $this->getRatingPercentageAttribute(),
             'images' => ImageResource::collection($this->whenLoaded('images')),
-
+            'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
+            'groups' => GroupResource::collection($this->groups),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
 
 
-            'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
         ];
     }
 }
