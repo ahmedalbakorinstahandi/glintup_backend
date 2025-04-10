@@ -28,7 +28,7 @@ class UserResource extends JsonResource
             'role'          => $this->role,
             'is_active'     => $this->is_active,
             'is_verified'   => $this->is_verified,
-            'location'      => $this->getLocation(),
+            // 'location'      => $this->getLocation(),
             'otp_expire_at' => $this->otp_expire_at,
 
             'wallet'              => new WalletResource($this->whenLoaded('wallet')),

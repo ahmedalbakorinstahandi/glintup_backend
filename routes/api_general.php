@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers\General;
 
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('general')->group(function () {
         Route::post('upload-image', [ImageController::class, 'uploadImage']);
-    });
 
-    Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::get('{id}', 'show');
+
+        Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+        });
+
+        // me
+        Route::prefix('profile')->group(function () {
+            Route::get('/', [UserController::class, 'getProfile']);
+            Route::put('/', [UserController::class, 'updateProfile']);
+        });
     });
 });

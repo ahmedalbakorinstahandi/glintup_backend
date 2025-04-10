@@ -70,4 +70,21 @@ return [
         'item_not_found'            => 'Booking not found',
     ],
 
+
+    'user' => [
+        'item_created_successfully' => 'User created successfully',
+        'item_updated_successfully' => 'User updated successfully',
+        'item_deleted_successfully' => 'User deleted successfully',
+        'failed_delete_item'        => 'Failed to delete user',
+        'item_not_found'            => 'User not found',
+    ],
+
+    'promotion_ad' => [
+        'item_created_successfully' => 'Promotion ad created successfully',
+        'item_updated_successfully' => 'Promotion ad updated successfully',
+        'item_deleted_successfully' => 'Promotion ad deleted successfully',
+        'failed_delete_item'        => 'Failed to delete promotion ad',
+        'item_not_found'            => 'Promotion ad not found',
+    ],
+
 ];

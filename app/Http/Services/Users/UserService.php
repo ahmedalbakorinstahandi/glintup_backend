@@ -16,9 +16,9 @@ class UserService
 
         $query = UserPermission::filterIndex($query);
 
-        $data['search'] =  str_replace(' ', '', $data['search']);
 
         if (isset($data['search']) && $data['search'] != '') {
+            $data['search'] =  str_replace(' ', '', $data['search']);
             $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
         }
 
@@ -58,5 +58,30 @@ class UserService
     public function destroy($user)
     {
         return $user->delete();
+    }
+
+
+    public function getProfile()
+    {
+        $user = User::auth();
+
+        return $user;
+    }
+
+    public function updateProfile($validatedData)
+    {
+
+        $user = User::auth();
+
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        }
+
+        // update location
+
+        $user->update($validatedData);
+
+
+        return $user;
     }
 }

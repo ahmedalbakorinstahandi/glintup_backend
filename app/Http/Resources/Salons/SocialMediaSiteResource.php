@@ -4,7 +4,7 @@ namespace App\Http\Resources\Salons;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SocialMidiaSiteResource extends JsonResource
+class SocialMediaSiteResource extends JsonResource
 {
     public function toArray($request)
     {

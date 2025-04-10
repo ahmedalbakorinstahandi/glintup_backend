@@ -5,9 +5,11 @@ namespace App\Models\Salons;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SalonSocialMidiaSite extends Model
+class SalonSocialMediaSite extends Model
 {
     use SoftDeletes;
+
+    // protected $table = 'salon_social_media_sites';
 
     protected $fillable = [
         'salon_id',
@@ -28,6 +30,6 @@ class SalonSocialMidiaSite extends Model
 
     public function socialMediaSite()
     {
-        return $this->belongsTo(SocialMidiaSite::class, 'social_media_site_id')->withTrashed();
+        return $this->belongsTo(SocialMediaSite::class, 'social_media_site_id')->withTrashed();
     }
 }

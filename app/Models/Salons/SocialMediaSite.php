@@ -9,7 +9,7 @@ use App\Services\LanguageService;
 use App\Traits\LanguageTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class SocialMidiaSite extends Model
+class SocialMediaSite extends Model
 {
     use SoftDeletes, HasTranslations, LanguageTrait;
 
@@ -30,7 +30,7 @@ class SocialMidiaSite extends Model
 
     public function salonSocialMidiaSites()
     {
-        return $this->hasMany(SalonSocialMidiaSite::class);
+        return $this->hasMany(SalonSocialMediaSite::class);
     }
 
     protected function name(): Attribute

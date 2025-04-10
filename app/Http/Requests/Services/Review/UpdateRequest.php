@@ -4,25 +4,19 @@ namespace App\Http\Requests\Services\Review;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+use App\Http\Requests\BaseFormRequest;
+
+class UpdateRequest extends BaseFormRequest
+{
     public function rules(): array
     {
         return [
-            //
+            'rating'           => 'nullable|integer|min:1|max:5',
+            'comment'          => 'nullable|string|max:1000',
+            'salon_reply'      => 'nullable|string|max:1000',
+            'salon_report'     => 'nullable|string|max:1000',
+            'salon_reported_at' => 'nullable|date',
         ];
     }
 }

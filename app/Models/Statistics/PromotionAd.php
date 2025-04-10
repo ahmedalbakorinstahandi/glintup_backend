@@ -18,6 +18,7 @@ class PromotionAd extends Model
         'salon_id',
         'title',
         'description',
+        'image',
         'valid_from',
         'valid_to',
         'is_active',
@@ -26,6 +27,10 @@ class PromotionAd extends Model
     ];
 
     protected $casts = [
+        'salon_id'    => 'integer',
+        'title'       => 'string',
+        'description' => 'string',
+        'image'       => 'string',
         'valid_from'  => 'date',
         'valid_to'    => 'date',
         'is_active'   => 'boolean',

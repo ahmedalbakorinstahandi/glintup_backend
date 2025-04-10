@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('salon_id')->references('id')->on('salons');
             $table->string('title', 255);
             $table->text('description')->nullable();
+            $table->string('image', 110)->nullable();
             $table->date('valid_from');
             $table->date('valid_to');
             $table->boolean('is_active')->default(true);

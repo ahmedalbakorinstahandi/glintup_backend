@@ -39,11 +39,11 @@ class SalonService
     {
         $query = Salon::query();
 
-        $searchFields = ['name', 'email', 'description', 'location'];
+        $searchFields = ['name', 'email', 'description', 'location', 'city', 'country'];
         $numericFields = [];
         $dateFields = ['created_at'];
         $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country'];
-        $inFields = ['id'];
+        $inFields = ['id','type'];
 
         $query = SalonPermission::filterIndex($query);
 
@@ -66,6 +66,9 @@ class SalonService
             MessageService::abort(404, 'messages.salon.item_not_found');
         }
 
+
+        $salon->load(['socialMediaSites','images']);
+
         return $salon;
     }
 
@@ -79,7 +82,7 @@ class SalonService
     public function update($salon, $data)
     {
         $salon->update($data);
-        
+
         return $salon;
     }
 

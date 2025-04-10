@@ -69,4 +69,24 @@ return [
         'failed_delete_item'        => 'فشل في حذف الحجز',
         'item_not_found'            => 'الحجز غير موجود',
     ],
+
+    'user' => [
+        'item_created_successfully' => 'تم إنشاء المستخدم بنجاح',
+        'item_updated_successfully' => 'تم تحديث المستخدم بنجاح',
+        'item_deleted_successfully' => 'تم حذف المستخدم بنجاح',
+        'failed_delete_item'        => 'فشل في حذف المستخدم',
+        'item_not_found'            => 'المستخدم غير موجود',
+    ],
+
+    // lang/ar/messages.php
+    'promotion_ad' => [
+        'item_created_successfully' => 'تم إنشاء الإعلان الترويجي بنجاح',
+        'item_updated_successfully' => 'تم تحديث الإعلان الترويجي بنجاح',
+        'item_deleted_successfully' => 'تم حذف الإعلان الترويجي بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الإعلان الترويجي',
+        'item_not_found'            => 'الإعلان الترويجي غير موجود',
+    ],
+
+
+
 ];

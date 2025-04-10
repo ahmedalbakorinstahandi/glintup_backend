@@ -3,26 +3,22 @@
 namespace App\Http\Requests\Statistics\PromotionAd;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
+use App\Services\LanguageService;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'title'       => LanguageService::translatableFieldRules('nullable|string|max:255'),
+            'description' => LanguageService::translatableFieldRules('nullable|string|max:1000'),
+            'image'       => 'nullable|string|max:110',
+            'valid_from'  => 'nullable|date',
+            'valid_to'    => 'nullable|date|after_or_equal:valid_from',
+            'is_active'   => 'nullable|boolean',
+            'views'       => 'nullable|integer|min:0',
+            'clicks'      => 'nullable|integer|min:0',
         ];
     }
 }
