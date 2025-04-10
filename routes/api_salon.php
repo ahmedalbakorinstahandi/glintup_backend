@@ -6,6 +6,7 @@ use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\GroupServiceController;
 use App\Http\Controllers\Services\ServiceController;
+use App\Http\Controllers\Users\UserController;
 use App\Http\Services\Salons\SalonService;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,7 @@ Route::prefix('salon')->group(function () {
         });
 
         Route::prefix('bookings')->controller(BookingController::class)->group(function () {
+            Route::get('/users', [UserController::class, 'index']);
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');

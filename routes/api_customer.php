@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Users\UserAuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +14,11 @@ Route::prefix('customer')->group(function () {
         Route::post('/forgot-password', [UserAuthController::class, 'forgotPassword']);
         Route::post('/reset-password', [UserAuthController::class, 'resetPassword'])->middleware('auth:sanctum');
         Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
+    });
+
+    // Booking
+    Route::prefix('bookings')->controller(BookingController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{id}', 'show');
     });
 });

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->dateTime('otp_expire_at')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->string('language', 10)->nullable();
+            $table->enum('added_by', ['admin', 'salon', 'register'])->default('register');
             $table->timestamps();
             $table->softDeletes();
         });

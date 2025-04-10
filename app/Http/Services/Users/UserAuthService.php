@@ -31,26 +31,59 @@ class UserAuthService
 
     public function register($requestData)
     {
+
+        $inputPhone = str_replace(' ', '', $requestData['phone']);
+
+
+        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+            ->where('role', 'customer')
+            ->first();
+
         $verifyCode = rand(100000, 999999);
         $codeExpiry = Carbon::now()->addMinutes(10);
 
-        $user = User::create([
-            'first_name' => $requestData['first_name'],
-            'last_name' => $requestData['last_name'],
-            'password' => Hash::make($requestData['password']),
-            'phone' => $requestData['phone'],
-            'phone_code' => $requestData['phone_code'],
-            'verified' => 0,
-            'otp' => $verifyCode,
-            'otp_expire_at' => $codeExpiry,
-            'role' => 'customer',
-            'gender' => $requestData['gender'],
-            'birth_date' => $requestData['birth_date'],
-            'avatar' => $requestData['avatar'] ?? null,
-            'is_active' => 1,
-            'is_verified' => 0,
-            'language' => $requestData['language'] ?? 'ar',
-        ]);
+        if ($user) {
+
+            $user->update(
+                [
+                    'first_name' => $requestData['first_name'],
+                    'last_name' => $requestData['last_name'],
+                    'password' => Hash::make($requestData['password']),
+                    'phone' => $requestData['phone'],
+                    'phone_code' => $requestData['phone_code'],
+                    'otp' => $verifyCode,
+                    'otp_expire_at' => $codeExpiry,
+                    'role' => 'customer',
+                    'gender' => $requestData['gender'],
+                    'birth_date' => $requestData['birth_date'],
+                    'avatar' => $requestData['avatar'] ?? null,
+                    'is_active' => 1,
+                    'is_verified' => 0,
+                    'language' => $requestData['language'] ?? 'ar',
+                ]
+            );
+
+        } else {
+
+
+            $user = User::create([
+                'first_name' => $requestData['first_name'],
+                'last_name' => $requestData['last_name'],
+                'password' => Hash::make($requestData['password']),
+                'phone' => $requestData['phone'],
+                'phone_code' => $requestData['phone_code'],
+                'otp' => $verifyCode,
+                'otp_expire_at' => $codeExpiry,
+                'role' => 'customer',
+                'gender' => $requestData['gender'],
+                'birth_date' => $requestData['birth_date'],
+                'avatar' => $requestData['avatar'] ?? null,
+                'is_active' => 1,
+                'is_verified' => 0,
+                'language' => $requestData['language'] ?? 'ar',
+                'added_by' => Auth::user() ? Auth::user()->id : null,
+            ]);
+        }
 
         // TODO send sms to user
         // $this->sendSms($user->phone, $user->phone_code, $verifyCode);
