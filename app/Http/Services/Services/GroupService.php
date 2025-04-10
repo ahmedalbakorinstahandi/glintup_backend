@@ -12,7 +12,7 @@ class GroupService
 {
     public function index($data)
     {
-        $query = Group::query()->with('salon');
+        $query = Group::query()->with(['salon', 'groupServices.service']);
 
         $searchFields = ['name'];
         $numericFields = [];
@@ -39,19 +39,33 @@ class GroupService
         if (!$group) {
             MessageService::abort(404, 'messages.group.item_not_found');
         }
+
+        $group->load(['salon', 'groupServices.service']);
+
         return $group;
     }
 
     public function create($validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, new Group);
-        return Group::create($validatedData);
+
+
+
+
+        $group = Group::create($validatedData);
+
+        $group->load(['salon', 'groupServices.service']);
+
+        return $group;
     }
 
     public function update($group, $validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $group);
         $group->update($validatedData);
+
+        $group->load(['salon', 'groupServices.service']);
+
         return $group;
     }
 

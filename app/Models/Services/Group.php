@@ -3,6 +3,7 @@
 namespace App\Models\Services;
 
 use App\Models\Salons\Salon;
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
@@ -35,9 +36,28 @@ class Group extends Model
         return $this->belongsTo(Salon::class)->withTrashed();
     }
 
+    // public function groupServices()
+    // {
+    //     return $this->hasMany(GroupService::class);
+    // }
+
+
     public function groupServices()
     {
-        return $this->hasMany(GroupService::class);
+        $user = User::auth();
+
+        $salon_id = 0;
+        if ($user->isUserSalon()) {
+            $salon_id = $user->salon->id;
+        } else {
+            $salon_id = request()->salon_id;
+        }
+
+
+        return $this->hasMany(GroupService::class)->where('salon_id', $salon_id);
+
+
+        // return $this->hasMany(GroupService::class);
     }
 
     // ✅ accessors
