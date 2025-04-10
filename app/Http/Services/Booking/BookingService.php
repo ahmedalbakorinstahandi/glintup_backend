@@ -22,15 +22,34 @@ class BookingService
 
         $query = BookingPermission::filterIndex($query);
 
-        return FilterService::applyFilters(
+        $query = FilterService::applyFilters(
             $query,
             $data,
             $searchFields,
             $numericFields,
             $dateFields,
             $exactMatchFields,
-            $inFields
+            $inFields,
+            false
         );
+
+
+        $bookings = $query->get();
+
+        // status "pending", "confirmed", "completed", "cancelled"
+
+        $bookings_status_count = [
+            'all_count' => $bookings->count(),
+            'pending_count' => $bookings->where('status', 'pending')->count(),
+            'confirmed_count' => $bookings->where('status', 'confirmed')->count(),
+            'completed_count' => $bookings->where('status', 'completed')->count(),
+            'cancelled_count' => $bookings->where('status', 'cancelled')->count(),
+        ];
+
+        return [
+            'data' => $query->paginate($data['limit'] ?? 20),
+            'info' => $bookings_status_count,
+        ];
     }
 
     public function show($id)

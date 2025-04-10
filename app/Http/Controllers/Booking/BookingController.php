@@ -25,8 +25,9 @@ class BookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => BookingResource::collection($bookings->items()),
-            'meta' => ResponseService::meta($bookings),
+            'data' => BookingResource::collection($bookings['data']->items()),
+            'meta' => ResponseService::meta($bookings['data']),
+            'info' => $bookings['info'],
         ]);
     }
 
