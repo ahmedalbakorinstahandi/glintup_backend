@@ -3,6 +3,7 @@
 namespace App\Models\Salons;
 
 use App\Models\General\Image;
+use App\Models\Services\Group;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -68,6 +69,20 @@ class Salon extends Model
     {
         return $this->hasMany(\App\Models\Services\Service::class);
     }
+
+    // public function groups()
+    // {
+    //     return $this->hasMany(Group::class, 'salon_id');
+    // }
+
+    public function groupsIncludingGlobal()
+    {
+        return Group::where('salon_id', $this->id)
+            ->orWhereNull('salon_id')
+            ->get();
+    }
+
+
 
     public function reviews()
     {

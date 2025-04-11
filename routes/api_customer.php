@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Salons\SalonController;
+use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
@@ -43,6 +44,11 @@ Route::prefix('customer')->group(function () {
             Route::post('/', 'create');
             // Route::put('{id}', 'update');
             // Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('groups')->controller(GroupController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
         });
     });
 });

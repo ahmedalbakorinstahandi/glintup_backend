@@ -69,16 +69,6 @@ class SalonService
         }
 
 
-        $groups = Group::where('salon_id', $salon->id)->orWhereNull('salon_id')->get();
-
-        // get group services for each group
-        foreach ($groups as $group) {
-            $group->groupServices = $group->groupServices()->with('service')->get();
-        }
-
-        $salon->groups = GroupResource::collection($groups);
-
-
         $salon->load(['socialMediaSites', 'images']);
 
         return $salon;

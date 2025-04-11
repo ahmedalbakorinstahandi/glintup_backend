@@ -13,6 +13,7 @@ class SalonPermission
     }
     public static function canShow(Salon $salon)
     {
+        
         return true;
     }
     public static function create($data)

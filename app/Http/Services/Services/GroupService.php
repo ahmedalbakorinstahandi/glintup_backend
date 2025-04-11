@@ -17,10 +17,16 @@ class GroupService
         $searchFields = ['name'];
         $numericFields = [];
         $dateFields = ['created_at'];
-        $exactMatchFields = ['salon_id'];
+        $exactMatchFields = [];
         $inFields = ['id'];
 
         $query = GroupPermission::filterIndex($query);
+
+        if (isset($data['salon_id'])) {
+            $query->where('salon_id', $data['salon_id'])->orWhereNull('salon_id');
+        } else {
+            $query->orWhereNull('salon_id');
+        }
 
         return FilterService::applyFilters(
             $query,
