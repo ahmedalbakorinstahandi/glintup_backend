@@ -78,7 +78,6 @@ return [
         'item_not_found'            => 'المستخدم غير موجود',
     ],
 
-    // lang/ar/messages.php
     'promotion_ad' => [
         'item_created_successfully' => 'تم إنشاء الإعلان الترويجي بنجاح',
         'item_updated_successfully' => 'تم تحديث الإعلان الترويجي بنجاح',
@@ -86,6 +85,16 @@ return [
         'failed_delete_item'        => 'فشل في حذف الإعلان الترويجي',
         'item_not_found'            => 'الإعلان الترويجي غير موجود',
     ],
+
+    'working_hour' => [
+        'item_created_successfully' => 'تم إنشاء وقت العمل بنجاح',
+        'item_updated_successfully' => 'تم تحديث وقت العمل بنجاح',
+        'item_deleted_successfully' => 'تم حذف وقت العمل بنجاح',
+        'failed_delete_item'        => 'فشل في حذف وقت العمل',
+        'item_not_found'            => 'وقت العمل غير موجود',
+        'this_day_of_week_already_exists' => 'يوجد بالفعل وقت عمل لهذا اليوم من الأسبوع',
+    ],
+
 
 
 

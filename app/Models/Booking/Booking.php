@@ -47,6 +47,23 @@ class Booking extends Model
         return $this->hasMany(BookingService::class);
     }
 
+    // end time : time + getTotalServiceTimeInMinutes()
+    public function getEndTimeAttribute()
+    {
+        return $this->time?->addMinutes($this->getTotalServiceTimeInMinutes());
+    }
+
+
+    public function getTotalServiceTimeInMinutes()
+    {
+        $totalMinutes = $this->bookingServices->sum(function ($service) {
+            return $service->duration_minutes;
+        });
+
+        return max($totalMinutes, 15);
+    }
+
+
     public function payments()
     {
         return $this->hasMany(BookingPayment::class);

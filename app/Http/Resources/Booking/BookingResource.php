@@ -21,6 +21,8 @@ class BookingResource extends JsonResource
             'salon_id'         => $this->salon_id,
             'date'             => $this->date?->format('Y-m-d'),
             'time'             => $this->time?->format('H:i'),
+            'end_time'         => $this->getEndTimeAttribute()?->format('H:i'),
+            'total_service_time_in_minutes' => $this->getTotalServiceTimeInMinutes(),
             'status'           => $this->status,
             // 'status_label'     => $this->status_label,
             'payment_status'   => $this->payment_status,

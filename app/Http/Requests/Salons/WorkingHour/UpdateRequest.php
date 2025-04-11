@@ -3,26 +3,18 @@
 namespace App\Http\Requests\Salons\WorkingHour;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'is_closed'     => 'required|boolean',
+            'opening_time'  => 'required_if:is_closed,false|date_format:H:i',
+            'closing_time'  => 'required_if:is_closed,false|date_format:H:i|after:opening_time',
+            'break_start'   => 'required_with:break_end|nullable|date_format:H:i',
+            'break_end'     => 'required_with:break_start|date_format:H:i|after:break_start',
         ];
     }
 }

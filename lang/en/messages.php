@@ -87,4 +87,13 @@ return [
         'item_not_found'            => 'Promotion ad not found',
     ],
 
+    'working_hour' => [
+        'item_created_successfully' => 'Working hour created successfully',
+        'item_updated_successfully' => 'Working hour updated successfully',
+        'item_deleted_successfully' => 'Working hour deleted successfully',
+        'failed_delete_item'        => 'Failed to delete working hour',
+        'item_not_found'            => 'Working hour not found',
+        'this_day_of_week_already_exists' => 'This day of the week already exists for this salon',
+    ],
+
 ];

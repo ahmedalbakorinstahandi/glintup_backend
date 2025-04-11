@@ -3,6 +3,7 @@
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
+use App\Http\Controllers\Salons\WorkingHourController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\GroupServiceController;
 use App\Http\Controllers\Services\ServiceController;
@@ -52,6 +53,14 @@ Route::prefix('salon')->group(function () {
 
         Route::prefix('bookings')->controller(BookingController::class)->group(function () {
             Route::get('/users', [UserController::class, 'index']);
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('working-hours')->controller(WorkingHourController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');
