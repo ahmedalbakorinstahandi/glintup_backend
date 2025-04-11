@@ -45,7 +45,7 @@ class SalonResource extends JsonResource
             'rating_percentage' => $this->getRatingPercentageAttribute(),
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
-            'groups' => GroupResource::collection($this->groups),
+            // 'groups' => GroupResource::collection($this->groups),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
 

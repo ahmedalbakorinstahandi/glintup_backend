@@ -115,7 +115,7 @@ class UserController extends Controller
     public function homeData()
     {
 
-        $prmomtionAdService = new PromotionAdService();
+        // $prmomtionAdService = new PromotionAdService();
 
         // $prmomtionAds = $prmomtionAdService->index([
         //     'limit' => 10,
