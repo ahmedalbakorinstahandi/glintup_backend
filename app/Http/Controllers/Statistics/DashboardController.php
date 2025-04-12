@@ -123,8 +123,8 @@ class DashboardController extends Controller
         });
 
 
-        // last 5 bookings
-        $last_bookings = Booking::orderBy('created_at', 'desc')->take(5)->get();
+        // last 5 bookings // load relationships: salon, user
+        $last_bookings = Booking::orderBy('created_at', 'desc')->take(5)->with(['salon', 'user'])->get();
 
         // last 5 salons
         $bset_salons = Salon::orderBy('created_at', 'desc')->take(5)->get();
