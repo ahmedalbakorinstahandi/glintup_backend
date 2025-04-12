@@ -68,6 +68,7 @@ return [
         'item_deleted_successfully' => 'Booking deleted successfully',
         'failed_delete_item'        => 'Failed to delete booking',
         'item_not_found'            => 'Booking not found',
+        'service_not_in_salon'     => 'Service not in salon',
     ],
 
 

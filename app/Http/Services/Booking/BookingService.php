@@ -14,7 +14,7 @@ class BookingService
     {
         $query = Booking::query()->with(['user', 'salon']);
 
-        
+
 
         $searchFields = ['code', 'notes'];
         $numericFields = [];
@@ -100,9 +100,18 @@ class BookingService
 
         $booking = Booking::create($data);
 
-        $booking->code = "BOOKKING" . $booking->id;
+        $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
 
         $booking->save();
+
+        // booking services
+        if (isset($data['services'])) {
+            foreach ($data['services'] as $service) {
+                $booking->bookingServices()->create([
+                    'service_id' => $service['id'],
+                ]);
+            }
+        }
 
         $booking->load(['user', 'salon']);
 

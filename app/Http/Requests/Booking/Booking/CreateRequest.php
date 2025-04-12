@@ -42,18 +42,26 @@ class CreateRequest extends BaseFormRequest
         }
 
         $rules2 = [
-            'salon_id'       => 'required|exists:salons,id',
             'date'           => 'required|date',
             'time'           => 'required|date_format:H:i',
             'status'         => 'required|in:pending,confirmed',
             // 'payment_status' => 'required|in:unpaid,partially_paid,paid',
             // 'notes'          => 'nullable|string',
             'salon_notes'    => 'nullable|string',
+            'services' => 'required|array|min:1',
+            'services.*.id' => 'required|exists:services,id,deleted_at,NULL',
         ];
 
         if ($user) {
             $rules2['phone_code'] = 'required|string';
             $rules2['phone'] = 'required|string';
+        }
+
+
+        $creator = User::auth();
+
+        if (!$creator->isUserSalon()) {
+            $rules2['salon_id'] = 'required|exists:salons,id,deleted_at,NULL';
         }
 
         return array_merge($rules, $rules2);

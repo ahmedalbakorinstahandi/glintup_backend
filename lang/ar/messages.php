@@ -68,6 +68,7 @@ return [
         'item_deleted_successfully' => 'تم حذف الحجز بنجاح',
         'failed_delete_item'        => 'فشل في حذف الحجز',
         'item_not_found'            => 'الحجز غير موجود',
+        'service_not_in_salon' => 'الخدمة غير موجودة في الصالون',
     ],
 
     'user' => [

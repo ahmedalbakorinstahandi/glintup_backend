@@ -6,6 +6,7 @@ use App\Http\Controllers\Salons\WorkingHourController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\GroupServiceController;
 use App\Http\Controllers\Services\ServiceController;
+use App\Http\Controllers\Statistics\DashboardController;
 use App\Http\Controllers\Statistics\PromotionAdController;
 use App\Http\Controllers\Users\AdminAuthController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,13 @@ Route::prefix('admin')->group(function () {
 
 
     Route::middleware(['auth:sanctum'])->group(function () {
+
+
+        //DashboardController
+        Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
+            Route::get('/', 'index');
+        });
+
         Route::prefix('services')->controller(ServiceController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');

@@ -3,6 +3,7 @@
 namespace App\Http\Permissions\Booking;
 
 use App\Models\Booking\Booking;
+use App\Models\Services\Service;
 use App\Models\Users\User;
 use App\Services\MessageService;
 
@@ -43,6 +44,16 @@ class BookingPermission
         } elseif ($user->isUserSalon()) {
             $data['salon_id'] = $user->salon->id;
         }
+
+        // check if the booking services in the salon already
+        $serviceIds = array_column($data['services'], 'id');
+
+        Service::whereIn('id', $serviceIds)->each(function ($service) use ($data) {
+            if ($service->salon_id != $data['salon_id']) {
+                MessageService::abort(422, 'messages.booking.service_not_in_salon');
+            }
+        });
+
 
         return $data;
     }
