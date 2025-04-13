@@ -12,7 +12,7 @@ class BookingService
 {
     public function index($data)
     {
-        $query = Booking::query()->with(['user', 'salon']);
+        $query = Booking::query()->with(['user', 'salon', 'bookingServices.service']);
 
 
 
@@ -62,7 +62,7 @@ class BookingService
             MessageService::abort(404, 'messages.booking.item_not_found');
         }
 
-        $booking->load(['user', 'salon']);
+        $booking->load(['user', 'salon', 'bookingServices.service']);
 
         return $booking;
     }
@@ -113,7 +113,7 @@ class BookingService
             }
         }
 
-        $booking->load(['user', 'salon']);
+        $booking->load(['user', 'salon', 'bookingServices.service']);
 
         return $booking;
     }
@@ -122,7 +122,7 @@ class BookingService
     {
         $booking->update($data);
 
-        $booking->load(['user', 'salon']);
+        $booking->load(['user', 'salon', 'bookingServices.service']);
 
         return $booking;
     }
