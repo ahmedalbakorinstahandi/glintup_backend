@@ -15,6 +15,7 @@ class UpdateRequest extends BaseFormRequest
             'closing_time'  => 'required_if:is_closed,false|date_format:H:i|after:opening_time',
             'break_start'   => 'required_with:break_end|nullable|date_format:H:i',
             'break_end'     => 'required_with:break_start|date_format:H:i|after:break_start',
+            'delete_break_time' => 'boolean',
         ];
     }
 }

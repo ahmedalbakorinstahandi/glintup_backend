@@ -15,7 +15,15 @@ class WorkingHourService
 
         $query = WorkingHourPermission::filterIndex($query);
 
-        return FilterService::applyFilters($query, $data, [], [], ['created_at'], ['salon_id', 'day_of_week', 'is_closed'], ['id']);
+        return FilterService::applyFilters(
+            $query,
+            $data,
+            [],
+            [],
+            ['created_at'],
+            ['salon_id', 'day_of_week', 'is_closed'],
+            ['id']
+        );
     }
 
     public function show($id)
@@ -58,6 +66,12 @@ class WorkingHourService
         if (isset($validated['is_closed']) && $validated['is_closed']) {
             $validated['opening_time'] = null;
             $validated['closing_time'] = null;
+            $validated['break_start'] = null;
+            $validated['break_end'] = null;
+        }
+
+        // delete_break_time
+        if (isset($validated['delete_break_time']) && $validated['delete_break_time']) {
             $validated['break_start'] = null;
             $validated['break_end'] = null;
         }
