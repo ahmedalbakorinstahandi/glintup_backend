@@ -6,6 +6,7 @@ use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\WorkingHourController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\GroupServiceController;
+use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Services\Salons\SalonService;
@@ -66,6 +67,15 @@ Route::prefix('salon')->group(function () {
             Route::post('/', 'create');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
+        });
+
+
+        Route::prefix('reviews')->controller(ReviewController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            // Route::post('/', 'create');
+            // Route::put('{id}', 'update');
+            // Route::delete('{id}', 'destroy');
         });
     });
 });
