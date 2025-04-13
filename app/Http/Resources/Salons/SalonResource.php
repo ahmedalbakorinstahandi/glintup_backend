@@ -20,6 +20,8 @@ class SalonResource extends JsonResource
 
         $is_admin = $user->isAdmin();
 
+        $local_lang = app()->getLocale();
+
         return [
             'id'              => $this->id,
             'owner_id'        => $this->owner_id,
@@ -47,7 +49,7 @@ class SalonResource extends JsonResource
             'total_revenue' => $this->when($is_admin,  5000),
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),
-            'working_status' => $this->getWorkingStatus(),
+            'working_status' => $this->getWorkingStatus($local_lang),
             'rating_percentage' => $this->getRatingPercentageAttribute(),
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
