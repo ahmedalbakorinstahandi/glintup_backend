@@ -69,7 +69,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner']);
 
         return $salon;
     }

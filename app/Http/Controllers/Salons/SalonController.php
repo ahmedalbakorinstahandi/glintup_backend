@@ -57,6 +57,7 @@ class SalonController extends Controller
     public function show($id)
     {
         $salon = $this->salonService->show($id);
+
         SalonPermission::canShow($salon);
 
         return response()->json([

@@ -2,6 +2,7 @@
 
 namespace App\Models\Salons;
 
+use App\Models\Booking\Booking;
 use App\Models\General\Image;
 use App\Models\Services\Group;
 use App\Models\Users\User;
@@ -45,6 +46,11 @@ class Salon extends Model
         return $this->belongsTo(User::class, 'owner_id')->withTrashed();
     }
 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
 
     public function socialMediaSites()
     {
@@ -86,50 +92,54 @@ class Salon extends Model
     // get active or not from working hours and holidays
     public function isOpen(): bool
     {
-        $currentDay = strtolower(now()->format('l')); // Get current day in lowercase
-        $currentTime = now()->format('H:i:s'); // Get current time in 24-hour format
-        $currentDate = now()->toDateString(); // Get current date
+        $now = now();
+        $currentDay = strtolower($now->format('l'));
+        $currentDate = $now->toDateString();
 
-        // Check if today is a holiday
         $holiday = $this->holidays()
             ->where('holiday_date', $currentDate)
             ->first();
 
         if ($holiday) {
             if ($holiday->is_full_day) {
-                return false; // Salon is closed for the full day
+                return false;
             }
 
-            // Check if current time is within holiday hours
             if ($holiday->start_time && $holiday->end_time) {
-                if ($currentTime >= $holiday->start_time && $currentTime <= $holiday->end_time) {
-                    return false; // Salon is closed during holiday hours
+                $holidayStart = $now->copy()->setTimeFromTimeString($holiday->start_time);
+                $holidayEnd = $now->copy()->setTimeFromTimeString($holiday->end_time);
+                if ($now->between($holidayStart, $holidayEnd)) {
+                    return false;
                 }
             }
         }
 
-        // Check working hours
         $workingHour = $this->workingHours()
             ->where('day_of_week', $currentDay)
             ->first();
 
         if (!$workingHour || $workingHour->is_closed) {
-            return false; // Salon is closed for the day
+            return false;
         }
 
-        // Check if current time is within opening and closing hours
-        if ($currentTime >= $workingHour->opening_time && $currentTime <= $workingHour->closing_time) {
-            // Check if current time is not within break hours
+        $openingTime = $now->copy()->setTimeFromTimeString($workingHour->opening_time);
+        $closingTime = $now->copy()->setTimeFromTimeString($workingHour->closing_time);
+
+        if ($now->between($openingTime, $closingTime)) {
             if ($workingHour->break_start && $workingHour->break_end) {
-                if ($currentTime >= $workingHour->break_start && $currentTime <= $workingHour->break_end) {
-                    return false; // Salon is on break
+                $breakStart = $now->copy()->setTimeFromTimeString($workingHour->break_start);
+                $breakEnd = $now->copy()->setTimeFromTimeString($workingHour->break_end);
+                if ($now->between($breakStart, $breakEnd)) {
+                    return false;
                 }
             }
-            return true; // Salon is open
+
+            return true;
         }
 
-        return false; // Salon is closed
+        return false;
     }
+
 
     // Define relationship with holidays
     public function holidays()
@@ -141,59 +151,61 @@ class Salon extends Model
     public function isAvailableAt(string $dateTime): bool
     {
         $date = \Carbon\Carbon::parse($dateTime);
-        $dayOfWeek = strtolower($date->format('l')); // Get day of the week in lowercase
-        $time = $date->format('H:i:s'); // Extract time in 24-hour format
-        $currentDate = $date->toDateString(); // Extract date
+        $dayOfWeek = strtolower($date->format('l'));
+        $currentDate = $date->toDateString();
 
-        // Check if the given date is a holiday
         $holiday = $this->holidays()
             ->where('holiday_date', $currentDate)
             ->first();
 
         if ($holiday) {
             if ($holiday->is_full_day) {
-                return false; // Salon is closed for the full day
+                return false;
             }
 
-            // Check if the given time is within holiday hours
             if ($holiday->start_time && $holiday->end_time) {
-                if ($time >= $holiday->start_time && $time <= $holiday->end_time) {
-                    return false; // Salon is closed during holiday hours
+                $holidayStart = $date->copy()->setTimeFromTimeString($holiday->start_time);
+                $holidayEnd = $date->copy()->setTimeFromTimeString($holiday->end_time);
+                if ($date->between($holidayStart, $holidayEnd)) {
+                    return false;
                 }
             }
         }
 
-        // Check working hours for the given day
         $workingHour = $this->workingHours()
             ->where('day_of_week', $dayOfWeek)
             ->first();
 
         if (!$workingHour || $workingHour->is_closed) {
-            return false; // Salon is closed for the day
+            return false;
         }
 
-        // Check if the given time is within opening and closing hours
-        if ($time >= $workingHour->opening_time && $time <= $workingHour->closing_time) {
-            // Check if the given time is not within break hours
+        $openingTime = $date->copy()->setTimeFromTimeString($workingHour->opening_time);
+        $closingTime = $date->copy()->setTimeFromTimeString($workingHour->closing_time);
+
+        if ($date->between($openingTime, $closingTime)) {
             if ($workingHour->break_start && $workingHour->break_end) {
-                if ($time >= $workingHour->break_start && $time <= $workingHour->break_end) {
-                    return false; // Salon is on break
+                $breakStart = $date->copy()->setTimeFromTimeString($workingHour->break_start);
+                $breakEnd = $date->copy()->setTimeFromTimeString($workingHour->break_end);
+                if ($date->between($breakStart, $breakEnd)) {
+                    return false;
                 }
             }
-            return true; // Salon is open
+
+            return true;
         }
 
-        return false; // Salon is closed
+        return false;
     }
+
 
 
     public function getWorkingStatus(string $locale = 'en'): string
     {
-        $currentDay = strtolower(now()->format('l')); // Get current day in lowercase
-        $currentTime = now()->format('H:i:s'); // Get current time in 24-hour format
-        $currentDate = now()->toDateString(); // Get current date
+        $now = now();
+        $currentDay = strtolower($now->format('l')); // sunday, monday, etc.
+        $currentDate = $now->toDateString(); // YYYY-MM-DD
 
-        $status = [];
         $holiday = $this->holidays()->where('holiday_date', $currentDate)->first();
 
         if ($holiday) {
@@ -202,12 +214,12 @@ class Salon extends Model
             }
 
             if ($holiday->start_time && $holiday->end_time) {
-                if ($currentTime >= $holiday->start_time && $currentTime <= $holiday->end_time) {
+                $holidayStart = $now->copy()->setTimeFromTimeString($holiday->start_time);
+                $holidayEnd = $now->copy()->setTimeFromTimeString($holiday->end_time);
+
+                if ($now->between($holidayStart, $holidayEnd)) {
                     return $locale === 'ar' ? 'مغلق الآن بسبب مناسبة' : 'Currently closed due to an event';
                 }
-                $status[] = $locale === 'ar'
-                    ? "مناسبة من " . date('h:i A', strtotime($holiday->start_time)) . " إلى " . date('h:i A', strtotime($holiday->end_time))
-                    : "Event from " . date('h:i A', strtotime($holiday->start_time)) . " to " . date('h:i A', strtotime($holiday->end_time));
             }
         }
 
@@ -217,28 +229,35 @@ class Salon extends Model
             return $locale === 'ar' ? 'مغلق اليوم' : 'Closed today';
         }
 
-        if ($currentTime >= $workingHour->opening_time && $currentTime <= $workingHour->closing_time) {
-            if ($workingHour->break_start && $workingHour->break_end) {
-                if ($currentTime >= $workingHour->break_start && $currentTime <= $workingHour->break_end) {
-                    return $locale === 'ar'
-                        ? "مغلق الآن بسبب استراحة من " . date('h:i A', strtotime($workingHour->break_start)) . " إلى " . date('h:i A', strtotime($workingHour->break_end))
-                        : "Currently closed for a break from " . date('h:i A', strtotime($workingHour->break_start)) . " to " . date('h:i A', strtotime($workingHour->break_end));
-                }
-                $status[] = $locale === 'ar'
-                    ? "استراحة من " . date('h:i A', strtotime($workingHour->break_start)) . " إلى " . date('h:i A', strtotime($workingHour->break_end))
-                    : "Break from " . date('h:i A', strtotime($workingHour->break_start)) . " to " . date('h:i A', strtotime($workingHour->break_end));
-            }
-            $status[] = $locale === 'ar'
-                ? "مفتوح من " . date('h:i A', strtotime($workingHour->opening_time)) . " إلى " . date('h:i A', strtotime($workingHour->closing_time))
-                : "Open from " . date('h:i A', strtotime($workingHour->opening_time)) . " to " . date('h:i A', strtotime($workingHour->closing_time));
-        } else {
-            return $locale === 'ar'
-                ? "مغلق الآن، ساعات العمل من " . date('h:i A', strtotime($workingHour->opening_time)) . " إلى " . date('h:i A', strtotime($workingHour->closing_time))
-                : "Currently closed, working hours are from " . date('h:i A', strtotime($workingHour->opening_time)) . " to " . date('h:i A', strtotime($workingHour->closing_time));
+        // إعداد أوقات العمل
+        $openingTime = $now->copy()->setTimeFromTimeString($workingHour->opening_time);
+        $closingTime = $now->copy()->setTimeFromTimeString($workingHour->closing_time);
+
+        if ($openingTime >= $closingTime) {
+            return $locale === 'ar' ? 'مغلق اليوم (خطأ في الإعدادات)' : 'Closed today (invalid schedule)';
         }
 
-        return implode(' | ', $status);
+        if ($now->between($openingTime, $closingTime)) {
+            // التحقق من فترة الاستراحة
+            if ($workingHour->break_start && $workingHour->break_end) {
+                $breakStart = $now->copy()->setTimeFromTimeString($workingHour->break_start);
+                $breakEnd = $now->copy()->setTimeFromTimeString($workingHour->break_end);
+
+                if ($now->between($breakStart, $breakEnd)) {
+                    return $locale === 'ar'
+                        ? "مغلق الآن بسبب استراحة من " . $breakStart->format('h:i A') . " إلى " . $breakEnd->format('h:i A')
+                        : "Currently closed for a break from " . $breakStart->format('h:i A') . " to " . $breakEnd->format('h:i A');
+                }
+            }
+
+            return $locale === 'ar' ? 'مفتوح الآن' : 'Currently open';
+        }
+
+        return $locale === 'ar'
+            ? "مغلق الآن، ساعات العمل من " . $openingTime->format('h:i A') . " إلى " . $closingTime->format('h:i A')
+            : "Currently closed, working hours are from " . $openingTime->format('h:i A') . " to " . $closingTime->format('h:i A');
     }
+
 
     public function workingHours()
     {

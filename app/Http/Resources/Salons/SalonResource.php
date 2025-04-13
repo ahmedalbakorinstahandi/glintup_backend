@@ -9,6 +9,7 @@ use App\Http\Resources\Users\UserResource;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonSocialMidiaSite;
 use App\Models\Users\User;
+use Google\Api\ResourceDescriptor\History;
 
 class SalonResource extends JsonResource
 {
@@ -16,6 +17,8 @@ class SalonResource extends JsonResource
     {
 
         $user = User::auth();
+
+        $is_admin = $user->isAdmin();
 
         return [
             'id'              => $this->id,
@@ -27,7 +30,6 @@ class SalonResource extends JsonResource
             'whats_app_link' => $this->whats_app_link,
             'phone_code'      => $this->phone_code,
             'full_phone'      => $this->full_phone,
-
             'email'           => $this->email,
             'description'     => $this->description,
             'location'        => $this->location,
@@ -40,6 +42,9 @@ class SalonResource extends JsonResource
             'city'            => $this->city,
             'distance' => $this->when($user->isCustomer(), $this->getDistance($user)),
             'average_rating' => $this->reviews->avg('rating'),
+            'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
+            //TODO اجمالي الايرادات 
+            'total_revenue' => $this->when($is_admin,  5000),
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),
             'working_status' => $this->getWorkingStatus(),
