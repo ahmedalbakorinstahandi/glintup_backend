@@ -56,12 +56,13 @@ class Salon extends Model
     // الخدمات الاكثر حجزا في الصالون
     public function mostBookedServices()
     {
+        // service resource
         return $this->services()
             ->withCount(['bookings as bookings_count' => function ($query) {
-                $query->select(DB::raw('count(distinct booking_id)'));
+            $query->select(DB::raw('count(distinct booking_id)'));
             }])
             ->orderByDesc('bookings_count')
-            ->take(5)
+            ->limit(1)
             ->get();
     }
 
