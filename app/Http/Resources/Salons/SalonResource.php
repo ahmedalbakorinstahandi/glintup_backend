@@ -4,6 +4,8 @@ namespace App\Http\Resources\Salons;
 
 use App\Http\Resources\General\ImageResource;
 use App\Http\Resources\Services\GroupResource;
+use App\Http\Resources\Services\ReviewResource;
+use App\Http\Resources\Services\ServiceResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Salons\Salon;
@@ -44,6 +46,7 @@ class SalonResource extends JsonResource
             'city'            => $this->city,
             'distance' => $this->when($user->isCustomer(), $this->getDistance($user)),
             'average_rating' => $this->reviews->avg('rating'),
+            'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
             //TODO اجمالي الايرادات 
             'total_revenue' => $this->when($is_admin,  5000),
@@ -53,8 +56,8 @@ class SalonResource extends JsonResource
             'rating_percentage' => $this->getRatingPercentageAttribute(),
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
-            'most_booked_services' => GroupResource::collection($this->mostBookedServices()),
-            // 'most_booked_services' => $this->mostBookedServices(),
+            'most_booked_services' => ServiceResource::collection($this->mostBookedServices()),
+            'latest_reviews' => ReviewResource::collection($this->reviews()->latest()->take(5)->get()),
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),

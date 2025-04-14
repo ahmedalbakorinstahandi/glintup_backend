@@ -2,27 +2,18 @@
 
 namespace App\Http\Requests\Salons\SalonHoliday;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'holiday_date' => 'required|date',
+            'reason'       => 'required|string|max:255',
+            'is_full_day'  => 'required|boolean',
+            'start_time'   => 'required_if:is_full_day,false|nullable|date_format:H:i:s',
+            'end_time'     => 'required_if:is_full_day,false|nullable|date_format:H:i:s|after:start_time',
         ];
     }
 }

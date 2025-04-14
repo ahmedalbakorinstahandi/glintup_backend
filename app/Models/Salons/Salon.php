@@ -5,6 +5,7 @@ namespace App\Models\Salons;
 use App\Models\Booking\Booking;
 use App\Models\General\Image;
 use App\Models\Services\Group;
+use App\Models\Services\Review;
 use App\Models\Services\Service;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
@@ -53,17 +54,40 @@ class Salon extends Model
         return $this->hasMany(Booking::class);
     }
 
-    // الخدمات الاكثر حجزا في الصالون
     public function mostBookedServices()
     {
         // service resource
         return $this->services()
             ->withCount(['bookings as bookings_count' => function ($query) {
-            $query->select(DB::raw('count(distinct booking_id)'));
+                $query->select(DB::raw('count(distinct booking_id)'));
             }])
             ->orderByDesc('bookings_count')
-            ->limit(1)
+            ->limit(5)
             ->get();
+    }
+
+    //مميز هل هو اعلى حجوزات خلال اخر 3 ايام  اي من اعلى 5 صالونات بالحجوزات خلال اخر 3 ايام
+    public function isMostBooked()
+    {
+        $threeDaysAgo = now()->subDays(3);
+
+        $mostBookedSalons = Booking::where('created_at', '>=', $threeDaysAgo)
+            ->select('salon_id')
+            ->groupBy('salon_id')
+            ->orderByRaw('COUNT(*) DESC')
+            ->limit(5)
+            ->pluck('salon_id');
+
+        return $mostBookedSalons->contains($this->id);
+    }
+
+
+    //أحدث التقييمات 
+    public function latestReviews()
+    {
+        return $this->hasMany(Review::class)
+            ->latest()
+            ->limit(5);
     }
 
 

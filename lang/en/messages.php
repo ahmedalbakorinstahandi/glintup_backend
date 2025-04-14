@@ -106,4 +106,13 @@ return [
         'send_notification_successfully' => 'Notification sent successfully',
     ],
 
+
+    'salon_holiday' => [
+        'item_created_successfully' => 'Salon holiday created successfully',
+        'item_updated_successfully' => 'Salon holiday updated successfully',
+        'item_deleted_successfully' => 'Salon holiday deleted successfully',
+        'failed_delete_item'        => 'Failed to delete salon holiday',
+        'item_not_found'            => 'Salon holiday not found',
+    ],
+
 ];

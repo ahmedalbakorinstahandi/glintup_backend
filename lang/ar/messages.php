@@ -106,6 +106,19 @@ return [
     ],
 
 
+    // lang/ar/messages.php
+    'salon_holiday' => [
+        'item_created_successfully' => 'تم إضافة عطلة للصالون بنجاح',
+        'item_updated_successfully' => 'تم تحديث عطلة الصالون بنجاح',
+        'item_deleted_successfully' => 'تم حذف عطلة الصالون بنجاح',
+        'failed_delete_item'        => 'فشل في حذف عطلة الصالون',
+        'item_not_found'            => 'عطلة الصالون غير موجودة',
+    ],
+
+   
+
+
+
 
 
 ];
