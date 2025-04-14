@@ -96,6 +96,15 @@ return [
         'this_day_of_week_already_exists' => 'يوجد بالفعل وقت عمل لهذا اليوم من الأسبوع',
     ],
 
+    'notification' => [
+        'item_created_successfully' => 'تم إنشاء الإشعار بنجاح',
+        'item_updated_successfully' => 'تم تحديث الإشعار بنجاح',
+        'item_deleted_successfully' => 'تم حذف الإشعار بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الإشعار',
+        'item_not_found'            => 'الإشعار غير موجود',
+        'send_notification_successfully' => 'تم إرسال الإشعار بنجاح',
+    ],
+
 
 
 

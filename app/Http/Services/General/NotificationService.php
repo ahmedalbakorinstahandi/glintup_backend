@@ -6,6 +6,10 @@ use App\Models\General\Notification;
 use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Http\Permissions\General\NotificationPermission;
+use App\Http\Services\Salons\SalonService;
+use App\Models\Salons\Salon;
+use App\Services\FirebaseService;
+use PDO;
 
 class NotificationService
 {
@@ -47,7 +51,7 @@ class NotificationService
     }
 
 
-    public static function storeNotification($users_ids, $notificationable, $title, $body, $replace, $data = [])
+    public static function storeNotification($users_ids, $notificationable, $title, $body, $replace, $data = [], $isCustom = false)
     {
         $notificationService = new NotificationService();
         $locales = config('translatable.locales');
@@ -66,12 +70,50 @@ class NotificationService
                 ],
             ];
 
-            foreach ($locales as $locale) {
-                $notificationData['title'][$locale] = __($title, $replace, $locale);
-                $notificationData['message'][$locale] = __($body, $replace, $locale);
+            if ($isCustom) {
+                $notificationData['title']['cu'] = $title;
+                $notificationData['message']['cu'] = $body;
+            } else {
+                foreach ($locales as $locale) {
+                    $notificationData['title'][$locale] = __($title, $replace, $locale);
+                    $notificationData['message'][$locale] = __($body, $replace, $locale);
+                }
             }
 
             $notificationService->create($notificationData);
         }
+    }
+
+
+    // send notification to salon onwer
+
+    public function sendNotificationToSalonOnwer($id, $data)
+    {
+
+        $salonService = new SalonService();
+
+        $salon = $salonService->show($id);
+        $salon_owner = $salon->owner;
+
+
+        FirebaseService::sendToTopicAndStorage(
+            'user-' . $salon_owner->id,
+            [
+                $salon_owner->id,
+            ],
+            [
+                'id' => $salon->id,
+                'type' => Salon::class,
+            ],
+            $data['title'],
+            $data['message'],
+            [],
+            [],
+            true,
+        );
+
+        $last_notification = Notification::where('user_id', $salon_owner->id)->latest()->first();
+
+        return $last_notification;
     }
 }

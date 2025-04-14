@@ -97,4 +97,13 @@ return [
         'this_day_of_week_already_exists' => 'This day of the week already exists for this salon',
     ],
 
+    'notification' => [
+        'item_created_successfully' => 'Notification created successfully',
+        'item_updated_successfully' => 'Notification updated successfully',
+        'item_deleted_successfully' => 'Notification deleted successfully',
+        'failed_delete_item'        => 'Failed to delete notification',
+        'item_not_found'            => 'Notification not found',
+        'send_notification_successfully' => 'Notification sent successfully',
+    ],
+
 ];

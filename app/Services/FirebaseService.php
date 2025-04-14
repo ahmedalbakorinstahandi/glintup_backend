@@ -104,9 +104,10 @@ class FirebaseService
             return self::handleException($e);
         }
     }
-    public static function sendToTopicAndStorage($topic, $users_ids, $notificationable, $title, $body, $replace, $data = [], $channelId = null)
+    public static function sendToTopicAndStorage($topic, $users_ids, $notificationable, $title, $body, $replace, $data = [], $isCustom = false, $channelId = null)
     {
         $messaging = self::getFirebaseMessaging()->createMessaging();
+
 
         NotificationService::storeNotification(
             $users_ids,
@@ -115,13 +116,18 @@ class FirebaseService
             $body,
             $replace,
             $data,
+            $isCustom
         );
 
         $data['notificationable_id'] = $notificationable['id'] ?? null;
-        $data['notificationable_type'] = $notificationable['type'] ?? 'Custom';
-        $data['notificationable'] = $notificationable;
+        $type = $notificationable['type'] ?? 'Custom';
+        $data['notificationable_type'] = $type;
 
-        $messageConfig = self::createMessageConfig($topic, __($title, $replace), __($body, $replace), $data, $channelId);
+        if ($isCustom) {
+            $messageConfig = self::createMessageConfig($topic, $title,  $body,  $data, $channelId);
+        } else {
+            $messageConfig = self::createMessageConfig($topic, __($title, $replace), __($body, $replace), $data, $channelId);
+        }
         $message = CloudMessage::fromArray($messageConfig);
 
 

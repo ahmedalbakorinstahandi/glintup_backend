@@ -5,9 +5,11 @@ namespace App\Models\Salons;
 use App\Models\Booking\Booking;
 use App\Models\General\Image;
 use App\Models\Services\Group;
+use App\Models\Services\Service;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Salon extends Model
 {
@@ -49,6 +51,18 @@ class Salon extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    // الخدمات الاكثر حجزا في الصالون
+    public function mostBookedServices()
+    {
+        return $this->services()
+            ->withCount(['bookings as bookings_count' => function ($query) {
+                $query->select(DB::raw('count(distinct booking_id)'));
+            }])
+            ->orderByDesc('bookings_count')
+            ->take(5)
+            ->get();
     }
 
 

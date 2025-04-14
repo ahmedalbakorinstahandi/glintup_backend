@@ -104,6 +104,16 @@ class BookingService
 
         $booking->save();
 
+        //bookingDate
+        $booking->bookingDate()->create([
+            'booking_id' => $booking->id,
+            'date' => $data['date'],
+            'time' => $data['time'],
+            'created_by' => $data['created_by'] ?? 'salon', // "salon","customer"
+            'status' => $data['status'] ?? 'pending',
+        ]);
+
+
         // booking services
         if (isset($data['services'])) {
             foreach ($data['services'] as $service) {

@@ -53,6 +53,7 @@ class BookingPermission
                 MessageService::abort(422, 'messages.booking.service_not_in_salon');
             }
         });
+        
 
 
         return $data;

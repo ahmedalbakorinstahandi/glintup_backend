@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreign('booking_id')->references('id')->on('bookings');
             $table->date('date');
             $table->time('time');
-            $table->enum('created_by', ["salon","customer"]);
-            $table->enum('status', ["pending","accepted","rejected"]);
+            $table->enum('created_by', ["salon", "customer"]);
+            $table->enum('status', ["pending", "accepted", "rejected"]);
             $table->timestamps();
             $table->softDeletes();
         });

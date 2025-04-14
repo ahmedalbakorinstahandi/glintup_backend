@@ -43,6 +43,12 @@ class NotificationPermission
 
     public static function canDelete(Notification $notification)
     {
+        $user = User::auth();
+
+        if ($notification->user_id !== $user->id) {
+            MessageService::abort(403, 'messages.permission_error');
+        }
+
         return true;
     }
 }
