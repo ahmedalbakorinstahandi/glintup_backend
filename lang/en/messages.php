@@ -29,6 +29,8 @@ return [
     'unauthorized' => 'Unauthorized access.',
     'user_logged_out_successfully' => 'User logged out successfully.',
 
+    'activation_code_message' => 'Your activation code in GlintUp is: :verifyCode. Please use this code to activate your account. This code will expire in 10 minutes.',
+    'password_reset_code_message' => 'Your password reset code in GlintUp is: :verifyCode. Please use this code to reset your password. This code will expire in 10 minutes.',
     'service' => [
         'item_created_successfully' => 'Service created successfully',
         'item_updated_successfully' => 'Service updated successfully',
@@ -115,4 +117,31 @@ return [
         'item_not_found'            => 'Salon holiday not found',
     ],
 
+
+
+    'social_media_site' => [
+        'item_created_successfully' => 'Social media site created successfully',
+        'item_updated_successfully' => 'Social media site updated successfully',
+        'item_deleted_successfully' => 'Social media site deleted successfully',
+        'failed_delete_item'        => 'Failed to delete social media site',
+        'item_not_found'            => 'Social media site not found',
+    ],
+
+    'salon_customer' => [
+        'item_created_successfully' => 'Salon customer created successfully',
+        'item_updated_successfully' => 'Salon customer updated successfully',
+        'item_deleted_successfully' => 'Salon customer deleted successfully',
+        'failed_delete_item'        => 'Failed to delete salon customer',
+        'item_not_found'            => 'Salon customer not found',
+    ],
+
+
+
+    'salon_social_media_site' => [
+        'item_created_successfully' => 'Salon social media link created successfully',
+        'item_updated_successfully' => 'Salon social media link updated successfully',
+        'item_deleted_successfully' => 'Salon social media link deleted successfully',
+        'failed_delete_item'        => 'Failed to delete salon social media link',
+        'item_not_found'            => 'Salon social media link not found',
+    ],
 ];

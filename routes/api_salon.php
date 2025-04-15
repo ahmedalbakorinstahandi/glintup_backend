@@ -3,7 +3,10 @@
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
+use App\Http\Controllers\Salons\SalonCustomerController;
 use App\Http\Controllers\Salons\SalonHolidayController;
+use App\Http\Controllers\Salons\SalonSocialMediaSiteController;
+use App\Http\Controllers\Salons\SocialMediaSiteController;
 use App\Http\Controllers\Salons\WorkingHourController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\GroupServiceController;
@@ -81,6 +84,30 @@ Route::prefix('salon')->group(function () {
 
 
         Route::prefix('salon-holidays')->controller(SalonHolidayController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+
+        Route::prefix('social-media-sites')->controller(SocialMediaSiteController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+        });
+
+
+        Route::prefix('salon-social-media-sites')->controller(SalonSocialMediaSiteController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+
+        Route::prefix('customers')->controller(SalonCustomerController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');

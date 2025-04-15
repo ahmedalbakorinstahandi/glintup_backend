@@ -128,6 +128,13 @@ class Salon extends Model
     }
 
 
+    //SalonCustomer
+    public function customers()
+    {
+        return $this->hasMany(User::class, 'salon_id');
+    }
+
+
     // get active or not from working hours and holidays
     public function isOpen(): bool
     {

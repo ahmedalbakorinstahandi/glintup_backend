@@ -12,8 +12,8 @@ class UpdateRequest extends BaseFormRequest
             'holiday_date' => 'required|date',
             'reason'       => 'required|string|max:255',
             'is_full_day'  => 'required|boolean',
-            'start_time'   => 'required_if:is_full_day,false|nullable|date_format:H:i:s',
-            'end_time'     => 'required_if:is_full_day,false|nullable|date_format:H:i:s|after:start_time',
+            'start_time'   => 'required_if:is_full_day,false|nullable|date_format:H:i',
+            'end_time'     => 'required_if:is_full_day,false|nullable|date_format:H:i|after:start_time',
         ];
     }
 }

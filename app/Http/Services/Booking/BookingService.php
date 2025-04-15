@@ -4,6 +4,7 @@ namespace App\Http\Services\Booking;
 
 use App\Http\Permissions\Booking\BookingPermission;
 use App\Models\Booking\Booking;
+use App\Models\Salons\SalonCustomer;
 use App\Models\Users\User;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -94,6 +95,16 @@ class BookingService
             // TODO :: send notification to user
         }
 
+
+        // add user to salon customers if not exists : salon->customers()
+
+        SalonCustomer::firstOrCreate([
+            'salon_id' => $data['salon_id'],
+            'user_id' => $user->id,
+        ]);
+
+
+
         $data['code'] = rand(100000, 999999);
 
         $data['user_id'] = $user->id;
@@ -105,12 +116,12 @@ class BookingService
         $booking->save();
 
         //bookingDate
-        $booking->bookingDate()->create([
+        $booking->bookingDates()->create([
             'booking_id' => $booking->id,
             'date' => $data['date'],
             'time' => $data['time'],
             'created_by' => $data['created_by'] ?? 'salon', // "salon","customer"
-            'status' => $data['status'] ?? 'pending',
+            'status' => $user->added_by == 'salon' && $user->is_verified == 0 ?  'accepted' : 'pending',
         ]);
 
 

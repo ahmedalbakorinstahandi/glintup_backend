@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Salons\SalonCustomer;
+namespace App\Http\Requests\Salons\SalonSocialMediaSite;
 
 use App\Http\Requests\BaseFormRequest;
 
@@ -9,8 +9,7 @@ class UpdateRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'is_banned' => 'nullable|boolean',
-            'notes'     => 'nullable|string|max:1000',
+            'link'                 => 'nullable|url|max:512',
         ];
     }
 }

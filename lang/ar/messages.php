@@ -29,6 +29,8 @@ return [
     'unauthorized' => 'غير مسجل الدخول.',
     'user_logged_out_successfully' => 'تم تسجيل الخروج بنجاح.',
 
+    'activation_code_message' => 'رمز التفعيل الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لتفعيل حسابك. سينتهي صلاحية هذا الرمز خلال 10 دقائق.',
+    'password_reset_code_message' => 'رمز إعادة تعيين كلمة المرور الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لإعادة تعيين كلمة مرورك. سينتهي صلاحية هذا الرمز خلال 10 دقائق.',
     'service' => [
         'item_created_successfully' => 'تم إنشاء الخدمة بنجاح',
         'item_updated_successfully' => 'تم تحديث الخدمة بنجاح',
@@ -106,7 +108,6 @@ return [
     ],
 
 
-    // lang/ar/messages.php
     'salon_holiday' => [
         'item_created_successfully' => 'تم إضافة عطلة للصالون بنجاح',
         'item_updated_successfully' => 'تم تحديث عطلة الصالون بنجاح',
@@ -115,6 +116,30 @@ return [
         'item_not_found'            => 'عطلة الصالون غير موجودة',
     ],
 
+    'social_media_site' => [
+        'item_created_successfully' => 'تم إنشاء موقع التواصل بنجاح',
+        'item_updated_successfully' => 'تم تحديث موقع التواصل بنجاح',
+        'item_deleted_successfully' => 'تم حذف موقع التواصل بنجاح',
+        'failed_delete_item'        => 'فشل في حذف موقع التواصل',
+        'item_not_found'            => 'موقع التواصل غير موجود',
+    ],
+
+
+    'salon_customer' => [
+        'item_created_successfully' => 'تم ربط العميل بالصالون بنجاح',
+        'item_updated_successfully' => 'تم تحديث بيانات العميل داخل الصالون',
+        'item_deleted_successfully' => 'تم حذف العميل من الصالون بنجاح',
+        'failed_delete_item'        => 'فشل في حذف العميل من الصالون',
+        'item_not_found'            => 'العميل غير موجود داخل الصالون',
+    ],
+
+    'salon_social_media_site' => [
+        'item_created_successfully' => 'تم ربط موقع التواصل بنجاح',
+        'item_updated_successfully' => 'تم تحديث رابط التواصل بنجاح',
+        'item_deleted_successfully' => 'تم حذف رابط التواصل بنجاح',
+        'failed_delete_item'        => 'فشل في حذف رابط التواصل',
+        'item_not_found'            => 'رابط التواصل غير موجود',
+    ],
    
 
 

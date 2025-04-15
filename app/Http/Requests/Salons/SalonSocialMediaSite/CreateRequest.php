@@ -1,7 +1,7 @@
 <?php
 
 // CreateRequest.php
-namespace App\Http\Requests\Salons\SalonCustomer;
+namespace App\Http\Requests\Salons\SalonSocialMediaSite;
 
 use App\Http\Requests\BaseFormRequest;
 use App\Models\Users\User;
@@ -10,10 +10,10 @@ class CreateRequest extends BaseFormRequest
 {
     public function rules(): array
     {
+
         $rules = [
-            'user_id'   => 'required|exists:users,id',
-            'is_banned' => 'nullable|boolean',
-            'notes'     => 'nullable|string|max:1000',
+            'social_media_site_id' => 'required|exists:social_media_sites,id',
+            'link'                 => 'required|url|max:512',
         ];
 
         $user = User::auth();

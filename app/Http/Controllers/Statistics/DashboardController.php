@@ -202,4 +202,110 @@ class DashboardController extends Controller
             ],
         ]);
     }
+
+
+    // get statistics for salon 
+    public function salonStatistics()
+    {
+        $salonId = request('salon_id');
+        if (!$salonId) {
+            return response()->json(['success' => false, 'message' => 'Salon ID is required'], 400);
+        }
+
+        // Earnings
+        $earnings = Booking::where('salon_id', $salonId)
+            ->where('status', 'completed')
+            ->sum('total_price');
+
+        // Appointments Count
+        $appointmentsCount = Booking::where('salon_id', $salonId)->count();
+
+        // Reviews Count
+        $reviewsCount = Booking::where('salon_id', $salonId)
+            ->whereNotNull('review')
+            ->count();
+
+        // New Clients Count
+        $newClientsCount = User::whereHas('bookings', function ($query) use ($salonId) {
+            $query->where('salon_id', $salonId);
+        })->where('created_at', '>=', now()->subMonth())->count();
+
+        // Invoices not paid
+        $unpaidInvoicesCount = Booking::where('salon_id', $salonId)
+            ->where('status', 'pending')
+            ->count();
+
+        // Revenue Overview
+        $monthlyData = [
+            ['name' => 'Jan', 'income' => 4000, 'expenses' => 2400],
+            ['name' => 'Feb', 'income' => 5000, 'expenses' => 3000],
+            ['name' => 'Mar', 'income' => 6000, 'expenses' => 3200],
+            ['name' => 'Apr', 'income' => 5500, 'expenses' => 3500],
+            ['name' => 'May', 'income' => 7000, 'expenses' => 4000],
+            ['name' => 'Jun', 'income' => 6500, 'expenses' => 3800],
+            ['name' => 'Jul', 'income' => 7500, 'expenses' => 4200],
+            ['name' => 'Aug', 'income' => 8000, 'expenses' => 4800],
+            ['name' => 'Sep', 'income' => 7000, 'expenses' => 4300],
+            ['name' => 'Oct', 'income' => 7500, 'expenses' => 4500],
+            ['name' => 'Nov', 'income' => 8000, 'expenses' => 5000],
+            ['name' => 'Dec', 'income' => 8500, 'expenses' => 5200],
+        ];
+
+        // Appointments Completed Count with percentage
+        $completedAppointmentsCount = Booking::where('salon_id', $salonId)
+            ->where('status', 'completed')
+            ->count();
+        $completedPercentage = $appointmentsCount > 0
+            ? ($completedAppointmentsCount / $appointmentsCount) * 100
+            : 0;
+
+        // Appointments Cancelled Count with percentage
+        $cancelledAppointmentsCount = Booking::where('salon_id', $salonId)
+            ->where('status', 'canceled')
+            ->count();
+        $cancelledPercentage = $appointmentsCount > 0
+            ? ($cancelledAppointmentsCount / $appointmentsCount) * 100
+            : 0;
+
+        // Recent Activity: Appointments Today
+        $appointmentsToday = Booking::where('salon_id', $salonId)
+            ->whereDate('date', now()->toDateString())
+            ->get();
+
+        // Last 7 Reviews
+        $last7Reviews = Booking::where('salon_id', $salonId)
+            ->whereNotNull('review')
+            ->orderBy('created_at', 'desc')
+            ->take(7)
+            ->get();
+
+        // Ads Active Count
+        $adsActiveCount = PromotionAd::where('salon_id', $salonId)
+            ->where('status', 'active')
+            ->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'earnings' => $earnings,
+                'appointments_count' => $appointmentsCount,
+                'reviews_count' => $reviewsCount,
+                'new_clients_count' => $newClientsCount,
+                'unpaid_invoices_count' => $unpaidInvoicesCount,
+                'revenue_overview' => $monthlyData,
+                'appointments' => [
+                    'completed_count' => $completedAppointmentsCount,
+                    'completed_percentage' => $completedPercentage,
+                    'cancelled_count' => $cancelledAppointmentsCount,
+                    'cancelled_percentage' => $cancelledPercentage,
+                    'total' => $appointmentsCount,
+                ],
+                'recent_activity' => [
+                    'appointments_today' => $appointmentsToday,
+                ],
+                'last_7_reviews' => $last7Reviews,
+                'ads_active_count' => $adsActiveCount,
+            ],
+        ]);
+    }
 }

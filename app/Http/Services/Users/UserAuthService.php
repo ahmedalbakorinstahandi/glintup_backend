@@ -5,6 +5,7 @@ namespace App\Http\Services\Users;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\MessageService;
+use App\Services\WhatsappMessageService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -62,7 +63,6 @@ class UserAuthService
                     'language' => $requestData['language'] ?? 'ar',
                 ]
             );
-
         } else {
 
 
@@ -85,8 +85,11 @@ class UserAuthService
             ]);
         }
 
-        // TODO send sms to user
         // $this->sendSms($user->phone, $user->phone_code, $verifyCode);
+        WhatsappMessageService::send(
+            $user->phone_code . $user->phone,
+            trans("messages.activation_code_message", ['verifyCode' => $verifyCode])
+        );
 
         return $user;
     }
@@ -107,10 +110,9 @@ class UserAuthService
 
 
 
-        // TODO: Uncomment the following lines when the verification code logic is implemented
-        // if ($user->verify_code !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->code_expiry_date)) {
-        //     MessageService::abort(401, 'messages.invalid_or_expired_verification_code');
-        // }
+        if ($user->verify_code !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->code_expiry_date)) {
+            MessageService::abort(401, 'messages.invalid_or_expired_verification_code');
+        }
 
 
 
@@ -148,14 +150,10 @@ class UserAuthService
         ]);
 
 
-        // $subject = "Reset Your Password - InstaHandi";
-        // $formattedCode = "<span style='font-size: 24px; font-weight: bold;'>$verifyCode</span>";
-        // $content = "Hello,<br><br>We received a request to reset your password for your InstaHandi account. Use the code below to proceed:<br><br>🔢 Your password reset code: $formattedCode<br><br>This code is valid for 10 minutes. If you didn’t request this, please ignore this email, and your password will remain unchanged.<br><br>If you need help, feel free to contact our support team.<br><br>Best,<br>InstaHandi Team";
-
-        // EmailService::sendEmail($user->email, $subject, $content);
-
-        // TODO send sms to user
-        // $this->sendSms($user->phone, $user->phone_code, $verifyCode);
+        WhatsappMessageService::send(
+            $user->phone_code . $user->phone,
+            trans("messages.password_reset_code_message", ['verifyCode' => $verifyCode])
+        );
 
         return true;
     }
