@@ -98,7 +98,7 @@ class PromotionAdController extends Controller
             'success' => true,
             'message' => trans('messages.promotion_ad.request_post_ad_successfully'),
             'stripe' => $data['stripe'],
-            'data' => new AdStatisicResource($data['ad']),
+            'data' => new PromotionAdResource($data['ad']),
         ]);
     }
 
