@@ -31,7 +31,6 @@ class UserResource extends JsonResource
             // 'location'      => $this->getLocation(),
             'otp_expire_at' => $this->otp_expire_at,
 
-            'wallet'              => new WalletResource($this->whenLoaded('wallet')),
             'wallet_transactions' => WalletTransactionResource::collection($this->whenLoaded('walletTransactions')),
             'refunds'             => RefundResource::collection($this->whenLoaded('refunds')),
             'salon_permissions'   => UserSalonPermissionResource::collection($this->whenLoaded('salonPermissions')),

@@ -155,4 +155,6 @@ return [
         'replied_successfully'      => 'Review replied successfully',
         'reported_successfully'     => 'Review reported successfully',
     ],
+
+    'ad_payment_description' => 'Payment for ad #:ad_id',
 ];

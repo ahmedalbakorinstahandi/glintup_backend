@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Statistics\PromotionAd\CreateRequest;
 use App\Http\Requests\Statistics\PromotionAd\UpdateRequest;
 use App\Http\Permissions\Statistics\PromotionAdPermission;
+use App\Http\Requests\Statistics\PromotionAd\GetAdDetailsRrequest;
 use App\Http\Requests\Statistics\PromotionAd\PostAdRequest;
 use App\Http\Resources\Statistics\AdStatisicResource;
 use App\Http\Services\Statistics\PromotionAdService;
@@ -91,12 +92,23 @@ class PromotionAdController extends Controller
 
     public function requestPostAd(PostAdRequest $request)
     {
-        $ad = $this->promotionAdService->requestPostAd($request->validated());
+        $data = $this->promotionAdService->requestPostAd($request->validated(), false);
 
         return response()->json([
             'success' => true,
             'message' => trans('messages.promotion_ad.request_post_ad_successfully'),
-            'data' => new AdStatisicResource($ad),
+            'stripe' => $data['stripe'],
+            'data' => new AdStatisicResource($data['ad']),
+        ]);
+    }
+
+    public function getAdDetails(GetAdDetailsRrequest $request)
+    {
+        $data = $this->promotionAdService->requestPostAd($request->validated(), true);
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
         ]);
     }
 }

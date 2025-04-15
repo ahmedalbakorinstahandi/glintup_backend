@@ -151,6 +151,7 @@ return [
         'reported_successfully' => 'تم الإبلاغ عن المراجعة بنجاح',
     ],
 
+    'ad_payment_description' => 'دفع للإعلان #:ad_id',
 
 
 

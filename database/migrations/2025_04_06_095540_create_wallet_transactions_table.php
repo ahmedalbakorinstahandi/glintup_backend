@@ -18,12 +18,15 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->decimal('amount', 10, 2);
+            $table->string('currency')->default('AED');
             $table->text('description');
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->enum('type', ["deposit", "withdrawal", "ad"]);
             $table->boolean('is_refund')->default(false);
             $table->unsignedBigInteger('transactionable_id')->nullable();
             $table->string('transactionable_type')->nullable();
             $table->enum('direction', ["in", "out"]);
+            $table->json('metadata')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

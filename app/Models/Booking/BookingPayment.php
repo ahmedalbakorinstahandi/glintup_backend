@@ -17,6 +17,7 @@ class BookingPayment extends Model
         'type',
         'method',
         'status',
+        'is_refund',
     ];
 
     protected $casts = [
@@ -24,6 +25,7 @@ class BookingPayment extends Model
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
         'deleted_at'  => 'datetime',
+        'is_refund'   => 'boolean',
     ];
 
     public function booking()

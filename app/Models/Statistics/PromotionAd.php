@@ -2,6 +2,7 @@
 
 namespace App\Models\Statistics;
 
+use App\Models\General\Setting;
 use App\Models\Salons\Salon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -65,4 +66,26 @@ class PromotionAd extends Model
             get: fn(?string $value) => $multi ? $this->getAllTranslations('description') : $value,
         );
     }
+
+    // amount
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $startDate = new \DateTime($this->valid_from);
+                $endDate = new \DateTime($this->valid_to);
+                $interval = $startDate->diff($endDate);
+
+                $ad_price_day = Setting::where('key', 'adver_cost_per_day')->first()->value;
+
+                $hours = $interval->h;
+                $minutes = $interval->i;
+                $amount = $interval->days * $ad_price_day + ($hours / 24) * $ad_price_day + ($minutes / 1440) * $ad_price_day;
+
+                return $amount;
+            }
+        );
+    }
+
 }

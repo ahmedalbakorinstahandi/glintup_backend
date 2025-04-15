@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('valid_from');
             $table->date('valid_to');
             $table->boolean('is_active')->default(true);
-            $table->enum('status', ['in_review', 'approved', 'rejected'])->default('in_review');
+            $table->enum('status', ['draft', 'in_review', 'approved', 'rejected'])->default('in_review');
             $table->unsignedBigInteger('views');
             $table->unsignedBigInteger('clicks');
             $table->timestamps();

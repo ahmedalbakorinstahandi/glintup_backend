@@ -6,7 +6,7 @@ use App\Http\Requests\BaseFormRequest;
 use App\Services\LanguageService;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostAdRequest extends BaseFormRequest
+class GetAdDetailsRrequest extends BaseFormRequest
 {
     public function rules(): array
     {

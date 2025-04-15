@@ -11,6 +11,8 @@ use App\Models\General\Setting;
 use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
 use App\Services\ImageService;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class PromotionAdService
 {
@@ -74,30 +76,11 @@ class PromotionAdService
             MessageService::abort(400, 'messages.start_date_after_end_date');
         }
 
-        // // Check if there are already 5 approved ads in the given time range
-        // $existingAds = Ad::where('status', 'approved')
-        //     ->where(function ($query) use ($startDate, $endDate) {
-        //         $query->whereBetween('start_date', [$startDate, $endDate])
-        //             ->orWhereBetween('end_date', [$startDate, $endDate])
-        //             ->orWhere(function ($query) use ($startDate, $endDate) {
-        //                 $query->where('start_date', '<=', $startDate)
-        //                     ->where('end_date', '>=', $endDate);
-        //             });
-        //     })
-        //     ->count();
-
-        // $maxApprovedAds = 5;
-        // if ($existingAds >= $maxApprovedAds) {
-        //     MessageService::abort(400, 'messages.ad_time_slot_full', ['max_approved_ads' => $maxApprovedAds]);
-        // }
-
-
         $ad_price_day = Setting::where('key', 'adver_cost_per_day')->first()->value;
 
         $hours = $interval->h;
         $minutes = $interval->i;
         $amount = $interval->days * $ad_price_day + ($hours / 24) * $ad_price_day + ($minutes / 1440) * $ad_price_day;
-
 
         if ($get_details) {
             return [
@@ -111,33 +94,74 @@ class PromotionAdService
 
         $user = User::auth();
 
-
-        $data['salon_id'] = $user->salon->id;
-
         // Create the ad
-        $ad = PromotionAd::create($data);
-
-        // Deduct the ad price from the user's balance
-        WalletTransaction::create([
-            'salon_id' => $user->id,
-            'amount' => $amount,
-            'type' => 'ad',
-            'direction' => 'out',
-            'status' => 'completed',
-            'message' => [
-                #TODO: translate later
-                'en' => 'Payment for ad #' . $ad->id,
-                'ar' => 'دفع للإعلان #' . $ad->id,
-            ],
-            'metadata' => json_encode([
-                'ad_id' => $ad->id,
-            ]),
-
+        $ad = PromotionAd::create([
+            'salon_id' => $user->salon->id,
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'image' => $data['image'],
+            'valid_from' => $data['valid_from'],
+            'valid_to' => $data['valid_to'],
+            'is_active' => true,
+            'views' => 0,
+            'clicks' => 0,
+            'status' => 'draft',
         ]);
 
-        $user->wallet_balance -= $amount;
-        $user->save();
+        // Create Stripe checkout session
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        return $ad;
+        $checkoutSession = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'aed',
+                    'product_data' => [
+                        'name' => trans('messages.ad_payment_description', ['ad_id' => $ad->id]),
+                    ],
+                    'unit_amount' => $amount * 100, // amount in cents
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $data['success_url'],
+            'cancel_url' => $data['cancel_url'],
+            'metadata' => [
+                'phone' => $user->phone_code . ' ' . $user->phone,
+                'ad_id' => $ad->id,
+                'user_id' => $user->id,
+                'salon_id' => $user->salon->id,
+            ],
+        ]);
+
+        // Store payment session in the database
+        $walletTransaction = WalletTransaction::create([
+            'user_id' => $user->id,
+            'amount' => $amount,
+            'currency' => 'aed',
+            'description' => trans('messages.ad_payment_description', ['ad_id' => $ad->id]),
+            'type' => 'ad',
+            'transactionable_id' => $ad->id,
+            'transactionable_type' => PromotionAd::class,
+            'direction' => 'out',
+            'status' => 'pending',
+            'metadata' => json_encode([
+                'checkout_session' => $checkoutSession->id,
+                'stripe_payment_id' => $checkoutSession->payment_intent,
+                'phone' => $user->phone_code . ' ' . $user->phone,
+                'ad_id' => $ad->id,
+                'user_id' => $user->id,
+                'salon_id' => $user->salon->id,
+            ]),
+        ]);
+
+        // Return checkout session details
+        return [
+            'stripe' => [
+                'checkout_session' => $checkoutSession->id,
+                'stripe_payment_id' => $checkoutSession->payment_intent,
+            ],
+            'ad' => $ad,
+        ];
     }
 }
