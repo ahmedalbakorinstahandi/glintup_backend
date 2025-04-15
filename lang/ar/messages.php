@@ -87,6 +87,7 @@ return [
         'item_deleted_successfully' => 'تم حذف الإعلان الترويجي بنجاح',
         'failed_delete_item'        => 'فشل في حذف الإعلان الترويجي',
         'item_not_found'            => 'الإعلان الترويجي غير موجود',
+        'request_post_ad_successfull' => 'تم طلب نشر الإعلان بنجاح',
     ],
 
     'working_hour' => [

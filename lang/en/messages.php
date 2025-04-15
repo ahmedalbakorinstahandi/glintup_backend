@@ -88,6 +88,7 @@ return [
         'item_deleted_successfully' => 'Promotion ad deleted successfully',
         'failed_delete_item'        => 'Failed to delete promotion ad',
         'item_not_found'            => 'Promotion ad not found',
+        'request_post_ad_successfully' => 'Request to post ad successfully',
     ],
 
     'working_hour' => [
