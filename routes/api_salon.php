@@ -120,7 +120,6 @@ Route::prefix('salon')->group(function () {
 
 
 
-
         Route::prefix('ads')->controller(PromotionAdController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
