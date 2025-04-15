@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Statistics\PromotionAd\CreateRequest;
 use App\Http\Requests\Statistics\PromotionAd\UpdateRequest;
 use App\Http\Permissions\Statistics\PromotionAdPermission;
+use App\Http\Requests\Statistics\PromotionAd\PostAdRequest;
+use App\Http\Resources\Statistics\AdStatisicResource;
 use App\Http\Services\Statistics\PromotionAdService;
 use App\Http\Resources\Statistics\PromotionAdResource;
 use App\Services\ResponseService;
@@ -83,6 +85,18 @@ class PromotionAdController extends Controller
             'message' => $deleted
                 ? trans('messages.promotion_ad.item_deleted_successfully')
                 : trans('messages.promotion_ad.failed_delete_item'),
+        ]);
+    }
+
+
+    public function requestPostAd(PostAdRequest $request)
+    {
+        $ad = $this->promotionAdService->requestPostAd($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.promotion_ad.request_post_ad_successfully'),
+            'data' => new AdStatisicResource($ad),
         ]);
     }
 }

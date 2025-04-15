@@ -52,4 +52,44 @@ class ReviewService
     {
         return $review->delete();
     }
+
+
+    // replay to review
+    public function reply($review, $validatedData)
+    {
+
+
+        $salon_reply = $validatedData['salon_reply'];
+
+
+
+        $review->update(
+            [
+                'salon_reply' => $salon_reply,
+                'salon_reply_at' => now(),
+            ]
+        );
+
+        //TODO send notification to user
+
+        return $review;
+    }
+
+    // report review
+    public function report($review, $validatedData)
+    {
+
+        $reason_for_report = $validatedData['reason_for_report'];
+        $salon_report = $validatedData['salon_report'];
+
+        $review->update([
+            'salon_report' => $salon_report,
+            'reason_for_report' => $reason_for_report,
+            'salon_reported_at' => now(),
+        ]);
+
+        //TODO send notification to user
+
+        return $review;
+    }
 }

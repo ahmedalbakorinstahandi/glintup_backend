@@ -24,6 +24,10 @@ class UpdateRequest extends BaseFormRequest
             'longitude'    => 'nullable|numeric',
             'country'      => 'nullable|string|max:255',
             'city'         => 'nullable|string|max:255',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|string|max:255',
+            'images_remove' => 'nullable|array',
+            'images_remove.*' => 'nullable|integer|exists:images,id,deleted_at,NULL',
         ];
     }
 }

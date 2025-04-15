@@ -44,4 +44,29 @@ class ReviewPermission
     {
         return true;
     }
+
+    public static function canReport(Review $review)
+    {
+        $user = User::auth();
+
+        if ($user->isUserSalon()) {
+            if ($review->salon_id !== $user->salon?->id) {
+                MessageService::abort(403, 'messages.permission_error');
+            }
+        }
+    }
+
+    // can reply
+    public static function canReply(Review $review)
+    {
+        $user = User::auth();
+
+        if ($user->isUserSalon()) {
+            if ($review->salon_id !== $user->salon?->id) {
+                MessageService::abort(403, 'messages.permission_error');
+            }
+        }
+
+        return true;
+    }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name', 255);
             $table->string('last_name', 255);
+            $table->double('balance')->default(0);
             $table->enum('gender', ["male", "female"]);
             $table->date('birth_date');
             $table->string('avatar', 110)->nullable();
@@ -23,8 +24,8 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ["customer", "salon_owner", "admin", "staff"]);
             $table->boolean('is_active')->default(true);
-            $table->double('latitude', 15, 8)->nullable();
-            $table->double('longitude', 15, 8)->nullable();
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
             $table->string('otp')->nullable();
             $table->dateTime('otp_expire_at')->nullable();
             $table->boolean('is_verified')->default(false);

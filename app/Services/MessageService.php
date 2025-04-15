@@ -8,13 +8,13 @@ class MessageService
 {
 
 
-    public static function abort($status, $message)
+    public static function abort($status, $message, $replace = [])
     {
         abort(
             response()->json(
                 [
                     'success' => false,
-                    'message' => trans($message),
+                    'message' => trans($message, $replace),
                 ],
                 $status
             )

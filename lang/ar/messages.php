@@ -140,8 +140,16 @@ return [
         'failed_delete_item'        => 'فشل في حذف رابط التواصل',
         'item_not_found'            => 'رابط التواصل غير موجود',
     ],
-   
 
+    'review' => [
+        'item_created_successfully' => 'تم إنشاء المراجعة بنجاح',
+        'item_updated_successfully' => 'تم تحديث المراجعة بنجاح',
+        'item_deleted_successfully' => 'تم حذف المراجعة بنجاح',
+        'failed_delete_item'        => 'فشل في حذف المراجعة',
+        'item_not_found'            => 'المراجعة غير موجودة',
+        'replied_successfully' => 'تم الرد على المراجعة بنجاح',
+        'reported_successfully' => 'تم الإبلاغ عن المراجعة بنجاح',
+    ],
 
 
 

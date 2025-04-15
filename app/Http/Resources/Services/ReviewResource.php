@@ -18,7 +18,9 @@ class ReviewResource extends JsonResource
             'stars'              => $this->stars,
             'comment'            => $this->comment,
             'salon_reply'        => $this->salon_reply,
+            'salon_reply_at'     => $this->salon_reply_at,
             'salon_report'       => $this->salon_report,
+            'reason_for_report'  => $this->reason_for_report,
             'salon_reported_at'  => $this->salon_reported_at,
 
             'user'   => new UserResource($this->whenLoaded('user')),

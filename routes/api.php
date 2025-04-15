@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Providers\StripeWebhookController;
 use App\Http\Middleware\SetLocaleMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 
 Route::middleware(SetLocaleMiddleware::class)->group(function () {

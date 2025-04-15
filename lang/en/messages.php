@@ -144,4 +144,15 @@ return [
         'failed_delete_item'        => 'Failed to delete salon social media link',
         'item_not_found'            => 'Salon social media link not found',
     ],
+
+
+    'review' => [
+        'item_created_successfully' => 'Review created successfully',
+        'item_updated_successfully' => 'Review updated successfully',
+        'item_deleted_successfully' => 'Review deleted successfully',
+        'failed_delete_item'        => 'Failed to delete review',
+        'item_not_found'            => 'Review not found',
+        'replied_successfully'      => 'Review replied successfully',
+        'reported_successfully'     => 'Review reported successfully',
+    ],
 ];

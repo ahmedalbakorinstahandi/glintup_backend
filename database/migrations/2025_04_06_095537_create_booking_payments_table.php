@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreign('booking_id')->references('id')->on('bookings');
             $table->decimal('amount', 10, 2);
             $table->string('currency', 5)->default('AED');
-            $table->enum('type', ["deposit", "full", "refund"]);
-            $table->enum('method', ["wallet"]);
-            $table->enum('status', ["pending", "confirm", "canceled", "rejected"]);
+            $table->enum('method', ["wallet","stripe","cash"]);
+            $table->enum('status', ["pending","confirm","canceled","rejected"]);
+            $table->boolean('is_refund')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

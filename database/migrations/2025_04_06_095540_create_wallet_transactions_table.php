@@ -15,12 +15,14 @@ return new class extends Migration
 
         Schema::create('wallet_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('wallet_id');
-            $table->foreign('wallet_id')->references('id')->on('wallets');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->decimal('amount', 10, 2);
-            $table->string('currency', 5)->default('AED');
             $table->text('description');
-            $table->enum('transaction_type', ["deposit", "withdrawal", "gift", "refund", "book"]);
+            $table->enum('type', ["deposit", "withdrawal", "ad"]);
+            $table->boolean('is_refund')->default(false);
+            $table->unsignedBigInteger('transactionable_id')->nullable();
+            $table->string('transactionable_type')->nullable();
             $table->enum('direction', ["in", "out"]);
             $table->timestamps();
             $table->softDeletes();

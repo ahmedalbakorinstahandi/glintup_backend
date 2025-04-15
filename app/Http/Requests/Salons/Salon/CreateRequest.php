@@ -24,6 +24,8 @@ class CreateRequest extends BaseFormRequest
             'longitude'    => 'nullable|numeric',
             'country'      => 'required|string|max:255',
             'city'         => 'required|string|max:255',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|string|max:255',
         ];
     }
 }

@@ -78,9 +78,9 @@ class ImageService
 
 
         foreach ($existingImages as $image) {
-            // if (Storage::exists("public/" . $image->getRawOriginal('path'))) {
-            //     Storage::delete("public/" . $image->getRawOriginal('path'));
-            // }
+            if (Storage::exists("public/" . $image->path)) {
+                Storage::delete("public/" . $image->path);
+            }
             $image->delete();
         }
     }

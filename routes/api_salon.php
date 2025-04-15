@@ -77,6 +77,8 @@ Route::prefix('salon')->group(function () {
         Route::prefix('reviews')->controller(ReviewController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+            Route::post('{id}/reply', 'reply');
+            Route::post('{id}/report', 'report');
             // Route::post('/', 'create');
             // Route::put('{id}', 'update');
             // Route::delete('{id}', 'destroy');

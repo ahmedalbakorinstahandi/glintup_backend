@@ -22,7 +22,9 @@ return new class extends Migration
             $table->tinyInteger('rating');
             $table->text('comment')->nullable();
             $table->text('salon_reply')->nullable();
+            $table->timestamp('salon_reply_at')->nullable();
             $table->text('salon_report')->nullable();
+            $table->enum('reason_for_report', ['inappropriate_content', 'spam', 'fake_review', 'other'])->nullable();
             $table->timestamp('salon_reported_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

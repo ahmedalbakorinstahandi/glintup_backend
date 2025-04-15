@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Services\Review\CreateRequest;
 use App\Http\Requests\Services\Review\UpdateRequest;
 use App\Http\Permissions\Services\ReviewPermission;
+use App\Http\Requests\Services\Review\ReplayRequest;
+use App\Http\Requests\Services\Review\ReportRequest;
 use App\Http\Services\Services\ReviewService;
 use App\Http\Resources\Services\ReviewResource;
 use App\Services\ResponseService;
@@ -83,6 +85,38 @@ class ReviewController extends Controller
             'message' => $deleted
                 ? trans('messages.review.item_deleted_successfully')
                 : trans('messages.review.failed_delete_item'),
+        ]);
+    }
+
+
+    public function reply($id, ReplayRequest $request)
+    {
+        $review = $this->reviewService->show($id);
+
+        ReviewPermission::canReply($review);
+
+        $review = $this->reviewService->reply($review, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'data' => new ReviewResource($review),
+            'message' => trans('messages.review.replied_successfully'),
+        ]);
+    }
+
+    // report
+    public function report($id, ReportRequest $request)
+    {
+        $review = $this->reviewService->show($id);
+
+        ReviewPermission::canReport($review);
+
+        $review = $this->reviewService->report($review, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'data' => new ReviewResource($review),
+            'message' => trans('messages.review.reported_successfully'),
         ]);
     }
 }

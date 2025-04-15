@@ -10,6 +10,7 @@ use App\Models\Salons\UserSalonPermission;
 use App\Models\Services\Group;
 use App\Models\Users\User;
 use App\Services\FilterService;
+use App\Services\ImageService;
 use App\Services\MessageService;
 
 class SalonService
@@ -76,14 +77,50 @@ class SalonService
 
     public function create($data)
     {
+
         $salon = Salon::create($data);
+
+        if (isset($data['images']) && is_array($data['images'])) {
+            foreach ($data['images'] as $key => $image) {
+
+                $salon->images()->create(
+                    [
+                        'path' => $image,
+                        'type' => 'salon_cover',
+                    ]
+                );
+            }
+        }
+
+
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews']);
 
         return $salon;
     }
 
     public function update($salon, $data)
     {
+
+        if (isset($data['images']) && is_array($data['images'])) {
+            foreach ($data['images'] as $key => $image) {
+
+                $salon->images()->create(
+                    [
+                        'path' => $image,
+                        'type' => 'salon_cover',
+                    ]
+                );
+            }
+        }
+
+        // images_remove
+        if (isset($data['images_remove']) && is_array($data['images_remove'])) {
+            ImageService::removeImages($data['images_remove']);
+        }
+
         $salon->update($data);
+
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews']);
 
         return $salon;
     }
