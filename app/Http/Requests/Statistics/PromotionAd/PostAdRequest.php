@@ -11,8 +11,8 @@ class PostAdRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'title'       => LanguageService::translatableFieldRules('required|string|max:255'),
+            'description' => LanguageService::translatableFieldRules('nullable|string|max:1000'),
             'image' => 'required|string|max:110',
             'valid_from' => 'required|date',
             'valid_to' => 'required|date|after_or_equal:start_date',

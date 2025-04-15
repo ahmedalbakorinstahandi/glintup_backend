@@ -61,6 +61,9 @@ class PromotionAdService
 
     public function requestPostAd($data, $get_details)
     {
+        $validatedData = LanguageService::prepareTranslatableData($data, new PromotionAd);
+
+
         // Check if the ad duration is more than 3 days
         $startDate = new \DateTime($data['valid_from']);
         $endDate = new \DateTime($data['valid_to']);
