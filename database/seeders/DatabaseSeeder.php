@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Database\Seeders\General\SettingSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(Salons\SalonPermissionSeeder::class);
         // $this->call(Salons\SalonSeeder::class);
         // $this->call(Salons\SalonStaffSeeder::class);
-        $this->call(Users\AdminSeeder::class);
+        // $this->call(Users\AdminSeeder::class);
+        $this->call(SettingSeeder::class);
     }
 }
