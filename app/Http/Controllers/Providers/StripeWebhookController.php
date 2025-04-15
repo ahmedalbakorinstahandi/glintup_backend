@@ -31,15 +31,20 @@ class StripeWebhookController extends Controller
         // التعامل مع الحدث
         switch ($event->type) {
             case 'payment_intent.succeeded':
-                $paymentIntent = $event->data->object;
-                // ✅ نفذ منطق نجاح الدفع: مثال - حدث حالة الحجز أو اشحن المحفظة
-                Log::info('Payment succeeded: ' . $paymentIntent->id);
+                $session = $event->data->object;
 
-                $walletTransaction = WalletTransaction::where('metadata->stripe_payment_id', $paymentIntent->id)->first();
+                $checkoutSessionId = $session->id;
+                $paymentIntentId = $session->payment_intent;
+
+
+                $walletTransaction = WalletTransaction::where('metadata->checkout_session', $checkoutSessionId)->first();
 
                 if ($walletTransaction) {
                     $walletTransaction->update([
                         'status' => 'completed',
+                        'metadata' => [
+                            'stripe_payment_id' => $paymentIntentId,
+                        ],
                     ]);
 
                     if ($walletTransaction->transactionable_type == PromotionAd::class) {

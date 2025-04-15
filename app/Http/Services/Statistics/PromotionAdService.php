@@ -145,14 +145,14 @@ class PromotionAdService
             'transactionable_type' => PromotionAd::class,
             'direction' => 'out',
             'status' => 'pending',
-            'metadata' => json_encode([
+            'metadata' => [
                 'checkout_session' => $checkoutSession->id,
                 'stripe_payment_id' => $checkoutSession->payment_intent,
                 'phone' => $user->phone_code . ' ' . $user->phone,
                 'ad_id' => $ad->id,
                 'user_id' => $user->id,
                 'salon_id' => $user->salon->id,
-            ]),
+            ],
         ]);
 
         // Return checkout session details
