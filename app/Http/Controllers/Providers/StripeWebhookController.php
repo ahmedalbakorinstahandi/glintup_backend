@@ -17,6 +17,8 @@ class StripeWebhookController extends Controller
     public function handleWebhook(Request $request)
     {
 
+        // log
+        Log::info('Stripe Webhook Request: ' . json_encode($request->all()));
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         try {
@@ -26,8 +28,12 @@ class StripeWebhookController extends Controller
                 env('STRIPE_WEBHOOK_SECRET')
             );
         } catch (\UnexpectedValueException $e) {
+            // log
+            Log::error('Stripe Webhook Error: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // log
+            Log::error('Stripe Webhook Error: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
