@@ -43,6 +43,7 @@ class StripeWebhookController extends Controller
         // التعامل مع الحدث
         switch ($event->type) {
             case 'payment_intent.succeeded':
+            case 'checkout.session.completed':
                 // log the event
                 Log::info('PaymentIntent was successful!');
                 // log metadata
@@ -101,6 +102,8 @@ class StripeWebhookController extends Controller
                 break;
 
             case 'payment_intent.payment_failed':
+            case 'checkout.session.expired':
+
                 $session = $event->data->object;
 
 
