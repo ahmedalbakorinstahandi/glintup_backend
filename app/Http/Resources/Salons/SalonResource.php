@@ -24,6 +24,8 @@ class SalonResource extends JsonResource
 
         $local_lang = app()->getLocale();
 
+        $this_function_is_show = $request->route()->getActionMethod() == 'show';
+
         return [
             'id'              => $this->id,
             'owner_id'        => $this->owner_id,
@@ -53,11 +55,11 @@ class SalonResource extends JsonResource
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),
             'working_status' => $this->getWorkingStatus($local_lang),
-            'rating_percentage' => $this->getRatingPercentageAttribute(),
+            'rating_percentage' => $this->when($this_function_is_show, $this->getRatingPercentageAttribute()),
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
-            'most_booked_services' => ServiceResource::collection($this->mostBookedServices()),
-            'latest_reviews' => ReviewResource::collection($this->reviews()->latest()->take(5)->get()),
+            'most_booked_services' => $this->when($this_function_is_show, ServiceResource::collection($this->mostBookedServices())),
+            'latest_reviews' => $this->when($this_function_is_show, ReviewResource::collection($this->reviews()->latest()->take(5)->get())),
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),

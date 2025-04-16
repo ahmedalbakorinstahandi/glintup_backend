@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('booking_id');
             $table->foreign('booking_id')->references('id')->on('bookings');
-            $table->unsignedBigInteger('used_at');
+            $table->timestamp('used_at')->nullable();
         });
 
         Schema::enableForeignKeyConstraints();

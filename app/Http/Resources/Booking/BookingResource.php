@@ -9,6 +9,7 @@ use App\Http\Resources\Booking\BookingServiceResource;
 use App\Http\Resources\Booking\BookingPaymentResource;
 use App\Http\Resources\Booking\InvoiceResource;
 use App\Http\Resources\Users\RefundResource;
+use App\Http\Resources\Users\WalletTransactionResource;
 
 class BookingResource extends JsonResource
 {
@@ -25,8 +26,6 @@ class BookingResource extends JsonResource
             'total_service_time_in_minutes' => $this->getTotalServiceTimeInMinutes(),
             'status'           => $this->status,
             // 'status_label'     => $this->status_label,
-            'payment_status'   => $this->payment_status,
-            // 'payment_status_label' => $this->payment_status_label,
             'notes'            => $this->notes,
             'salon_notes'      => $this->salon_notes,
 
@@ -37,6 +36,7 @@ class BookingResource extends JsonResource
             'payments'         => BookingPaymentResource::collection($this->whenLoaded('payments')),
             'invoice'          => new InvoiceResource($this->whenLoaded('invoice')),
             'refund'           => new RefundResource($this->whenLoaded('refund')),
+            'transactions'     => WalletTransactionResource::collection($this->whenLoaded('transactions')),
 
             // التواريخ
             'created_at'       => $this->created_at?->format('Y-m-d H:i:s'),

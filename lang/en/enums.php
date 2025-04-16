@@ -17,10 +17,10 @@ return [
         'completed' => 'Completed',
         'cancelled' => 'Cancelled',
     ],
-    'payment_statuses' => [
+    'payment_method' => [
         'unpaid'         => 'Unpaid',
         'partially_paid' => 'Partially Paid',
-        'paid'           => 'Paid',
+        'full_paid'           => 'Full Paid',
     ],
     'created_by' => [
         'customer' => 'Customer',

@@ -17,10 +17,10 @@
         'completed' => 'مكتملة',
         'cancelled' => 'ملغاة',
     ],
-    'payment_statuses' => [
+    'payment_mehtod' => [
         'unpaid'         => 'غير مدفوع',
         'partially_paid' => 'مدفوع جزئيًا',
-        'paid'           => 'مدفوع',
+        'full_paid'           => 'مدفوع',
     ],
     'created_by' => [
         'customer' => 'العميل',

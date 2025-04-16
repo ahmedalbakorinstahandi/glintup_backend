@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Booking\BookingController;
+use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\General\NotificationController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
@@ -134,6 +135,15 @@ Route::prefix('admin')->group(function () {
 
 
         Route::prefix('salon-customers')->controller(SalonCustomerController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+
+        Route::prefix('coupons')->controller(CouponController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');

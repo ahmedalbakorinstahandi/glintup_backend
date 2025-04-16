@@ -4,6 +4,7 @@ namespace App\Models\Booking;
 
 use App\Models\Salons\Salon;
 use App\Models\Users\User;
+use App\Models\Users\WalletTransaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -18,7 +19,6 @@ class Booking extends Model
         'date',
         'time',
         'status',
-        'payment_status',
         'notes',
         'salon_notes',
     ];
@@ -47,7 +47,13 @@ class Booking extends Model
     {
         return $this->hasMany(BookingDate::class);
     }
-    //
+    
+    // CouponUsage
+    public function couponUsage()
+    {
+        return $this->hasOne(CouponUsage::class);
+    }
+
 
     public function bookingServices()
     {
@@ -58,6 +64,13 @@ class Booking extends Model
     public function getEndTimeAttribute()
     {
         return $this->time?->addMinutes($this->getTotalServiceTimeInMinutes());
+    }
+
+
+    // transaction morph
+    public function transactions()
+    {
+        return $this->morphMany(WalletTransaction::class, 'transactionable');
     }
 
 

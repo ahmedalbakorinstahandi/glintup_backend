@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Booking\BookingController;
+use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
@@ -23,8 +24,11 @@ Route::prefix('customer')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         // Booking
         Route::prefix('bookings')->controller(BookingController::class)->group(function () {
+            Route::post('/details', 'returnBookingDetails');
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+            Route::post('/', 'createFromUser');
+            
         });
 
         Route::prefix('home')->group(function () {
@@ -37,6 +41,8 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
         });
+
+        Route::get('/salons/{id}/coupons/{code}', [CouponController::class, 'check']);
 
         Route::prefix('reviews')->controller(ReviewController::class)->group(function () {
             Route::get('/', 'index');

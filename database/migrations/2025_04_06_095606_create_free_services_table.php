@@ -20,6 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services');
             $table->enum('source', ["loyalty", "gift"]);
+            $table->unsignedBigInteger('booking_id')->nullable();
+            $table->foreign('booking_id')->references('id')->on('bookings');
             $table->boolean('is_used')->default(false);
             $table->timestamps();
             $table->softDeletes();

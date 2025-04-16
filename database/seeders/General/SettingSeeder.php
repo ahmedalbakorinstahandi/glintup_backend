@@ -39,6 +39,13 @@ class SettingSeeder extends Seeder
                 'allow_null' => false,
                 'is_settings' => true,
             ],
+            [
+                'key' => 'tax',
+                'value' => null,
+                'type' => 'float',
+                'allow_null' => true,
+                'is_settings' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {

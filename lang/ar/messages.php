@@ -71,6 +71,7 @@ return [
         'failed_delete_item'        => 'فشل في حذف الحجز',
         'item_not_found'            => 'الحجز غير موجود',
         'service_not_in_salon' => 'الخدمة غير موجودة في الصالون',
+        'booking_details' => 'الحجز #:code - :salon',
     ],
 
     'user' => [
@@ -79,6 +80,7 @@ return [
         'item_deleted_successfully' => 'تم حذف المستخدم بنجاح',
         'failed_delete_item'        => 'فشل في حذف المستخدم',
         'item_not_found'            => 'المستخدم غير موجود',
+        'not_enough_balance' => 'ليس لديك رصيد كافٍ في المحفظة',
     ],
 
     'promotion_ad' => [
@@ -154,6 +156,18 @@ return [
 
     'ad_payment_description' => 'دفع للإعلان #:ad_id',
 
+    'coupon' => [
+        'item_created_successfully' => 'تم إنشاء الكوبون بنجاح',
+        'item_updated_successfully' => 'تم تحديث الكوبون بنجاح',
+        'item_deleted_successfully' => 'تم حذف الكوبون بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الكوبون',
+        'item_not_found'            => 'الكوبون غير موجود',
+        'code_already_exists' => 'الكود :code موجود بالفعل',
+        'item_checked_successfully' => 'تم التحقق من الكوبون بنجاح',
+        'is_invalid' => 'الكوبون غير صالح',
+    ],
+
+    
 
 
 ];

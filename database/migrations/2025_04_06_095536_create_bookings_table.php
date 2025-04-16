@@ -23,7 +23,6 @@ return new class extends Migration
             $table->dateTime('date');
             $table->time('time');
             $table->enum('status', ["pending", "confirmed", "completed", "cancelled", "Rejected"]);
-            $table->enum('payment_status', ["unpaid", "partially_paid", "paid"]);
             $table->text('notes')->nullable();
             $table->text('salon_notes')->nullable();
             $table->timestamps();

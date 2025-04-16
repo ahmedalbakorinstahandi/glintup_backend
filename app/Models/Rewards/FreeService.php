@@ -15,10 +15,15 @@ class FreeService extends Model
         'user_id',
         'service_id',
         'source',
+        'booking_id',
         'is_used',
     ];
 
     protected $casts = [
+        'user_id'    => 'integer',
+        'service_id' => 'integer',
+        'source'     => 'string',
+        'booking_id' => 'integer',
         'is_used'    => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

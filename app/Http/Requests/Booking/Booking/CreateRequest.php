@@ -45,7 +45,6 @@ class CreateRequest extends BaseFormRequest
             'date'           => 'required|date',
             'time'           => 'required|date_format:H:i',
             'status'         => 'required|in:pending,confirmed',
-            // 'payment_status' => 'required|in:unpaid,partially_paid,paid',
             // 'notes'          => 'nullable|string',
             'salon_notes'    => 'nullable|string',
             'services' => 'required|array|min:1',

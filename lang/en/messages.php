@@ -71,6 +71,7 @@ return [
         'failed_delete_item'        => 'Failed to delete booking',
         'item_not_found'            => 'Booking not found',
         'service_not_in_salon'     => 'Service not in salon',
+        'booking_details' => 'Booking #:code - :salon',
     ],
 
 
@@ -80,6 +81,7 @@ return [
         'item_deleted_successfully' => 'User deleted successfully',
         'failed_delete_item'        => 'Failed to delete user',
         'item_not_found'            => 'User not found',
+        'not_enough_balance' => 'You do not have enough balance in the wallet',
     ],
 
     'promotion_ad' => [
@@ -158,4 +160,16 @@ return [
     ],
 
     'ad_payment_description' => 'Payment for ad #:ad_id',
+
+
+    'coupon' => [
+        'item_created_successfully' => 'Coupon created successfully',
+        'item_updated_successfully' => 'Coupon updated successfully',
+        'item_deleted_successfully' => 'Coupon deleted successfully',
+        'failed_delete_item'        => 'Failed to delete coupon',
+        'item_not_found'            => 'Coupon not found',
+        'code_already_exists' => 'Code :code already exists',
+        'item_checked_successfully' => 'Coupon checked successfully',
+        'is_invalid' => 'Coupon is invalid',
+    ],
 ];

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Booking;
 
 use App\Http\Controllers\Controller;
 use App\Http\Permissions\Booking\BookingPermission;
+use App\Http\Requests\Booking\Booking\CreateFromUserRequest;
 use App\Http\Requests\Booking\Booking\CreateRequest;
 use App\Http\Requests\Booking\Booking\UpdateRequest;
 use App\Http\Resources\Booking\BookingResource;
+use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Http\Services\Booking\BookingService;
 use App\Services\ResponseService;
 
@@ -84,6 +86,38 @@ class BookingController extends Controller
             'message' => $deleted
                 ? trans('messages.booking.item_deleted_successfully')
                 : trans('messages.booking.failed_delete_item'),
+        ]);
+    }
+
+
+    // create booking from user
+    public function createFromUser(CreateFromUserRequest $request)
+    {
+        $data = BookingPermission::create($request->validated());
+        $booking = $this->bookingService->createFromUser($data);
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => new BookingResource($booking),
+            ]
+        );
+    }
+
+    // returnBookingDetails
+    public function returnBookingDetails(CreateFromUserRequest $request)
+    {
+        $data = BookingPermission::create($request->validated());
+
+        $data = $this->bookingService->returnBookingDetails($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'with_free_services' => $data['with_free_services'],
+                'with_out_free_services' => $data['with_out_free_services'],
+                'selected_free_services' =>  FreeServiceResource::collection($data['selected_free_services']),
+            ],
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Resources\Booking;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Salons\SalonResource;
+use App\Models\Users\User;
 
 class CouponResource extends JsonResource
 {
@@ -25,6 +26,7 @@ class CouponResource extends JsonResource
             'gender'             => $this->gender,
             'is_active'          => $this->is_active,
             'is_expired'         => $this->is_expired,
+            'is_valid'           => $this->getIsValidAttribute(),
 
             'salon'              => new SalonResource($this->whenLoaded('salon')),
 

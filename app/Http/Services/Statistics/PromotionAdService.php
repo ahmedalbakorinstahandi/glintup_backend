@@ -142,7 +142,10 @@ class PromotionAdService
             'user_id' => $user->id,
             'amount' => $amount,
             'currency' => 'aed',
-            'description' => trans('messages.ad_payment_description', ['ad_id' => $ad->id]),
+            'description' => [
+                'en' => __('messages.ad_payment_description', ['ad_id' => $ad->id], 'en'),
+                'ar' => __('messages.ad_payment_description', ['ad_id' => $ad->id], 'ar'),
+            ],
             'type' => 'ad',
             'transactionable_id' => $ad->id,
             'transactionable_type' => PromotionAd::class,

@@ -19,6 +19,7 @@ class User extends Model
     protected $fillable = [
         'first_name',
         'last_name',
+        'balance',
         'gender',
         'birth_date',
         'avatar',
@@ -35,6 +36,7 @@ class User extends Model
     ];
 
     protected $casts = [
+        'balance'        => 'double',
         'birth_date'      => 'date',
         'is_active'       => 'boolean',
         'latitude'        => 'double',
@@ -149,10 +151,6 @@ class User extends Model
     //     return $this->hasMany(SalonStaff::class, 'user_id');
     // }
 
-    public function wallet()
-    {
-        return $this->hasOne(Wallet::class)->withTrashed();
-    }
 
     public function walletTransactions()
     {
@@ -166,11 +164,7 @@ class User extends Model
 
     public function getAgeAttribute(): ?int
     {
-        if (is_null($this->birth_date)) {
-            return null;
-        }
-
-        return now()->diffInYears($this->birth_date);
+        return abs(now()->diffInYears($this->birth_date));
     }
 
 

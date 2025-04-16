@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->string('code');
             $table->unsignedBigInteger('salon_id');
             $table->foreign('salon_id')->references('id')->on('salons');
             $table->enum('discount_type', ["percentage","fixed"]);
