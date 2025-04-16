@@ -170,6 +170,7 @@ class BookingService
         $total_amount = 0;
 
         $total_amount_with_out_free_services = 0;
+
         $selected_free_services = [];
 
         foreach ($data['services'] as $service) {
@@ -205,8 +206,8 @@ class BookingService
             }
 
             if ($coupon) {
-                $total_amount_with_out_free_services_after_discount -= $coupon->getAmountAfterDiscount($total_amount_with_out_free_services);
-                $total_amount_after_discount -= $coupon->getAmountAfterDiscount($total_amount);
+                $total_amount_with_out_free_services_after_discount = $coupon->getAmountAfterDiscount($total_amount_with_out_free_services);
+                $total_amount_after_discount = $coupon->getAmountAfterDiscount($total_amount);
             }
         }
 
