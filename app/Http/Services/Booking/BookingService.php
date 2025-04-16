@@ -7,6 +7,7 @@ use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Models\Booking\Booking;
 use App\Models\Booking\Coupon;
 use App\Models\Booking\CouponUsage;
+use App\Models\General\Setting;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\SalonCustomer;
 use App\Models\Salons\SalonPayment;
@@ -323,7 +324,8 @@ class BookingService
             ]
         );
 
-
+        $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
+        
         // booking payment
         SalonPayment::create([
             'paymentable_id' => $booking->id,
@@ -335,6 +337,7 @@ class BookingService
             'method' => 'wallet',
             'status' => 'confirm',
             'is_refund' => false,
+            'system_percentage' => $system_percentage,
         ]);
 
 

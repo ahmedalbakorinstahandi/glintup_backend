@@ -11,12 +11,11 @@ class SalonPaymentResource extends JsonResource
         return [
             'id'                => $this->id,
             'amount'            => $this->amount,
-            // 'amount_formatted'  => $this->amount_formatted,
             'currency'          => $this->currency,
             'method'            => $this->method,
             'status'            => $this->status,
-            // 'status_label'      => $this->status_label,
             'is_refund'         => $this->is_refund,
+            'system_percentage' => $this->system_percentage,
             'paymentable_id'    => $this->paymentable_id,
             'paymentable_type'  => $this->paymentable_type,
 

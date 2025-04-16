@@ -22,6 +22,7 @@ class SalonPayment extends Model
         'method',
         'status',
         'is_refund',
+        'system_percentage',
     ];
 
     protected $casts = [
@@ -38,6 +39,7 @@ class SalonPayment extends Model
         'updated_at'  => 'datetime',
         'deleted_at'  => 'datetime',
         'is_refund'   => 'boolean',
+        'system_percentage' => 'decimal:2',
     ];
 
     public function booking()

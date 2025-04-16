@@ -6,6 +6,7 @@ use App\Models\Rewards\GiftCard;
 use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Http\Permissions\Rewards\GiftCardPermission;
+use App\Models\General\Setting;
 use App\Models\Salons\SalonPayment;
 use App\Models\Services\Service;
 use App\Models\Users\User;
@@ -20,6 +21,11 @@ class GiftCardService
 
 
         $query = GiftCardPermission::filterIndex($query);
+
+        if (isset($data['search']) && $data['search'] != '') {
+            $data['search'] =  str_replace(' ', '', $data['search']);
+            $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
+        }
 
 
         return FilterService::applyFilters(
@@ -202,6 +208,8 @@ class GiftCardService
             ]
         );
 
+        $system_percentage = Setting::where('key', 'system_percentage_gift')->first()->value ?? 0;
+
 
         if ($data['type'] == 'services') {
             SalonPayment::create([
@@ -214,6 +222,7 @@ class GiftCardService
                 'method' => 'wallet',
                 'status' => 'confirm',
                 'is_refund' => false,
+                'system_percentage' => $system_percentage,
             ]);
         }
 

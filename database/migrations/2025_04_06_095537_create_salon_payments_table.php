@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('method', ["wallet", "stripe", "cash"]);
             $table->enum('status', ["pending", "confirm", "canceled", "rejected"]);
             $table->boolean('is_refund')->default(false);
+            $table->float('system_percentage', 10, 2)->default(0);
             $table->morphs('paymentable');
             $table->timestamps();
             $table->softDeletes();

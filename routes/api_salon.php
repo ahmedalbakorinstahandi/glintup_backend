@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
+use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
@@ -136,6 +137,10 @@ Route::prefix('salon')->group(function () {
             Route::post('/', 'create');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('gift-cards')->group(function () {
+            Route::get('/', [GiftCardController::class, 'index']);
         });
     });
 });
