@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
+use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
@@ -64,6 +65,13 @@ Route::prefix('customer')->group(function () {
             Route::get('/transactions', [WalletTransactionController::class, 'index']);
             Route::get('/transactions/{id}', [WalletTransactionController::class, 'show']);
             // deposit createPaymentIntent
+        });
+
+
+        // gift cards
+        Route::prefix('gift-cards')->group(function () {
+            Route::get('/', [GiftCardController::class, 'index']);
+            Route::post('/send', [GiftCardController::class, 'createByUser']);
         });
     });
 });

@@ -184,4 +184,20 @@ return [
         'failed_delete_item'        => 'Failed to delete wallet transaction',
         'item_not_found'            => 'Wallet transaction not found',
     ],
+
+    'gift_card' => [
+        'item_created_successfully' => 'Gift card created successfully',
+        'item_updated_successfully' => 'Gift card updated successfully',
+        'item_deleted_successfully' => 'Gift card deleted successfully',
+        'failed_delete_item'        => 'Failed to delete gift card',
+        'item_not_found'            => 'Gift card not found',
+        'cannot_send_to_yourself' => 'You cannot send a gift card to yourself',
+        'transaction_details' => 'Gift card transaction #:code added with an amount of :amount :currency. Details: :details. We wish you a great experience!',
+    ],
+
+    'gift_card_message' => "Hi,\n\nYou have received a gift card from :sender.\n\nDetails:\n:details\n\nMessage from sender:\n:note\n\nPlease download the app from the link below and register to claim your gift card.\n\n:link",
+
+    'gift_card_amount_details' => "Gift Card Value: :amount :currency",
+
+    'gift_card_service_details' => "Gift Card Services:\n:services",
 ];

@@ -3,8 +3,10 @@
 namespace App\Models\Rewards;
 
 use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class GiftCard extends Model
 {
@@ -19,6 +21,7 @@ class GiftCard extends Model
         'type',
         'amount',
         'currency',
+        'salon_id',
         'services',
         'tax',
         'message',
@@ -26,6 +29,15 @@ class GiftCard extends Model
     ];
 
     protected $casts = [
+        'code'          => 'string',
+        'sender_id'     => 'integer',
+        'recipient_id'  => 'integer',
+        'phone_code'    => 'string',
+        'phone'         => 'string',
+        'type'          => 'string',
+        'currency'      => 'string',
+        'salon_id'      => 'integer',
+        'message'       => 'string',
         'amount'        => 'decimal:2',
         'tax'           => 'double',
         'services'      => 'array',
@@ -39,6 +51,18 @@ class GiftCard extends Model
     {
         return $this->belongsTo(User::class, 'sender_id')->withTrashed();
     }
+
+    // salon
+    public function salon()
+    {
+        return $this->belongsTo(User::class, 'salon_id')->withTrashed();
+    }
+
+    public static function generateCode(): string
+    {
+        return 'GIFT-' . strtoupper(Str::random(4)) . '-' . strtoupper(Str::random(4));
+    }
+
 
     public function recipient()
     {
@@ -54,4 +78,12 @@ class GiftCard extends Model
     // {
     //     return ucfirst($this->type);
     // }
+
+    protected function services(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => json_decode($value, true),
+            set: fn($value) => json_encode($value),
+        );
+    }
 }

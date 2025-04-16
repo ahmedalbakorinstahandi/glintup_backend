@@ -182,5 +182,23 @@ return [
     ],
 
 
+    'gift_card' => [
+        'item_created_successfully' => 'تم إنشاء بطاقة الهدية بنجاح',
+        'item_updated_successfully' => 'تم تحديث بطاقة الهدية بنجاح',
+        'item_deleted_successfully' => 'تم حذف بطاقة الهدية بنجاح',
+        'failed_delete_item'        => 'فشل في حذف بطاقة الهدية',
+        'item_not_found'            => 'بطاقة الهدية غير موجودة',
+        'cannot_send_to_yourself' => 'لا يمكنك إرسال بطاقة هدية لنفسك',
+        'transaction_details' => 'تمت إضافة تكلفة بطاقة الهدية رقم #:code بقيمة :amount :currency. التفاصيل: :details. نتمنى لك تجربة رائعة!',
+    ],
+
+    'gift_card_message' => "مرحبًا،\n\nلقد استلمت بطاقة هدية من :sender.\n\nالتفاصيل:\n:details\n\nرسالة المرسل:\n:note\n\nيرجى تحميل التطبيق من الرابط أدناه والتسجيل للحصول على البطاقة.\n\n:link",
+
+    'gift_card_amount_details' => "قيمة بطاقة الهدية: :amount :currency",
+
+    'gift_card_service_details' => "الخدمات المشمولة في بطاقة الهدية:\n:services",
+
+
+
 
 ];
