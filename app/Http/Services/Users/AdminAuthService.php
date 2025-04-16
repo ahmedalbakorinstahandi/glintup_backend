@@ -19,6 +19,9 @@ class AdminAuthService
             return null;
         }
 
+
+        
+
         // $user->load(['salonPermissions.permission']);
 
         return $user;

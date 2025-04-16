@@ -226,6 +226,9 @@ class BookingService
         }
 
 
+        // get  services
+        $services = Service::whereIn('id', array_column($data['services'], 'id'))->get();
+
         return [
 
             'with_out_free_services' => [
@@ -244,6 +247,7 @@ class BookingService
                 'payment_percentage' => $payment_method == 'partially_paid' ? 20 : 100,
             ],
             'selected_free_services' => $selected_free_services,
+            'services' => $services,
         ];
     }
 

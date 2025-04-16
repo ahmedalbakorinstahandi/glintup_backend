@@ -118,6 +118,7 @@ class BookingController extends Controller
                 'with_free_services' => $data['with_free_services'],
                 'with_out_free_services' => $data['with_out_free_services'],
                 'selected_free_services' =>  FreeServiceResource::collection($data['selected_free_services']),
+                'services' => FreeServiceResource::collection($data['services']),
             ],
         ]);
     }
