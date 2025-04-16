@@ -217,6 +217,9 @@ class BookingService
 
         $payment_method = $data['payment_method'] ?? 'partially_paid'; // partially_paid,full_paid : if partially_paid 20 % of the total amount will be deducted from the user balance 
 
+        // المبلغ الذي يجب دفعه 
+        $amount_to_pay_with_out_free_services = $total_amount_with_out_free_services_after_discount;
+        $amount_to_pay_with_free_services = $total_amount_after_discount;
 
         if ($payment_method == 'full_paid') {
             $you_have_enough_balance_to_pay_with_out_free_services = $user_balance >= $total_amount_with_out_free_services_after_discount;
@@ -225,11 +228,11 @@ class BookingService
             $you_have_enough_balance_to_pay_with_out_free_services = $user_balance >= ($total_amount_with_out_free_services_after_discount * 0.2);
             $you_have_enough_balance_to_pay_with_free_services = $user_balance >= ($total_amount_after_discount * 0.2);
 
-            $total_amount_with_out_free_services_after_discount = $total_amount_with_out_free_services_after_discount * 0.2;
-            $total_amount_after_discount = $total_amount_after_discount * 0.2;
-            $total_amount_with_out_free_services = $total_amount_with_out_free_services * 0.2;
-            $total_amount = $total_amount * 0.2;
-            
+
+
+            $amount_to_pay_with_out_free_services = $total_amount_with_out_free_services_after_discount * 0.2;
+            $amount_to_pay_with_free_services = $total_amount_after_discount * 0.2;
+
         }
 
 
@@ -243,14 +246,16 @@ class BookingService
                 'total_amount_after_discount' => $total_amount_with_out_free_services_after_discount,
                 'discount_amount' => $total_amount_with_out_free_services - $total_amount_with_out_free_services_after_discount,
                 'you_have_enough_balance_to_pay' => $you_have_enough_balance_to_pay_with_out_free_services,
+                'amount_to_pay_with_out_free_services' => $amount_to_pay_with_out_free_services,
                 'payment_percentage' => $payment_method == 'partially_paid' ? 20 : 100,
             ],
-
+            
             'with_out_free_services' => [
                 'total_amount' => $total_amount,
                 'total_amount_after_discount' => $total_amount_after_discount,
                 'discount_amount' => $total_amount - $total_amount_after_discount,
                 'you_have_enough_balance_to_pay' => $you_have_enough_balance_to_pay_with_free_services,
+                'amount_to_pay_with_free_services' => $amount_to_pay_with_free_services,
                 'payment_percentage' => $payment_method == 'partially_paid' ? 20 : 100,
             ],
             'selected_free_services' => $selected_free_services,
