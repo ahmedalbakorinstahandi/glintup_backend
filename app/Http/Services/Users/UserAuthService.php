@@ -32,8 +32,12 @@ class UserAuthService
 
     public function register($requestData)
     {
+        $requestData['phone_code'] = str_replace(' ', '', $requestData['phone_code']);
+        $requestData['phone'] = str_replace(' ', '', $requestData['phone']);
 
-        $inputPhone = str_replace(' ', '', $requestData['phone']);
+        $fullPhone = $requestData['phone_code'] . $requestData['phone'];
+
+        $inputPhone = str_replace(' ', '', $fullPhone);
 
 
         $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
