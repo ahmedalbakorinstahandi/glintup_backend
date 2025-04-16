@@ -23,6 +23,7 @@ class PromotionAd extends Model
         'valid_from',
         'valid_to',
         'is_active',
+        'status',
         'views',
         'clicks',
     ];
