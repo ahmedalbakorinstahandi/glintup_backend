@@ -10,6 +10,7 @@ use App\Http\Requests\Booking\Booking\GetBookingDetailsRequest;
 use App\Http\Requests\Booking\Booking\UpdateRequest;
 use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\FreeServiceResource;
+use App\Http\Resources\Services\ServiceResource;
 use App\Http\Services\Booking\BookingService;
 use App\Services\ResponseService;
 
@@ -118,7 +119,7 @@ class BookingController extends Controller
                 'with_free_services' => $data['with_free_services'],
                 'with_out_free_services' => $data['with_out_free_services'],
                 'selected_free_services' =>  FreeServiceResource::collection($data['selected_free_services']),
-                'services' => FreeServiceResource::collection($data['services']),
+                'services' => ServiceResource::collection($data['services']),
             ],
         ]);
     }
