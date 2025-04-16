@@ -2,27 +2,24 @@
 
 namespace App\Http\Requests\Rewards\GiftCard;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'code' => 'required|string|unique:gift_cards,code',
+            'sender_id' => 'required|exists:users,id',
+            'recipient_id' => 'nullable|exists:users,id',
+            'phone_code' => 'required|string',
+            'phone' => 'required|string',
+            'type' => 'required|in:services,amount',
+            'amount' => 'nullable|numeric',
+            'currency' => 'nullable|string',
+            'services' => 'nullable|array',
+            'tax' => 'nullable|numeric',
+            'message' => 'required|string',
         ];
     }
 }

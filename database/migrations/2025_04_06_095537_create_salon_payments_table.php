@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('booking_payments', function (Blueprint $table) {
+        Schema::create('salon_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('booking_id');
-            $table->foreign('booking_id')->references('id')->on('bookings');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('salon_id');
@@ -26,6 +24,7 @@ return new class extends Migration
             $table->enum('method', ["wallet", "stripe", "cash"]);
             $table->enum('status', ["pending", "confirm", "canceled", "rejected"]);
             $table->boolean('is_refund')->default(false);
+            $table->morphs('paymentable');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -38,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booking_payments');
+        Schema::dropIfExists('salon_payments');
     }
 };

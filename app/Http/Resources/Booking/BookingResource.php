@@ -6,8 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Salons\SalonResource;
 use App\Http\Resources\Booking\BookingServiceResource;
-use App\Http\Resources\Booking\BookingPaymentResource;
 use App\Http\Resources\Booking\InvoiceResource;
+use App\Http\Resources\Salons\SalonPaymentResource;
 use App\Http\Resources\Users\RefundResource;
 use App\Http\Resources\Users\WalletTransactionResource;
 
@@ -35,7 +35,7 @@ class BookingResource extends JsonResource
             'user'             => new UserResource($this->whenLoaded('user')),
             'salon'            => new SalonResource($this->whenLoaded('salon')),
             'booking_services' => BookingServiceResource::collection($this->whenLoaded('bookingServices')),
-            'payments'         => BookingPaymentResource::collection($this->whenLoaded('payments')),
+            'payments'         => SalonPaymentResource::collection($this->whenLoaded('payments')),
             'invoice'          => new InvoiceResource($this->whenLoaded('invoice')),
             'refund'           => new RefundResource($this->whenLoaded('refund')),
             'transactions'     => WalletTransactionResource::collection($this->whenLoaded('transactions')),

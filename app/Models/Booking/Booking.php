@@ -5,6 +5,7 @@ namespace App\Models\Booking;
 use App\Http\Resources\Services\ServiceResource;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
+use App\Models\Salons\SalonPayment;
 use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
 use Illuminate\Database\Eloquent\Model;
@@ -96,7 +97,9 @@ class Booking extends Model
             }
         }
 
-        $totalPrice = $this->couponUsage->coupon->getAmountAfterDiscount($totalPrice);
+        if ($this->couponUsage) {
+            $totalPrice = $this->couponUsage->coupon->getAmountAfterDiscount($totalPrice);
+        }
 
         return $totalPrice;
     }
@@ -120,9 +123,9 @@ class Booking extends Model
     }
 
 
-    public function payments()
+    public function payments() // morph
     {
-        return $this->hasMany(BookingPayment::class);
+        return $this->morphMany(SalonPayment::class, 'paymentable');
     }
 
     public function invoice()

@@ -25,6 +25,8 @@ return new class extends Migration
             $table->enum('type', ["services","amount"]);
             $table->decimal('amount', 10, 2)->nullable();
             $table->string('currency', 10)->nullable();
+            $table->unsignedBigInteger('salon_id')->nullable();
+            $table->foreign('salon_id')->references('id')->on('salons');
             $table->json('services')->nullable();
             $table->double('tax')->nullable();
             $table->string('message');

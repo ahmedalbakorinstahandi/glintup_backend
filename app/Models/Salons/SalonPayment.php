@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Models\Booking;
+namespace App\Models\Salons;
 
+use App\Models\Booking\Booking;
 use App\Services\HelperService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BookingPayment extends Model
+class SalonPayment extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
-        'booking_id',
+        'paymentable_id',
+        'paymentable_type',
         'user_id',
         'salon_id',
         'amount',
@@ -23,6 +25,14 @@ class BookingPayment extends Model
     ];
 
     protected $casts = [
+        'paymentable_id' => 'integer',
+        'paymentable_type' => 'string',
+        'user_id'      => 'integer',
+        'salon_id'     => 'integer',
+        'currency'     => 'string',
+        'type'         => 'string',
+        'method'       => 'string',
+        'status'       => 'string',
         'amount'      => 'decimal:2',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
@@ -39,6 +49,12 @@ class BookingPayment extends Model
     public function getAmountFormattedAttribute(): string
     {
         return number_format($this->amount, 2) . HelperService::getCurrencySymbol($this->currency);
+    }
+
+    // morphs
+    public function paymentable()
+    {
+        return $this->morphTo();
     }
 
     // public function getStatusLabelAttribute(): string

@@ -9,6 +9,7 @@ use App\Models\Booking\Coupon;
 use App\Models\Booking\CouponUsage;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\SalonCustomer;
+use App\Models\Salons\SalonPayment;
 use App\Models\Services\Service;
 use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
@@ -324,7 +325,9 @@ class BookingService
 
 
         // booking payment
-        $booking->payments()->create([
+        SalonPayment::create([
+            'paymentable_id' => $booking->id,
+            'paymentable_type' => Booking::class,
             'user_id' => $user->id,
             'salon_id' => $booking->salon_id,
             'amount' => $amount,
