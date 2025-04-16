@@ -16,21 +16,30 @@ class StripeWebhookController extends Controller
 {
     public function handleWebhook(Request $request)
     {
-        $payload = $request->getContent();
-        $sigHeader = $request->header('Stripe-Signature');
-        $endpointSecret = env('STRIPE_WEBHOOK_SECRET'); // خدها من Stripe بعد إنشاء الويب هوك
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
         try {
-            $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
+            $event = Webhook::constructEvent(
+                $request->getContent(),
+                $request->header('Stripe-Signature'),
+                env('STRIPE_WEBHOOK_SECRET')
+            );
         } catch (\UnexpectedValueException $e) {
-            return response('Invalid payload', 400);
+            return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            return response('Invalid signature', 400);
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
+
 
         // التعامل مع الحدث
         switch ($event->type) {
             case 'payment_intent.succeeded':
+                // log the event
+                Log::info('PaymentIntent was successful!');
+                // log metadata
+                Log::info('Metadata: ' . json_encode($event->data->object->metadata));
+
                 $session = $event->data->object;
 
                 // $checkoutSessionId = $session->id;
