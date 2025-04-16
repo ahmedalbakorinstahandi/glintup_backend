@@ -199,6 +199,12 @@ return [
     'gift_card_service_details' => "الخدمات المشمولة في بطاقة الهدية:\n:services",
 
 
-
+    'setting' => [
+        'item_created_successfully' => 'تم إنشاء الإعداد بنجاح',
+        'item_updated_successfully' => 'تم تحديث الإعداد بنجاح',
+        'item_deleted_successfully' => 'تم حذف الإعداد بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الإعداد',
+        'item_not_found'            => 'الإعداد غير موجود',
+    ],
 
 ];

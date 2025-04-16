@@ -3,6 +3,7 @@
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\General\NotificationController;
+use App\Http\Controllers\General\SettingController;
 use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
@@ -167,6 +168,13 @@ Route::prefix('admin')->group(function () {
         // gift cards
         Route::prefix('gift-cards')->group(function () {
             Route::get('/', [GiftCardController::class, 'index']);
+        });
+
+
+        // settings
+        Route::prefix('settings')->group(function () {
+            Route::get('/', [SettingController::class, 'index']);
+            Route::put('/', [SettingController::class, 'updateSettings']);
         });
     });
 });

@@ -46,6 +46,62 @@ class SettingSeeder extends Seeder
                 'allow_null' => true,
                 'is_settings' => true,
             ],
+            [
+                'key' => 'app_name',
+                'value' => 'Glintup',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'app_url',
+                'value' => 'https://glintup.com',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'admin_email',
+                'value' => 'admin@glintup.com',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'support_email',
+                'value' => 'support@glintup.com',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'app_version',
+                'value' => '1.2.0',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'min_supported_version',
+                'value' => '1.0.0',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'android_app_url',
+                'value' => 'https://play.google.com/store/apps/details?id=com.glintup',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'ios_app_url',
+                'value' => 'https://apps.apple.com/app/glintup/id1234567890',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {

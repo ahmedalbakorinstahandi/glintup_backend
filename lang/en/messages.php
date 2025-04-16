@@ -200,4 +200,13 @@ return [
     'gift_card_amount_details' => "Gift Card Value: :amount :currency",
 
     'gift_card_service_details' => "Gift Card Services:\n:services",
+
+
+    'setting' => [
+        'item_created_successfully' => 'Setting created successfully',
+        'item_updated_successfully' => 'Setting updated successfully',
+        'item_deleted_successfully' => 'Setting deleted successfully',
+        'failed_delete_item'        => 'Failed to delete setting',
+        'item_not_found'            => 'Setting not found',
+    ],
 ];

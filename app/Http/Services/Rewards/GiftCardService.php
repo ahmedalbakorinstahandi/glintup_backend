@@ -101,6 +101,14 @@ class GiftCardService
             $data['currency'] = null;
             $data['tax'] = null;
 
+            $serviceIds = $data['services'];
+
+            Service::whereIn('id', $serviceIds)->each(function ($service) use ($data) {
+                if ($service->salon_id != $data['salon_id']) {
+                    MessageService::abort(422, 'messages.booking.service_not_in_salon');
+                }
+            });
+
             $services = Service::whereIn('id', $data['services'])
                 ->where('salon_id', $data['salon_id'])
                 ->get();
@@ -147,7 +155,17 @@ class GiftCardService
                     'currency' => $data['currency'],
                 ]);
             } else {
-                $serviceNames = $services->pluck('name')->map(fn($name) => "- " . $name)->join("\n");
+                $serviceNames = "";
+
+                foreach ($data['services'] as $serviceId) {
+                    $service = Service::find($serviceId);
+
+                    $lang = app()->getLocale();
+                    if ($service) {
+                        $serviceNames .= "-" . $service->name[$lang] . "\n";
+                    }
+                }
+
                 $details = trans('messages.gift_card_service_details', [
                     'services' => $serviceNames,
                 ]);
