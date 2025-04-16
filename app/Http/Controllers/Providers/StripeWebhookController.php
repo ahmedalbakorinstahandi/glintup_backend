@@ -81,11 +81,21 @@ class StripeWebhookController extends Controller
                         'metadata' => $metadata,
                     ]);
 
+                    // log type
+                    Log::info('Type: ' . $type);
+
                     if ($type == 'ad') {
 
                         $adId = $session->metadata->ad_id ?? null;
 
                         $ad = PromotionAd::find($adId);
+
+                        // log ad
+                        Log::info('Ad: ' . json_encode($ad));
+
+                        // log ad id and status
+                        Log::info('Ad ID: ' . $adId);
+                        Log::info('Ad Status: ' . $ad->status);
 
                         if ($ad) {
                             $ad->update([
