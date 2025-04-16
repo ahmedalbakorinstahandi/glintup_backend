@@ -224,6 +224,9 @@ class BookingService
         } elseif ($payment_method == 'partially_paid') {
             $you_have_enough_balance_to_pay_with_out_free_services = $user_balance >= ($total_amount_with_out_free_services_after_discount * 0.2);
             $you_have_enough_balance_to_pay_with_free_services = $user_balance >= ($total_amount_after_discount * 0.2);
+
+            $total_amount_with_out_free_services_after_discount = $total_amount_with_out_free_services_after_discount * 0.2;
+            $total_amount_after_discount = $total_amount_after_discount * 0.2;
         }
 
 
@@ -232,7 +235,7 @@ class BookingService
 
         return [
 
-            'with_out_free_services' => [
+            'with_free_services' => [
                 'total_amount' => $total_amount_with_out_free_services,
                 'total_amount_after_discount' => $total_amount_with_out_free_services_after_discount,
                 'discount_amount' => $total_amount_with_out_free_services - $total_amount_with_out_free_services_after_discount,
@@ -240,7 +243,7 @@ class BookingService
                 'payment_percentage' => $payment_method == 'partially_paid' ? 20 : 100,
             ],
 
-            'with_free_services' => [
+            'with_out_free_services' => [
                 'total_amount' => $total_amount,
                 'total_amount_after_discount' => $total_amount_after_discount,
                 'discount_amount' => $total_amount - $total_amount_after_discount,
