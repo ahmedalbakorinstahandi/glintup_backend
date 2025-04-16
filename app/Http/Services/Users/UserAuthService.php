@@ -40,10 +40,16 @@ class UserAuthService
             ->where('role', 'customer')
             ->first();
 
+
+
         $verifyCode = rand(100000, 999999);
         $codeExpiry = Carbon::now()->addMinutes(10);
 
-        if ($user) {
+        if ($user && $user->is_active == 0) {
+            MessageService::abort(422, 'messages.user.is_banned');
+        } elseif ($user && $user->is_verified == 1) {
+            MessageService::abort(422, 'messages.user.already_registered');
+        } elseif ($user && $user->added_by == 'salon') {
 
             $user->update(
                 [
@@ -63,7 +69,12 @@ class UserAuthService
                     'language' => $requestData['language'] ?? 'ar',
                 ]
             );
-        } else {
+        } elseif ($user && $user->is_verified == 0) {
+            MessageService::abort(422, 'messages.user.registered_but_not_verified');
+        }
+
+
+        if (!$user) {
 
 
             $user = User::create([
@@ -110,7 +121,7 @@ class UserAuthService
 
 
 
-        if ($user->verify_code !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->code_expiry_date)) {
+        if ($user->otp !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->otp_expire_at)) {
             MessageService::abort(401, 'messages.invalid_or_expired_verification_code');
         }
 
@@ -141,7 +152,7 @@ class UserAuthService
             return false;
         }
 
-        $verifyCode = rand(1000, 9999);
+        $verifyCode = rand(100000, 999999);
         $codeExpiry = Carbon::now()->addMinutes(10);
 
         $user->update([

@@ -2,6 +2,8 @@
 
 namespace App\Models\Booking;
 
+use App\Http\Resources\Services\ServiceResource;
+use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
 use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
@@ -47,7 +49,7 @@ class Booking extends Model
     {
         return $this->hasMany(BookingDate::class);
     }
-    
+
     // CouponUsage
     public function couponUsage()
     {
@@ -72,6 +74,40 @@ class Booking extends Model
     {
         return $this->morphMany(WalletTransaction::class, 'transactionable');
     }
+
+    // calculate total price
+    public function getTotalPriceAttribute()
+    {
+        $totalPrice = 0;
+
+        foreach ($this->bookingServices as $service) {
+            $finalPrice = $service->service->getFinalPriceAttribute();
+
+            // Check if the service is free for the user
+            $freeService = FreeService::where([
+                'user_id' => $this->user_id,
+                'service_id' => $service->id,
+                'booking_id' => $this->id,
+            ])->first();
+
+
+            if (!$freeService) {
+                $totalPrice += $finalPrice;
+            }
+        }
+
+        $totalPrice = $this->couponUsage->coupon->getAmountAfterDiscount($totalPrice);
+
+        return $totalPrice;
+    }
+
+
+    // free service
+    public function freeService()
+    {
+        return $this->hasMany(FreeService::class);
+    }
+
 
 
     public function getTotalServiceTimeInMinutes()

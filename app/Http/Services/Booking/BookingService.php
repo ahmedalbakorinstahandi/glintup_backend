@@ -19,7 +19,7 @@ class BookingService
 {
     public function index($data)
     {
-        $query = Booking::query()->with(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage']);
+        $query = Booking::query()->with(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
 
 
 
@@ -69,7 +69,7 @@ class BookingService
             MessageService::abort(404, 'messages.booking.item_not_found');
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage']);
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
 
         return $booking;
     }
@@ -140,7 +140,7 @@ class BookingService
             }
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage']);
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
 
         return $booking;
     }
@@ -323,6 +323,18 @@ class BookingService
         );
 
 
+        // booking payment
+        $booking->payments()->create([
+            'user_id' => $user->id,
+            'salon_id' => $booking->salon_id,
+            'amount' => $amount,
+            'currency' => 'AED',
+            'method' => 'wallet',
+            'status' => 'confirm',
+            'is_refund' => false,
+        ]);
+
+
         // check if user have free services and use them
         if ($use_free_services) {
             foreach ($data['selected_free_services'] as $freeService) {
@@ -353,7 +365,7 @@ class BookingService
             }
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage']);
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
 
         return $booking;
     }

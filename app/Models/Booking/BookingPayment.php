@@ -12,6 +12,8 @@ class BookingPayment extends Model
 
     protected $fillable = [
         'booking_id',
+        'user_id',
+        'salon_id',
         'amount',
         'currency',
         'type',

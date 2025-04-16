@@ -29,6 +29,8 @@ class BookingResource extends JsonResource
             'notes'            => $this->notes,
             'salon_notes'      => $this->salon_notes,
 
+            'total_price' => $this->getTotalPriceAttribute(),
+
             // العلاقات
             'user'             => new UserResource($this->whenLoaded('user')),
             'salon'            => new SalonResource($this->whenLoaded('salon')),

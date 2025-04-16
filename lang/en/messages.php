@@ -82,6 +82,9 @@ return [
         'failed_delete_item'        => 'Failed to delete user',
         'item_not_found'            => 'User not found',
         'not_enough_balance' => 'You do not have enough balance in the wallet',
+        'is_banned' => 'User is banned',
+        'already_registered' => 'User is already registered',
+        'registered_but_not_verified' => 'User is registered but not verified',
     ],
 
     'promotion_ad' => [

@@ -81,6 +81,9 @@ return [
         'failed_delete_item'        => 'فشل في حذف المستخدم',
         'item_not_found'            => 'المستخدم غير موجود',
         'not_enough_balance' => 'ليس لديك رصيد كافٍ في المحفظة',
+        'is_banned' => 'المستخدم محظور',
+        'already_registered' => 'المستخدم مسجل بالفعل',
+        'registered_but_not_verified' => 'المستخدم مسجل ولكن غير مفعل',
     ],
 
     'promotion_ad' => [

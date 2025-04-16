@@ -14,6 +14,7 @@ use App\Http\Controllers\Services\GroupServiceController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\Statistics\PromotionAdController;
+use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Services\Salons\SalonService;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::prefix('salon')->group(function () {
 
     Route::prefix('auth')->group(function () {
         Route::post('/login', [SalonAuthController::class, 'login']);
+        Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
     });
 
     Route::middleware(['auth:sanctum'])->group(function () {

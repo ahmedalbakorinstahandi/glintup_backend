@@ -101,7 +101,7 @@ class Coupon extends Model
     public function getAmountAfterDiscount($amount): float
     {
         if ($this->discount_type === 'percentage') {
-            return $amount * ($this->discount_value / 100);
+            return $amount -  ($amount * ($this->discount_value / 100));
         }
 
         return $amount - $this->discount_value;
