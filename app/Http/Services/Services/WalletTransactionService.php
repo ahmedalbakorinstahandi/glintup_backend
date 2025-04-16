@@ -66,7 +66,7 @@ class WalletTransactionService
             ['amount'],
             ['created_at'],
             ['user_id', 'status', 'type', 'direction', 'is_refund'],
-            ['id']
+            ['id','status']
         );
     }
 
