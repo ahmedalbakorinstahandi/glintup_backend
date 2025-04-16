@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Permissions\Booking\BookingPermission;
 use App\Http\Requests\Booking\Booking\CreateFromUserRequest;
 use App\Http\Requests\Booking\Booking\CreateRequest;
+use App\Http\Requests\Booking\Booking\GetBookingDetailsRequest;
 use App\Http\Requests\Booking\Booking\UpdateRequest;
 use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\FreeServiceResource;
@@ -105,7 +106,7 @@ class BookingController extends Controller
     }
 
     // returnBookingDetails
-    public function returnBookingDetails(CreateFromUserRequest $request)
+    public function returnBookingDetails(GetBookingDetailsRequest $request)
     {
         $data = BookingPermission::create($request->validated());
 
