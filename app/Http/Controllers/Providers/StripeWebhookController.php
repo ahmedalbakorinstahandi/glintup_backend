@@ -67,8 +67,14 @@ class StripeWebhookController extends Controller
 
                 if ($walletTransaction && $walletTransaction->status == 'pending') {
 
-                    $metadata = $walletTransaction->metadata ?? [];
-                    $metadata['stripe_payment_id'] = $paymentIntentId;
+                    $metadata = [
+                        'stripe_payment_id' => $paymentIntentId,
+                        'phone' => $session->metadata->phone ?? null,
+                        'user_id' => $session->metadata->user_id ?? null,
+                        'ad_id' => $session->metadata->ad_id ?? null,
+                        'salon_id' => $session->metadata->salon_id ?? null,
+                        'checkout_session' => $session->id,
+                    ];
 
                     $walletTransaction->update([
                         'status' => 'completed',

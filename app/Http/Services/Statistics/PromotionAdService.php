@@ -165,6 +165,7 @@ class PromotionAdService
                     'ad_id' => $ad->id,
                     'user_id' => $user->id,
                     'salon_id' => $user->salon->id,
+                    'type' => 'ad',
                 ]
             ],
         ]);
