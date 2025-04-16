@@ -69,8 +69,7 @@ class PromotionAdService
         $endDate = new \DateTime($data['valid_to']);
         $interval = $startDate->diff($endDate);
 
-        $maxDuration = 14
-        ;
+        $maxDuration = 14;
         if ($interval->days > $maxDuration) {
             MessageService::abort(400, 'messages.ad_duration_exceeds_limit', ['max_duration' => $maxDuration]);
         }
@@ -151,7 +150,6 @@ class PromotionAdService
                 'transaction_id' => $walletTransaction->id,
                 'phone' => $user->phone_code . ' ' . $user->phone,
                 'user_id' => $user->id,
-                'salon_id' => $user->salon->id,
                 'type' => 'ad',
                 'ad_id' => $ad->id,
             ],

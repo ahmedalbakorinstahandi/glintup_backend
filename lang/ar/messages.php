@@ -159,6 +159,8 @@ return [
 
     'ad_payment_description' => 'دفع للإعلان #:ad_id',
 
+    'wallet_deposit' => 'إيداع مبلغ للمحفظة :amount',
+
     'coupon' => [
         'item_created_successfully' => 'تم إنشاء الكوبون بنجاح',
         'item_updated_successfully' => 'تم تحديث الكوبون بنجاح',
@@ -170,7 +172,15 @@ return [
         'is_invalid' => 'الكوبون غير صالح',
     ],
 
-    
+
+    'wallet_transaction' => [
+        'item_created_successfully' => 'تم إنشاء معاملة المحفظة بنجاح',
+        'item_updated_successfully' => 'تم تحديث معاملة المحفظة بنجاح',
+        'item_deleted_successfully' => 'تم حذف معاملة المحفظة بنجاح',
+        'failed_delete_item'        => 'فشل في حذف معاملة المحفظة',
+        'item_not_found'            => 'معاملة المحفظة غير موجودة',
+    ],
+
 
 
 ];

@@ -17,6 +17,7 @@ use App\Http\Controllers\Statistics\DashboardController;
 use App\Http\Controllers\Statistics\PromotionAdController;
 use App\Http\Controllers\Users\AdminAuthController;
 use App\Http\Controllers\Users\UserAuthController;
+use App\Http\Controllers\Users\WalletTransactionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -151,6 +152,14 @@ Route::prefix('admin')->group(function () {
             Route::post('/', 'create');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
+        });
+
+
+        Route::prefix('transactions')->group(function () {
+            Route::post('/deposit', [WalletTransactionController::class, 'createPaymentIntent']);
+            Route::get('/', [WalletTransactionController::class, 'index']);
+            Route::get('{id}', [WalletTransactionController::class, 'show']);
+            // deposit createPaymentIntent
         });
     });
 });

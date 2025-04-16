@@ -7,6 +7,7 @@ use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\Users\WalletTransactionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,7 +29,6 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'createFromUser');
-            
         });
 
         Route::prefix('home')->group(function () {
@@ -55,6 +55,15 @@ Route::prefix('customer')->group(function () {
         Route::prefix('groups')->controller(GroupController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+        });
+
+
+        // wallet transactions
+        Route::prefix('wallet')->group(function () {
+            Route::post('/transactions/deposit', [WalletTransactionController::class, 'createPaymentIntent']);
+            Route::get('/transactions', [WalletTransactionController::class, 'index']);
+            Route::get('/transactions/{id}', [WalletTransactionController::class, 'show']);
+            // deposit createPaymentIntent
         });
     });
 });

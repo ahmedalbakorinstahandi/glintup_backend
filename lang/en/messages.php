@@ -163,6 +163,7 @@ return [
     ],
 
     'ad_payment_description' => 'Payment for ad #:ad_id',
+    'wallet_deposit' => 'Wallet deposit amount: :amount',
 
 
     'coupon' => [
@@ -174,5 +175,13 @@ return [
         'code_already_exists' => 'Code :code already exists',
         'item_checked_successfully' => 'Coupon checked successfully',
         'is_invalid' => 'Coupon is invalid',
+    ],
+
+    'wallet_transaction' => [
+        'item_created_successfully' => 'Wallet transaction created successfully',
+        'item_updated_successfully' => 'Wallet transaction updated successfully',
+        'item_deleted_successfully' => 'Wallet transaction deleted successfully',
+        'failed_delete_item'        => 'Failed to delete wallet transaction',
+        'item_not_found'            => 'Wallet transaction not found',
     ],
 ];

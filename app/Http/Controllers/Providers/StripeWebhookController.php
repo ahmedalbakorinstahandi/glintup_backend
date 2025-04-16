@@ -54,7 +54,6 @@ class StripeWebhookController extends Controller
                 // $paymentIntentId = $session->payment_intent;
 
                 // metadata in object i have my transaction id
-                $checkoutSessionId = $session->id;
                 $paymentIntentId = $session->payment_intent;
 
                 // Extract metadata from the Stripe session object
@@ -86,23 +85,44 @@ class StripeWebhookController extends Controller
                                 'status' => 'in_review',
                             ]);
                         }
+
+                        // TODO send notification to admin 
                     }
 
+                    if ($type == 'deposit') {
+                        $user = $walletTransaction->user;
 
-                    // TODO send notification to admin 
+                        $user->update([
+                            'balance' => $user->wallet_balance + $walletTransaction->amount,
+                        ]);
+                    }
                 }
 
                 break;
 
             case 'payment_intent.payment_failed':
-                $paymentIntent = $event->data->object;
-                Log::warning('Payment failed: ' . $paymentIntent->id);
+                $session = $event->data->object;
 
-                $walletTransaction = WalletTransaction::where('metadata->stripe_payment_id', $paymentIntent->id)->first();
 
-                if ($walletTransaction) {
+                // metadata in object i have my transaction id
+                $paymentIntentId = $session->payment_intent;
+
+                // Extract metadata from the Stripe session object
+                $transactionId = $session->metadata->transaction_id ?? null;
+                $type = $session->metadata->type ?? null;
+
+
+
+                $walletTransaction = WalletTransaction::find($transactionId);
+
+                if ($walletTransaction && $walletTransaction->status == 'pending') {
+
+                    $metadata = $walletTransaction->metadata ?? [];
+                    $metadata['stripe_payment_id'] = $paymentIntentId;
+
                     $walletTransaction->update([
                         'status' => 'failed',
+                        'metadata' => $metadata,
                     ]);
                 }
 
