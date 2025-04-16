@@ -227,6 +227,9 @@ class BookingService
 
             $total_amount_with_out_free_services_after_discount = $total_amount_with_out_free_services_after_discount * 0.2;
             $total_amount_after_discount = $total_amount_after_discount * 0.2;
+            $total_amount_with_out_free_services = $total_amount_with_out_free_services * 0.2;
+            $total_amount = $total_amount * 0.2;
+            
         }
 
 
