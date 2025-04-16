@@ -31,6 +31,8 @@ class StripeWebhookController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
+        // log the event
+        Log::info('Stripe Webhook Event: ' . $event->type);
 
         // التعامل مع الحدث
         switch ($event->type) {

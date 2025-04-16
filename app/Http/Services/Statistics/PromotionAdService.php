@@ -69,7 +69,8 @@ class PromotionAdService
         $endDate = new \DateTime($data['valid_to']);
         $interval = $startDate->diff($endDate);
 
-        $maxDuration = 14;
+        $maxDuration = 14
+        ;
         if ($interval->days > $maxDuration) {
             MessageService::abort(400, 'messages.ad_duration_exceeds_limit', ['max_duration' => $maxDuration]);
         }
