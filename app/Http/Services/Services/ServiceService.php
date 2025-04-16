@@ -18,7 +18,7 @@ class ServiceService
         $numericFields = [];
         $dateFields = ['created_at'];
         $exactMatchFields = ['salon_id', 'is_active', 'gender', 'type'];
-        $inFields = ['id'];
+        $inFields = ['id'];// in_id[] = [1,2,3]
 
         $query = ServicePermission::filterIndex($query);
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
+use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\WalletTransactionController;
@@ -72,6 +73,13 @@ Route::prefix('customer')->group(function () {
         Route::prefix('gift-cards')->group(function () {
             Route::get('/', [GiftCardController::class, 'index']);
             Route::post('/send', [GiftCardController::class, 'createByUser']);
+        });
+
+
+        // services
+        Route::prefix('services')->controller(ServiceController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
         });
     });
 });
