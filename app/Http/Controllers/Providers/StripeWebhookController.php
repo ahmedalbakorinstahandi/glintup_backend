@@ -33,22 +33,36 @@ class StripeWebhookController extends Controller
             case 'payment_intent.succeeded':
                 $session = $event->data->object;
 
+                // $checkoutSessionId = $session->id;
+                // $paymentIntentId = $session->payment_intent;
+
+                // metadata in object i have my transaction id
                 $checkoutSessionId = $session->id;
                 $paymentIntentId = $session->payment_intent;
 
+                // Extract metadata from the Stripe session object
+                $transactionId = $session->metadata->transaction_id ?? null;
+                $type = $session->metadata->type ?? null;
 
-                $walletTransaction = WalletTransaction::where('metadata->checkout_session', $checkoutSessionId)->first();
 
-                if ($walletTransaction) {
+
+                $walletTransaction = WalletTransaction::find($transactionId);
+
+                if ($walletTransaction && $walletTransaction->status == 'pending') {
+
+                    $metadata = $walletTransaction->metadata ?? [];
+                    $metadata['stripe_payment_id'] = $paymentIntentId;
+
                     $walletTransaction->update([
                         'status' => 'completed',
-                        'metadata' => [
-                            'stripe_payment_id' => $paymentIntentId,
-                        ],
+                        'metadata' => $metadata,
                     ]);
 
-                    if ($walletTransaction->transactionable_type == PromotionAd::class) {
-                        $ad = PromotionAd::find($walletTransaction->transactionable_id);
+                    if ($type == 'ad') {
+
+                        $adId = $session->metadata->ad_id ?? null;
+
+                        $ad = PromotionAd::find($adId);
 
                         if ($ad) {
                             $ad->update([
@@ -56,6 +70,7 @@ class StripeWebhookController extends Controller
                             ]);
                         }
                     }
+
 
                     // TODO send notification to admin 
                 }

@@ -111,6 +111,23 @@ class PromotionAdService
             'status' => 'draft',
         ]);
 
+        // Store payment session in the database
+        $walletTransaction = WalletTransaction::create([
+            'user_id' => $user->id,
+            'amount' => $amount,
+            'currency' => 'aed',
+            'description' => [
+                'en' => __('messages.ad_payment_description', ['ad_id' => $ad->id], 'en'),
+                'ar' => __('messages.ad_payment_description', ['ad_id' => $ad->id], 'ar'),
+            ],
+            'type' => 'ad',
+            'transactionable_id' => $ad->id,
+            'transactionable_type' => PromotionAd::class,
+            'direction' => 'out',
+            'status' => 'pending',
+            'metadata' => [],
+        ]);
+
         // Create Stripe checkout session
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -130,36 +147,30 @@ class PromotionAdService
             'success_url' => $data['success_url'],
             'cancel_url' => $data['cancel_url'],
             'metadata' => [
+                'transaction_id' => $walletTransaction->id,
                 'phone' => $user->phone_code . ' ' . $user->phone,
-                'ad_id' => $ad->id,
                 'user_id' => $user->id,
                 'salon_id' => $user->salon->id,
+                'type' => 'ad',
+                'ad_id' => $ad->id,
             ],
         ]);
 
-        // Store payment session in the database
-        $walletTransaction = WalletTransaction::create([
-            'user_id' => $user->id,
-            'amount' => $amount,
-            'currency' => 'aed',
-            'description' => [
-                'en' => __('messages.ad_payment_description', ['ad_id' => $ad->id], 'en'),
-                'ar' => __('messages.ad_payment_description', ['ad_id' => $ad->id], 'ar'),
-            ],
-            'type' => 'ad',
-            'transactionable_id' => $ad->id,
-            'transactionable_type' => PromotionAd::class,
-            'direction' => 'out',
-            'status' => 'pending',
+
+        $walletTransaction->update([
             'metadata' => [
-                'checkout_session' => $checkoutSession->id,
-                'stripe_payment_id' => $checkoutSession->payment_intent,
-                'phone' => $user->phone_code . ' ' . $user->phone,
-                'ad_id' => $ad->id,
-                'user_id' => $user->id,
-                'salon_id' => $user->salon->id,
+                [
+                    'checkout_session' => $checkoutSession->id,
+                    'stripe_payment_id' => $checkoutSession->payment_intent,
+                    'phone' => $user->phone_code . ' ' . $user->phone,
+                    'ad_id' => $ad->id,
+                    'user_id' => $user->id,
+                    'salon_id' => $user->salon->id,
+                ]
             ],
         ]);
+
+
 
         // Return checkout session details
         return [
