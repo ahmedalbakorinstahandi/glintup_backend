@@ -21,6 +21,7 @@ class WalletTransactionResource extends JsonResource
             'transactionable_id'=> $this->transactionable_id,
             'transactionable_type' => $this->transactionable_type,
             'direction'         => $this->direction,
+            'user'            => new UserResource($this->whenLoaded('user')),
             'created_at'        => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'        => $this->updated_at?->format('Y-m-d H:i:s'),
         ];

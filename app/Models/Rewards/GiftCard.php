@@ -27,6 +27,7 @@ class GiftCard extends Model
         'tax',
         'message',
         'is_used',
+        'received_at',
     ];
 
     protected $casts = [
@@ -46,6 +47,7 @@ class GiftCard extends Model
         'created_at'    => 'datetime',
         'updated_at'    => 'datetime',
         'deleted_at'    => 'datetime',
+        'received_at'   => 'datetime',
     ];
 
 

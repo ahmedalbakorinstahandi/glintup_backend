@@ -31,6 +31,8 @@ return new class extends Migration
             $table->double('tax')->nullable();
             $table->string('message');
             $table->boolean('is_used')->default(false);
+            //received_at
+            $table->timestamp('received_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

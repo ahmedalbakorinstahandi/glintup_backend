@@ -33,7 +33,7 @@ class GiftCardService
             $data,
             ['code', 'message'],
             ['amount'],
-            ['created_at'],
+            ['created_at', 'received_at'],
             ['type', 'is_used', 'sender_id', 'recipient_id', 'salon_id'],
             ['id']
         );
