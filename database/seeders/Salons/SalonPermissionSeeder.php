@@ -38,10 +38,31 @@ class SalonPermissionSeeder extends Seeder
             ],
             [
                 'name' => [
+                    'en' => 'Coupons',
+                    'ar' => 'الكوبونات',
+                ],
+                'key' => 'coupons',
+            ],
+            [
+                'name' => [
                     'en' => 'Working Hours',
                     'ar' => 'ساعات العمل',
                 ],
                 'key' => 'working_hours',
+            ],
+            [
+                'name' => [
+                    'en' => 'Gift Cards',
+                    'ar' => 'بطاقات الهدايا',
+                ],
+                'key' => 'gift_cards',
+            ],
+            [
+                'name' => [
+                    'en' => 'Loyalty',
+                    'ar' => 'الولاء',
+                ],
+                'key' => 'loyalty',
             ],
             [
                 'name' => [
@@ -52,10 +73,17 @@ class SalonPermissionSeeder extends Seeder
             ],
             [
                 'name' => [
-                    'en' => 'Clients',
+                    'en' => 'Customers',
                     'ar' => 'العملاء',
                 ],
-                'key' => 'clients',
+                'key' => 'customers',
+            ],
+            [
+                'name' => [
+                    'en' => 'Payments',
+                    'ar' => 'المدفوعات',
+                ],
+                'key' => 'payments',
             ],
             [
                 'name' => [
@@ -63,6 +91,13 @@ class SalonPermissionSeeder extends Seeder
                     'ar' => 'المراجعات',
                 ],
                 'key' => 'reviews',
+            ],
+            [
+                'name' => [
+                    'en' => 'Audit Log',
+                    'ar' => 'سجل التدقيق',
+                ],
+                'key' => 'audit_log',
             ],
             [
                 'name' => [
@@ -81,10 +116,10 @@ class SalonPermissionSeeder extends Seeder
         ];
 
         foreach ($SalonPermission as $permission) {
-            SalonPermission::create([
-                'name' => $permission['name'],
-                'key' => $permission['key'],
-            ]);
+            SalonPermission::updateOrCreate(
+                ['key' => $permission['key']],
+                ['name' => $permission['name']]
+            );
         }
     }
 }
