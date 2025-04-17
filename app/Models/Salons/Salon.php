@@ -49,6 +49,12 @@ class Salon extends Model
         return $this->belongsTo(User::class, 'owner_id')->withTrashed();
     }
 
+    // salon staff
+    public function staff()
+    {
+        return $this->hasMany(SalonStaff::class);
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

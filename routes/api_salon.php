@@ -7,7 +7,9 @@ use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
 use App\Http\Controllers\Salons\SalonHolidayController;
+use App\Http\Controllers\Salons\SalonPaymentController;
 use App\Http\Controllers\Salons\SalonSocialMediaSiteController;
+use App\Http\Controllers\Salons\SalonStaffController;
 use App\Http\Controllers\Salons\SocialMediaSiteController;
 use App\Http\Controllers\Salons\WorkingHourController;
 use App\Http\Controllers\Services\GroupController;
@@ -141,6 +143,23 @@ Route::prefix('salon')->group(function () {
 
         Route::prefix('gift-cards')->group(function () {
             Route::get('/', [GiftCardController::class, 'index']);
+        });
+
+        Route::prefix('salon-staff')->controller(SalonStaffController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+            Route::post('{id}/permissions', 'updatePermissions');
+        });
+
+        Route::prefix('salon-payments')->controller(SalonPaymentController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            // Route::post('/', 'create');
+            // Route::put('{id}', 'update');
+            // Route::delete('{id}', 'destroy');
         });
     });
 });

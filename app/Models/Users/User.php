@@ -139,6 +139,8 @@ class User extends Model
         return null;
     }
 
+
+
     // user salon permissions
     public function salonPermissions()
     {

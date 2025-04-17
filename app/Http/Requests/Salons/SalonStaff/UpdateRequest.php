@@ -2,27 +2,20 @@
 
 namespace App\Http\Requests\Salons\SalonStaff;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'position'  => 'nullable|string|max:255',
+            'is_active' => 'nullable|boolean',
+            'user'      => 'nullable|array',
+            'user.first_name' => 'nullable|string|max:255',
+            'user.last_name'  => 'nullable|string|max:255',
+            'user.password'   => 'nullable|string|min:6',
+            'user.gender'     => 'nullable|in:male,female',
         ];
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Salons\SalonController;
+use App\Http\Controllers\Salons\SalonPaymentController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Services\ServiceController;
@@ -80,6 +81,14 @@ Route::prefix('customer')->group(function () {
         Route::prefix('services')->controller(ServiceController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+        });
+
+        Route::prefix('salon-payments')->controller(SalonPaymentController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            // Route::post('/', 'create');
+            // Route::put('{id}', 'update');
+            // Route::delete('{id}', 'destroy');
         });
     });
 });

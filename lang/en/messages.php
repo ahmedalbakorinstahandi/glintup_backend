@@ -209,4 +209,23 @@ return [
         'failed_delete_item'        => 'Failed to delete setting',
         'item_not_found'            => 'Setting not found',
     ],
+
+
+    'salon_staff' => [
+        'item_created_successfully'       => 'Salon staff member added successfully',
+        'item_updated_successfully'       => 'Salon staff member updated successfully',
+        'item_deleted_successfully'       => 'Salon staff member deleted successfully',
+        'failed_delete_item'              => 'Failed to delete salon staff member',
+        'item_not_found'                  => 'Salon staff member not found',
+        'permissions_updated_successfully'=> 'Salon staff member permissions updated successfully',
+    ],
+
+
+    'salon_payment' => [
+        'item_created_successfully' => 'Salon payment created successfully',
+        'item_updated_successfully' => 'Salon payment updated successfully',
+        'item_deleted_successfully' => 'Salon payment deleted successfully',
+        'failed_delete_item'        => 'Failed to delete salon payment',
+        'item_not_found'            => 'Salon payment not found',
+    ],
 ];

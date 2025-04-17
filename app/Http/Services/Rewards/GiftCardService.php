@@ -143,7 +143,7 @@ class GiftCardService
 
 
 
-        if (!$recipient) {
+        if (!$recipient || ($recipient && !$recipient->is_verified && $recipient->added_by == 'salon')) {
             $full_phone = str_replace(' ', '', $data['phone_code'] . $data['phone']);
 
             $website_url = "https://glintup.ae/";

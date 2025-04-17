@@ -207,4 +207,22 @@ return [
         'item_not_found'            => 'الإعداد غير موجود',
     ],
 
+    'salon_staff' => [
+        'item_created_successfully'       => 'تم إضافة عضو جديد إلى الطاقم',
+        'item_updated_successfully'       => 'تم تحديث بيانات عضو الطاقم',
+        'item_deleted_successfully'       => 'تم حذف عضو الطاقم بنجاح',
+        'failed_delete_item'              => 'فشل في حذف عضو الطاقم',
+        'item_not_found'                  => 'عضو الطاقم غير موجود',
+        'permissions_updated_successfully' => 'تم تحديث صلاحيات عضو الطاقم بنجاح',
+    ],
+    
+    'salon_payment' => [
+        'item_created_successfully' => 'تم إنشاء دفعة الصالون بنجاح',
+        'item_updated_successfully' => 'تم تحديث دفعة الصالون بنجاح',
+        'item_deleted_successfully' => 'تم حذف دفعة الصالون بنجاح',
+        'failed_delete_item'        => 'فشل في حذف دفعة الصالون',
+        'item_not_found'            => 'دفعة الصالون غير موجودة',
+    ],
+
+
 ];

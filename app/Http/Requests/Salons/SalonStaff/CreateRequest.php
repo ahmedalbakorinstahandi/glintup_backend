@@ -2,27 +2,33 @@
 
 namespace App\Http\Requests\Salons\SalonStaff;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
+use App\Models\Users\User;
 
-class CreateRequest extends FormRequest
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'phone_code' => 'required|string|max:7',
+            'phone'      => 'required|string|max:12|unique:users,phone',
+            'gender'     => 'required|in:male,female',
+            'birth_date' => 'required|date',
+            'password'   => 'required|string|min:6',
+            'position'   => 'required|string|max:255',
+            'is_active'  => 'nullable|boolean',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:salon_permissions,id,deleted_at,NULL',
         ];
+
+        $user = User::auth();
+
+        if ($user->isAdmin()) {
+            $rules['salon_id'] = 'required|exists:salons,id,deleted_at,NULL';
+        }
+
+        return $rules;
     }
 }

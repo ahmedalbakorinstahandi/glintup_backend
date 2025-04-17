@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Users;
 
+use App\Models\Rewards\GiftCard;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\MessageService;
@@ -105,6 +106,25 @@ class UserAuthService
             $user->phone_code . $user->phone,
             trans("messages.activation_code_message", ['verifyCode' => $verifyCode])
         );
+
+
+        // check have gift card for this user phone 
+
+        $giftCards = GiftCard::where('phone', $user->phone, 'phone_code', $user->phone_code)
+            ->where('recipient_id', null)
+            ->get();
+
+
+        if ($giftCards) {
+            foreach ($giftCards as $giftCard) {
+                $giftCard->update([
+                    'recipient_id' => $user->id,
+                ]);
+            }
+
+            // send notification to the sender and recipient
+        }
+
 
         return $user;
     }

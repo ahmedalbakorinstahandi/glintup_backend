@@ -1,28 +1,18 @@
 <?php
 
-namespace App\Http\Requests\Booking\SalonPayment;
+namespace App\Http\Requests\Salons\SalonPayment;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'status'       => 'nullable|in:pending,confirm,canceled,rejected',
+            'method'       => 'nullable|in:wallet,stripe,cash',
+            'is_refund'    => 'nullable|boolean',
+            'system_percentage' => 'nullable|numeric|min:0',
         ];
     }
 }
