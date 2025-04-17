@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Booking\Booking;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonStaff;
 use App\Models\Salons\UserSalonPermission;
@@ -101,6 +102,12 @@ class User extends Model
             'id',          // Local key on User
             'salon_id'     // Local key on SalonStaff pointing to Salon
         )->withTrashed();
+    }
+
+    //bookings
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 
 

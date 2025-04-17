@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Statistics;
 use App\Http\Controllers\Controller;
 use App\Models\Booking\Booking;
 use App\Models\Salons\Salon;
+use App\Models\Salons\SalonPayment;
 use App\Models\Statistics\PromotionAd;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
@@ -212,16 +213,15 @@ class DashboardController extends Controller
         $salonId = $user->salon->id;
 
         // Earnings
-        $earnings = Booking::where('salon_id', $salonId)
-            ->where('status', 'completed')
-            ->sum('total_price');
+        $earnings = SalonPayment::where('salon_id', $salonId)
+            ->where('status', 'confirm')
+            ->sum('amount');
 
         // Appointments Count
         $appointmentsCount = Booking::where('salon_id', $salonId)->count();
 
         // Reviews Count
         $reviewsCount = Booking::where('salon_id', $salonId)
-            ->whereNotNull('review')
             ->count();
 
         // New Clients Count
@@ -273,7 +273,6 @@ class DashboardController extends Controller
 
         // Last 7 Reviews
         $last7Reviews = Booking::where('salon_id', $salonId)
-            ->whereNotNull('review')
             ->orderBy('created_at', 'desc')
             ->take(7)
             ->get();

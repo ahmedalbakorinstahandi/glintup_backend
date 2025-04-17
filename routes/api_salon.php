@@ -41,7 +41,7 @@ Route::prefix('salon')->group(function () {
         });
 
         //salonStatistics
-        Route::get('/statistics', [DashboardController::class, 'getStatistics']);
+        Route::get('/statistics', [DashboardController::class, 'salonStatistics']);
 
         Route::prefix('services')->controller(ServiceController::class)->group(function () {
             Route::get('/', 'index');
