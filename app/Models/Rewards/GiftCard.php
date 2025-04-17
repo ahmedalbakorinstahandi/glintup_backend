@@ -2,6 +2,7 @@
 
 namespace App\Models\Rewards;
 
+use App\Models\Services\Service;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -46,6 +47,21 @@ class GiftCard extends Model
         'updated_at'    => 'datetime',
         'deleted_at'    => 'datetime',
     ];
+
+
+    public function getServicesData()
+    {
+        $services = $this->services;
+
+        $services_data = [];
+
+        foreach ($services as $service) {
+            $services_data[] = Service::find($service['id']);
+        }
+
+        return $services_data;
+    }
+
 
     public function sender()
     {
