@@ -226,4 +226,12 @@ return [
     ],
 
 
+    'loyalty_point' => [
+        'item_created_successfully' => 'تم إنشاء نقاط الولاء بنجاح',
+        'item_updated_successfully' => 'تم تحديث نقاط الولاء بنجاح',
+        'item_deleted_successfully' => 'تم حذف نقاط الولاء بنجاح',
+        'failed_delete_item'        => 'فشل في حذف نقاط الولاء',
+        'item_not_found'            => 'نقاط الولاء غير موجودة',
+    ],
+
 ];

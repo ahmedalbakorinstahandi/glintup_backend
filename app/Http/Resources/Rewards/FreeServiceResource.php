@@ -23,6 +23,17 @@ class FreeServiceResource extends JsonResource
             'user'          => new UserResource($this->whenLoaded('user')),
             'service'       => new ServiceResource($this->whenLoaded('service')),
             'booking'       => new BookingResource($this->whenLoaded('booking')),
+            'freeable'      => $this->whenLoaded('freeable'),
+
+
+            // gift card relation if freeable_type is GiftCard
+            'gift_card' => $this->freeable_type == "App\\Models\\Rewards\\GiftCard" ?
+                GiftCardResource::make($this->whenLoaded('freeable')) :
+                null,
+            // booking relation if freeable_type is Booking
+            'loyalty_point' => $this->freeable_type == "App\\Models\\Rewards\\LoyaltyPoint" ?
+                LoyaltyPointResource::make($this->whenLoaded('freeable')) :
+                null,
 
             'created_at'    => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'    => $this->updated_at?->format('Y-m-d H:i:s'),

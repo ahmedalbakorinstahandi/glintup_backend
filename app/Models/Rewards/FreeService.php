@@ -2,6 +2,7 @@
 
 namespace App\Models\Rewards;
 
+use App\Models\Booking\Booking;
 use App\Models\Users\User;
 use App\Models\Services\Service;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,8 @@ class FreeService extends Model
         'source',
         'booking_id',
         'is_used',
+        'freeable_id',
+        'freeable_type',
     ];
 
     protected $casts = [
@@ -28,6 +31,8 @@ class FreeService extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'freeable_id' => 'integer',
+        'freeable_type' => 'string',
     ];
 
     public function user()
@@ -38,6 +43,15 @@ class FreeService extends Model
     public function service()
     {
         return $this->belongsTo(Service::class)->withTrashed();
+    }
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class)->withTrashed();
+    }
+    public function freeable()
+    {
+        return $this->morphTo();
     }
 
     // public function getSourceLabelAttribute(): string

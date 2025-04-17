@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('booking_id')->nullable();
             $table->foreign('booking_id')->references('id')->on('bookings');
             $table->boolean('is_used')->default(false);
+            $table->morphs('freeable');
             $table->timestamps();
             $table->softDeletes();
         });

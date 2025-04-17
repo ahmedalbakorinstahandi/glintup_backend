@@ -230,4 +230,13 @@ return [
         'failed_delete_item'        => 'Failed to delete salon payment',
         'item_not_found'            => 'Salon payment not found',
     ],
+
+
+    'loyalty_point' => [
+        'item_created_successfully' => 'Loyalty points created successfully',
+        'item_updated_successfully' => 'Loyalty points updated successfully',
+        'item_deleted_successfully' => 'Loyalty points deleted successfully',
+        'failed_delete_item'        => 'Failed to delete loyalty points',
+        'item_not_found'            => 'Loyalty points not found',
+    ],
 ];
