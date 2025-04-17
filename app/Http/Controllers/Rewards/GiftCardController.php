@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Rewards\GiftCard\CreateRequest;
 use App\Http\Requests\Rewards\GiftCard\UpdateRequest;
 use App\Http\Permissions\Rewards\GiftCardPermission;
-use App\Http\Requests\Rewards\GiftCard\createByUserRequest;
+use App\Http\Requests\Rewards\GiftCard\CreateByUserRequest;
 use App\Http\Services\Rewards\GiftCardService;
 use App\Http\Resources\Rewards\GiftCardResource;
 use App\Services\ResponseService;
@@ -81,7 +81,7 @@ class GiftCardController extends Controller
 
 
     // create gift card by user 
-    public function createByUser(createByUserRequest $request)
+    public function createByUser(CreateByUserRequest $request)
     {
         $gift = $this->giftCardService->createByUser($request->validated());
 
