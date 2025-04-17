@@ -18,12 +18,10 @@ class CreateRequest extends BaseFormRequest
             'phone_code'  => 'required|string|max:7',
             'phone'       => 'required|string|max:12|unique:users,phone',
             'password'    => 'required|string|min:6',
-            'role'        => 'required|in:customer,salon_owner,admin,staff',
             'is_active'   => 'nullable|boolean',
             'latitude'    => 'nullable|numeric',
             'longitude'   => 'nullable|numeric',
             'language'    => 'nullable|string|max:10',
-            'added_by'    => 'nullable|in:admin,salon,register',
         ];
     }
 }

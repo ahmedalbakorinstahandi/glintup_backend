@@ -46,17 +46,43 @@ class UserService
 
     public function create($validatedData)
     {
-        return User::create($validatedData);
+
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        }
+
+        if (isset($validatedData['phone'])) {
+            $validatedData['phone'] = str_replace(' ', '', $validatedData['phone']);
+        }
+        if (isset($validatedData['phone_code'])) {
+            $validatedData['phone_code'] = str_replace(' ', '', $validatedData['phone_code']);
+        }
+
+        // role 
+        $validatedData['role'] = 'customer';
+
+        // added by admin
+        $validatedData['added_by'] = 'admin';
+
+        $user = User::create($validatedData);
+
+        return $user;
     }
 
     public function update($user, $validatedData)
     {
+
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        }
+
         $user->update($validatedData);
         return $user;
     }
 
     public function destroy($user)
     {
+
         return $user->delete();
     }
 
