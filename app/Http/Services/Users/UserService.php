@@ -7,6 +7,7 @@ use App\Models\Users\User;
 use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Http\Permissions\Users\UserPermission;
+use App\Models\Users\WalletTransaction;
 
 class UserService
 {
@@ -22,7 +23,7 @@ class UserService
             $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
         }
 
-        return FilterService::applyFilters(
+        $query = FilterService::applyFilters(
             $query,
             $data,
             [],
@@ -31,6 +32,34 @@ class UserService
             ['role', 'is_active'],
             ['id']
         );
+
+        $users = $query->get();
+
+        // status "pending", "confirmed", "completed", "cancelled"
+
+        // حساب متوسط الانفاق لكل مستخدم
+        $transactions = WalletTransaction::whereIn('user_id', $users->pluck('id'))
+            ->where('direction', 'out')
+            ->where('status', 'completed')
+            ->where('is_refund', 0)
+            ->get();
+
+        $total_spending = $transactions->sum('amount'); // مجموع المبالغ المدفوعة
+        $active_users_count = $transactions->groupBy('user_id')->count(); // عدد المستخدمين الذين اشتروا
+        $average_spending = $active_users_count > 0 ? $total_spending / $active_users_count : 0; // متوسط الانفاق
+
+
+        $users_status_count = [
+            'all_count' => $users->count(),
+            'active_count' => $users->where('is_active', 1)->count(),
+            'unactive_count' => $users->where('is_active', 0)->count(),
+            'average_spending' => $average_spending,
+        ];
+
+        return [
+            'data' => $query->paginate($data['limit'] ?? 20),
+            'info' => $users_status_count,
+        ];
     }
 
     public function show($id)

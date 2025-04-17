@@ -27,12 +27,13 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = $this->userService->index(request()->all());
+        $data = $this->userService->index(request()->all());
 
         return response()->json([
             'success' => true,
-            'data' => UserResource::collection($users->items()),
-            'meta' => ResponseService::meta($users),
+            'info' => $data['info'],
+            'data' => UserResource::collection($data['data']->items()),
+            'meta' => ResponseService::meta($data['data']),
         ]);
     }
 
