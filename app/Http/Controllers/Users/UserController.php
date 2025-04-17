@@ -32,7 +32,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'info' => $data['info'],
-            'data' => UserResource::collection($data['data']->items()),
+            'data' => UserResource::collection(resource: $data['data']->items()),
             'meta' => ResponseService::meta($data['data']),
         ]);
     }

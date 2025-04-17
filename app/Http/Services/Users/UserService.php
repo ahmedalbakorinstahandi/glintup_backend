@@ -30,7 +30,8 @@ class UserService
             [],
             ['created_at'],
             ['role', 'is_active'],
-            ['id']
+            ['id'],
+            false
         );
 
         $users = $query->get();
