@@ -23,7 +23,16 @@ class SalonService
             ->with('permission')
             ->get();
 
-        $permissions = SalonPermissionModel::whereIn('id', $userPermissions->pluck('permission_id'))->get();
+        $permissions = SalonPermissionModel::whereIn(
+            'id',
+            $userPermissions->pluck('permission_id')
+        )->get();
+
+
+        // orders by filed `orders` in salon_permissions table
+        $permissions = $permissions->sortBy(function ($permission) {
+            return $permission->order;
+        });
 
         return $permissions;
     }

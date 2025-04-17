@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text('name');
             $table->string('key');
+            $table->unsignedBigInteger('orders')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
