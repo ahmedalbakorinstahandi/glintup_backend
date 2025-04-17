@@ -21,6 +21,7 @@ use App\Http\Controllers\Statistics\DashboardController;
 use App\Http\Controllers\Statistics\PromotionAdController;
 use App\Http\Controllers\Users\AdminAuthController;
 use App\Http\Controllers\Users\UserAuthController;
+use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\WalletTransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -196,6 +197,17 @@ Route::prefix('admin')->group(function () {
             // Route::post('/', 'create');
             // Route::put('{id}', 'update');
             // Route::delete('{id}', 'destroy');
+        });
+
+
+
+        // users
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UserController::class, 'index']);
+            Route::get('{id}', [UserController::class, 'show']);
+            Route::post('/', [UserController::class, 'create']);
+            Route::put('{id}', [UserController::class, 'update']);
+            Route::delete('{id}', [UserController::class, 'destroy']);
         });
     });
 });
