@@ -8,6 +8,7 @@ use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
 use App\Http\Controllers\Salons\SalonHolidayController;
 use App\Http\Controllers\Salons\SalonPaymentController;
+use App\Http\Controllers\Salons\SalonPermissionController;
 use App\Http\Controllers\Salons\SalonSocialMediaSiteController;
 use App\Http\Controllers\Salons\SalonStaffController;
 use App\Http\Controllers\Salons\SocialMediaSiteController;
@@ -153,6 +154,7 @@ Route::prefix('salon')->group(function () {
             Route::delete('{id}', 'destroy');
             Route::post('{id}/permissions', 'updatePermissions');
         });
+
 
         Route::prefix('salon-payments')->controller(SalonPaymentController::class)->group(function () {
             Route::get('/', 'index');

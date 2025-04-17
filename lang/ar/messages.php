@@ -28,6 +28,7 @@ return [
     'invalid_or_expired_verification_code' => 'رمز التحقق غير صالح أو منتهي الصلاحية.',
     'unauthorized' => 'غير مسجل الدخول.',
     'user_logged_out_successfully' => 'تم تسجيل الخروج بنجاح.',
+    'user_logged_in_successfully' => 'تم تسجيل الدخول بنجاح.',
 
     'activation_code_message' => 'رمز التفعيل الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لتفعيل حسابك. سينتهي صلاحية هذا الرمز خلال 10 دقائق.',
     'password_reset_code_message' => 'رمز إعادة تعيين كلمة المرور الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لإعادة تعيين كلمة مرورك. سينتهي صلاحية هذا الرمز خلال 10 دقائق.',

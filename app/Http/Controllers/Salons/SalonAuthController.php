@@ -45,6 +45,7 @@ class SalonAuthController extends Controller
         return response()->json([
             'success' => true,
             'access_token' => $token,
+            'message' => trans('messages.user_logged_in_successfully'),
             'data' => new UserResource($user),
         ]);
     }

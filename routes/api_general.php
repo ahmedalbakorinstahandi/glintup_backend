@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\General;
 
+use App\Http\Controllers\Salons\SalonPermissionController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,5 +21,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/', [UserController::class, 'getProfile']);
             Route::put('/', [UserController::class, 'updateProfile']);
         });
+
+        Route::get('/salon-permissions', [SalonPermissionController::class, 'index']);
+
     });
 });

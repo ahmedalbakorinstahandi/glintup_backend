@@ -15,7 +15,15 @@ class SalonSocialMediaSiteService
 
         $query = SalonSocialMediaSitePermission::filterIndex($query);
 
-        return FilterService::applyFilters($query, $data, ['link'], [], ['created_at'], ['salon_id', 'social_media_site_id'], ['id']);
+        return FilterService::applyFilters(
+            $query,
+            $data,
+            ['link'],
+            [],
+            ['created_at'],
+            ['salon_id', 'social_media_site_id'],
+            ['id']
+        );
     }
 
     public function show($id)
