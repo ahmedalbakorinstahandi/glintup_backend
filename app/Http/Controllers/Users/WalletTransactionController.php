@@ -29,7 +29,7 @@ class WalletTransactionController extends Controller
         return response()->json([
             'success' => true,
             'wallet' => [
-                'balance' => $user->isCutomer() ? $user->balance : null,
+                'balance' => $user->isCustomer() ? $user->balance : null,
             ],
             'data' => WalletTransactionResource::collection($transactions->items()),
             'meta' => ResponseService::meta($transactions),

@@ -13,6 +13,7 @@ class SalonPermissionService
 
         $data['limit'] = $data['limit'] ?? 100;
         $data['sort_order'] = 'asc';
+        $data['sort_by'] = 'orders';
 
         return  FilterService::applyFilters(
             $query,

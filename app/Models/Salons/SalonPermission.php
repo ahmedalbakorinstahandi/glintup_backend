@@ -16,6 +16,7 @@ class SalonPermission extends Model
     protected $fillable = [
         'name',
         'key',
+        'orders',
     ];
 
     protected $casts = [
