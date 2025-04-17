@@ -103,7 +103,7 @@ class StripeWebhookController extends Controller
                         $user = $walletTransaction->user;
 
                         $user->update([
-                            'balance' => $user->wallet_balance + $walletTransaction->amount,
+                            'balance' => $user->balance + $walletTransaction->amount,
                         ]);
                     }
                 }
