@@ -55,9 +55,10 @@ class GiftCard extends Model
 
         $services_data = [];
 
-        foreach ($services as $service) {
-            if (isset($service['id'])) {
-                $services_data[] = Service::find($service['id']);
+        foreach ($services as $service_id) {
+            $service = Service::find($service_id);
+            if ($service) {
+                $services_data[] = $service;
             }
         }
 
