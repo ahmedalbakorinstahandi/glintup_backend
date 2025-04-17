@@ -359,10 +359,12 @@ class BookingService
 
         // check if user have free services and use them
         if ($use_free_services) {
-            foreach ($data['selected_free_services'] as $freeService) {
-                $freeService->is_used = 1;
-                $freeService->booking_id = $booking->id;
-                $freeService->save();
+            foreach ($bookingDetails['selected_free_services'] as $freeService) {
+                if ($freeService) {
+                    $freeService->is_used = 1;
+                    $freeService->booking_id = $booking->id;
+                    $freeService->save();
+                }
             }
         }
 
