@@ -18,14 +18,14 @@ class UserPermission
             return $query;
         }
 
-        if ($user->isSalonOwner()) {
-            $salon = $user->salon();
+        // if ($user->isSalonOwner()) {
+        //     $salon = $user->salon();
 
-            // staff
-            $query->whereHas('staff', function ($q) use ($salon) {
-                $q->where('salon_id', $salon->id);
-            });
-        }
+        //     // staff
+        //     $query->whereHas('staff', function ($q) use ($salon) {
+        //         $q->where('salon_id', $salon->id);
+        //     });
+        // }
 
         return $query;
     }
@@ -43,19 +43,19 @@ class UserPermission
     public static function canUpdate(User $user, $data)
     {
 
-        $editor = User::auth();
+        // $editor = User::auth();
 
-        if ($editor->isSalonOwner()) {
-            $salon = $editor->salon();
+        // if ($editor->isSalonOwner()) {
+        //     $salon = $editor->salon();
 
-            if ($user->salon()->id != $salon->id) {
-                MessageService::abort(403, 'messages.permission_error');
-            }
-        } elseif (!$editor->isAdmin()) {
-            if ($user->id != $editor->id) {
-                MessageService::abort(403, 'messages.permission_error');
-            }
-        }
+        //     if ($user->salon()->id != $salon->id) {
+        //         MessageService::abort(403, 'messages.permission_error');
+        //     }
+        // } elseif (!$editor->isAdmin()) {
+        //     if ($user->id != $editor->id) {
+        //         MessageService::abort(403, 'messages.permission_error');
+        //     }
+        // }
 
 
         return true;
