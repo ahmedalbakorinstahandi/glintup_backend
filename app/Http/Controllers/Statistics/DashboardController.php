@@ -207,10 +207,9 @@ class DashboardController extends Controller
     // get statistics for salon 
     public function salonStatistics()
     {
-        $salonId = request('salon_id');
-        if (!$salonId) {
-            return response()->json(['success' => false, 'message' => 'Salon ID is required'], 400);
-        }
+        $user = User::auth();
+
+        $salonId = $user->salon->id;
 
         // Earnings
         $earnings = Booking::where('salon_id', $salonId)
