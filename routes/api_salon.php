@@ -18,6 +18,7 @@ use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\GroupServiceController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Services\ServiceController;
+use App\Http\Controllers\Statistics\DashboardController;
 use App\Http\Controllers\Statistics\PromotionAdController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
@@ -38,6 +39,9 @@ Route::prefix('salon')->group(function () {
             Route::get('/permissions', [SalonController::class, 'getPermissions']);
             Route::get('/data', [SalonController::class, 'getSalonData']);
         });
+
+        //salonStatistics
+        Route::get('/statistics', [DashboardController::class, 'getStatistics']);
 
         Route::prefix('services')->controller(ServiceController::class)->group(function () {
             Route::get('/', 'index');
