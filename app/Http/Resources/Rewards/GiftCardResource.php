@@ -30,7 +30,7 @@ class GiftCardResource extends JsonResource
 
             'sender'         => new UserResource($this->whenLoaded('sender')),
             'recipient'      => new UserResource($this->whenLoaded('recipient')),
-            'salon'          => $this->salon_id == null ? null :  new SalonResource($this->whenLoaded('salon')),
+            // 'salon'          => $this->salon_id == null ? null :  new SalonResource($this->whenLoaded('salon')),
 
             'created_at'     => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'     => $this->updated_at?->format('Y-m-d H:i:s'),
