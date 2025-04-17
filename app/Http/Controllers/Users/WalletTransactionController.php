@@ -24,8 +24,13 @@ class WalletTransactionController extends Controller
     {
         $transactions = $this->transactionService->index(request()->all());
 
+        $user = User::auth();
+
         return response()->json([
             'success' => true,
+            'wallet' => [
+                'balance' => $user->isCutomer() ? $user->balance : null,
+            ],
             'data' => WalletTransactionResource::collection($transactions->items()),
             'meta' => ResponseService::meta($transactions),
         ]);
