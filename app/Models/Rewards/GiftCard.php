@@ -51,12 +51,14 @@ class GiftCard extends Model
 
     public function getServicesData()
     {
-        $services = $this->services;
+        $services = is_array($this->services) ? $this->services : [];
 
         $services_data = [];
 
         foreach ($services as $service) {
-            $services_data[] = Service::find($service['id']);
+            if (isset($service['id'])) {
+                $services_data[] = Service::find($service['id']);
+            }
         }
 
         return $services_data;

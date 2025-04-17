@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Rewards;
 
+use App\Http\Resources\Salons\SalonResource;
+use App\Http\Resources\Services\ServiceResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Users\UserResource;
 
@@ -18,16 +20,17 @@ class GiftCardResource extends JsonResource
             'phone'          => $this->phone,
             'full_phone'     => $this->full_phone,
             'type'           => $this->type,
-            // 'type_label'     => $this->type_label,
             'amount'         => $this->amount,
             'currency'       => $this->currency,
             'services'       => $this->services,
+            'services_data' => ServiceResource::collection($this->getServicesData()),
             'tax'            => $this->tax,
             'message'        => $this->message,
             'is_used'        => $this->is_used,
 
             'sender'         => new UserResource($this->whenLoaded('sender')),
             'recipient'      => new UserResource($this->whenLoaded('recipient')),
+            'salon'          => new SalonResource($this->whenLoaded('salon')),
 
             'created_at'     => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'     => $this->updated_at?->format('Y-m-d H:i:s'),
