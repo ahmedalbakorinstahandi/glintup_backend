@@ -5,6 +5,7 @@ use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\General\NotificationController;
 use App\Http\Controllers\General\SettingController;
 use App\Http\Controllers\Rewards\GiftCardController;
+use App\Http\Controllers\Rewards\LoyaltyPointController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
 use App\Http\Controllers\Salons\SalonHolidayController;
@@ -213,6 +214,11 @@ Route::prefix('admin')->group(function () {
             Route::post('/', [UserController::class, 'create']);
             Route::put('{id}', [UserController::class, 'update']);
             Route::delete('{id}', [UserController::class, 'destroy']);
+        });
+
+        Route::prefix('loyalty-points')->controller(LoyaltyPointController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
         });
     });
 });

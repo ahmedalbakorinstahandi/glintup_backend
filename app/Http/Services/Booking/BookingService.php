@@ -9,6 +9,7 @@ use App\Models\Booking\Coupon;
 use App\Models\Booking\CouponUsage;
 use App\Models\General\Setting;
 use App\Models\Rewards\FreeService;
+use App\Models\Rewards\LoyaltyPoint;
 use App\Models\Salons\SalonCustomer;
 use App\Models\Salons\SalonPayment;
 use App\Models\Services\Service;
@@ -149,9 +150,42 @@ class BookingService
 
     public function update($booking, $data)
     {
+
+        $old_status = $booking->status;
+
         $booking->update($data);
 
         $booking->load(['user', 'salon', 'bookingServices.service']);
+
+
+        if ($old_status != 'completed' && $booking->status == 'completed') {
+            // add point to loyalty program
+            $user = User::find($booking->user_id);
+
+            // if user have loyalty program and points less than 5 add 1 point to him else create new loyalty program with 1 point
+            $loyaltyProgram = LoyaltyPoint::where('user_id', $user->id)->where('points', '<', 5)->first();
+            if ($loyaltyProgram) {
+                $loyaltyProgram->points += 1;
+                $loyaltyProgram->save();
+
+
+                if ($loyaltyProgram->points == 5) {
+                    //TODO send notification to user 
+                    // مبروك لقد حصلت على 5 نقاط ولاء
+                    $loyaltyProgram->taken_at = now();
+                    $loyaltyProgram->save();
+                } else {
+                    //TODO send notification to user 
+                    // اما بزالنا نضيف لك نقطة ولاء جديدة
+                }
+            } else {
+                LoyaltyPoint::create([
+                    'user_id' => $user->id,
+                    'salon_id' => $booking->salon_id,
+                    'points' => 1,
+                ]);
+            }
+        }
 
         return $booking;
     }
@@ -232,7 +266,6 @@ class BookingService
 
             $amount_to_pay_with_out_free_services = $total_amount_with_out_free_services_after_discount * 0.2;
             $amount_to_pay_with_free_services = $total_amount_after_discount * 0.2;
-
         }
 
 
@@ -249,7 +282,7 @@ class BookingService
                 'amount_to_pay_with_out_free_services' => $amount_to_pay_with_out_free_services,
                 'payment_percentage' => $payment_method == 'partially_paid' ? 20 : 100,
             ],
-            
+
             'with_out_free_services' => [
                 'total_amount' => $total_amount,
                 'total_amount_after_discount' => $total_amount_after_discount,
@@ -341,7 +374,7 @@ class BookingService
         );
 
         $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
-        
+
         // booking payment
         SalonPayment::create([
             'paymentable_id' => $booking->id,

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('salon_id');
             $table->foreign('salon_id')->references('id')->on('salons');
             $table->integer('points');
+            $table->timestamp('taken_at')->nullable();
+            $table->timestamp('used_at')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

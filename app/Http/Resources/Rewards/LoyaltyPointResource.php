@@ -15,7 +15,9 @@ class LoyaltyPointResource extends JsonResource
             'user_id'     => $this->user_id,
             'salon_id'    => $this->salon_id,
             'points'      => $this->points,
-            'description' => $this->description,
+            // 'description' => $this->description,
+            'taken_at'    => $this->taken_at?->format('Y-m-d H:i:s'),
+            'used_at'     => $this->used_at?->format('Y-m-d H:i:s'),
 
             'user'        => new UserResource($this->whenLoaded('user')),
             'salon'       => new SalonResource($this->whenLoaded('salon')),

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\Rewards\GiftCardController;
+use App\Http\Controllers\Rewards\LoyaltyPointController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonPaymentController;
 use App\Http\Controllers\Services\GroupController;
@@ -89,6 +90,11 @@ Route::prefix('customer')->group(function () {
             // Route::post('/', 'create');
             // Route::put('{id}', 'update');
             // Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('loyalty-points')->controller(LoyaltyPointController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
         });
     });
 });

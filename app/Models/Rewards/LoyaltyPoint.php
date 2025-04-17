@@ -16,6 +16,8 @@ class LoyaltyPoint extends Model
         'salon_id',
         'points',
         'description',
+        'taken_at',
+        'used_at',
     ];
 
     protected $casts = [
