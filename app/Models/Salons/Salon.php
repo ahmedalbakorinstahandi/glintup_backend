@@ -32,6 +32,20 @@ class Salon extends Model
         'longitude',
         'country',
         'city',
+        'merchant_legal_name',
+        'merchant_commercial_name',
+        'address',
+        'city_street_name',
+        'contact_name',
+        'contact_number',
+        'contact_email',
+        'business_contact_name',
+        'business_contact_email',
+        'business_contact_number',
+        'types',
+        'block_message',
+        'bio',
+        'tags',
     ];
 
     protected $casts = [
@@ -42,6 +56,7 @@ class Salon extends Model
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
         'deleted_at'  => 'datetime',
+        'block_message' => 'integer',
     ];
 
     public function owner()

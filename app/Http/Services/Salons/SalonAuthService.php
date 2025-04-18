@@ -2,6 +2,9 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Models\Salons\Salon;
+use App\Models\Salons\SalonPermission;
+use App\Models\Salons\UserSalonPermission;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\MessageService;
@@ -28,35 +31,94 @@ class SalonAuthService
         return $user;
     }
 
+    // $verifyCode = rand(100000, 999999);
+    // $codeExpiry = Carbon::now()->addMinutes(10);
+    // TODO send sms to user
+    // $this->sendSms($user->phone, $user->phone_code, $verifyCode);
 
     public function register($requestData)
     {
-        $verifyCode = rand(100000, 999999);
-        $codeExpiry = Carbon::now()->addMinutes(10);
 
-        $user = User::create([
-            'first_name' => $requestData['first_name'],
-            'last_name' => $requestData['last_name'],
-            'password' => Hash::make($requestData['password']),
-            'phone' => $requestData['phone'],
-            'phone_code' => $requestData['phone_code'],
-            'verified' => 0,
-            'otp' => $verifyCode,
-            'otp_expire_at' => $codeExpiry,
-            'role' => 'customer',
-            'gender' => $requestData['gender'],
-            'birth_date' => $requestData['birth_date'],
-            'avatar' => $requestData['avatar'] ?? null,
-            'is_active' => 1,
-            'is_verified' => 0,
-            'language' => $requestData['language'] ?? 'ar',
+
+        $userData = $requestData['user'];
+
+        $userData['phone_code'] = str_replace(' ', '', $userData['phone_code']);
+        $userData['phone'] = str_replace(' ', '', $userData['phone']);
+
+        $fullPhone = $userData['phone_code'] . $userData['phone'];
+
+        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$fullPhone])
+            ->where('role', 'salon_owner')
+            ->first();
+
+
+        if ($user) {
+            MessageService::abort(409, 'messages.phone_already_taken');
+        }
+
+        $userData['password'] = Hash::make($userData['password']);
+        $userData['role'] = 'salon_owner';
+
+        $userData['is_verified'] = 1;
+        $userData['is_active'] = 1;
+        $userData['language'] = app()->getLocale();
+        $userData['added_by'] = 'register';
+
+        unset($requestData['user']);
+
+        $userSalonOnwer = User::create($userData);
+
+        $salon = Salon::create([
+            'owner_id' => $userSalonOnwer->id,
+            'merchant_legal_name' => $requestData['merchant_legal_name'],
+            'merchant_commercial_name' => $requestData['merchant_commercial_name'],
+            'address' => $requestData['address'],
+            'city_street_name' => $requestData['city_street_name'],
+            'contact_name' => $requestData['contact_name'],
+            'contact_number' => $requestData['contact_number'],
+            'contact_email' => $requestData['contact_email'],
+            'business_contact_name' => $requestData['business_contact_name'],
+            'business_contact_email' => $requestData['business_contact_email'],
+            'business_contact_number' => $requestData['business_contact_number'],
+
+            'icon' => $requestData['icon'],
+            'description' => $requestData['description'],
+            'latitude' => $requestData['latitude'],
+            'longitude' => $requestData['longitude'],
+            'types' => implode(',', $requestData['types']),
+            'bio' => $requestData['bio'],
+
+
+
+            // old data
+            'name' => '',
+            'phone_code' => '',
+            'phone' => '',
+            'email' => null,
+            'location' => '',
+            'type' => 'salon',
+            'country' => '',
+            'city' => '',
         ]);
 
-        // TODO send sms to user
-        // $this->sendSms($user->phone, $user->phone_code, $verifyCode);
+        $salonPermissions = SalonPermission::get();
 
-        return $user;
+        foreach ($salonPermissions as $permission) {
+            UserSalonPermission::create([
+                'user_id' => $userSalonOnwer->id,
+                'salon_id' => $salon->id,
+                'permission_id' => $permission->id,
+            ]);
+        }
+
+
+        return $userSalonOnwer->load([
+            'salonPermissions.permission',
+            'salon',
+        ]);
     }
+
+
 
     public function verifyCode($requestData)
     {

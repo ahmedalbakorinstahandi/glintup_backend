@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Users;
 
+use App\Http\Resources\Salons\SalonResource;
 use App\Http\Resources\Salons\UserSalonPermissionResource;
 use App\Http\Resources\Users\RefundResource;
 use App\Http\Resources\Users\WalletResource;
@@ -31,6 +32,9 @@ class UserResource extends JsonResource
             'is_verified'   => $this->is_verified,
             // 'location'      => $this->getLocation(),
             'otp_expire_at' => $this->otp_expire_at,
+
+            'salon' => SalonResource::collection($this->whenLoaded('salon')),
+            'salon_owner' => SalonResource::collection($this->whenLoaded('salonOwner')),
 
             'wallet_transactions' => WalletTransactionResource::collection($this->whenLoaded('walletTransactions')),
             'refunds'             => RefundResource::collection($this->whenLoaded('refunds')),

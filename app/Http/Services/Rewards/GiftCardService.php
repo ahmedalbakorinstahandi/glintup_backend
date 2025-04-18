@@ -75,6 +75,7 @@ class GiftCardService
 
         $recipient = User::where('phone_code', $data['phone_code'])
             ->where('phone', $data['phone'])
+            ->where('role', 'customer')
             ->first();
 
 

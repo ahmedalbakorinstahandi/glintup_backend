@@ -146,6 +146,12 @@ class User extends Model
         return null;
     }
 
+    // salon owner
+    public function salonOwner()
+    {
+        return $this->hasMany(Salon::class, 'owner_id');
+    }
+
 
 
     // user salon permissions

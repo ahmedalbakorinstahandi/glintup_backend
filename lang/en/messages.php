@@ -239,4 +239,8 @@ return [
         'failed_delete_item'        => 'Failed to delete loyalty points',
         'item_not_found'            => 'Loyalty points not found',
     ],
+
+    'phone_already_exists' => 'Phone number already exists',
+    'salon_registered_successfully' => 'Salon registered successfully',
+    'phone_already_taken' => 'Phone number already taken',
 ];

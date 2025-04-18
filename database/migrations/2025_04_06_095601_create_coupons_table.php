@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('code');
             $table->unsignedBigInteger('salon_id');
             $table->foreign('salon_id')->references('id')->on('salons');
-            $table->enum('discount_type', ["percentage","fixed"]);
+            $table->enum('discount_type', ["percentage", "fixed"]);
             $table->double('discount_value');
             $table->unsignedBigInteger('max_uses')->nullable();
             $table->integer('max_uses_per_user')->nullable();
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->dateTime('end_date')->nullable();
             $table->tinyInteger('min_age')->nullable();
             $table->tinyInteger('max_age')->nullable();
-            $table->enum('gender', ["male","female"]);
+            $table->enum('gender', ["male", "female"])->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();

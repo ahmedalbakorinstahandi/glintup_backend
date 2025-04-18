@@ -30,6 +30,7 @@ Route::prefix('salon')->group(function () {
 
     Route::prefix('auth')->group(function () {
         Route::post('/login', [SalonAuthController::class, 'login']);
+        Route::post('/register', [SalonAuthController::class, 'register']);
         Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
     });
 

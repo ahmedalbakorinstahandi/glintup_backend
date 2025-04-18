@@ -57,7 +57,7 @@ class SalonAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => trans('messages.account_created_verify_phone'),
+            'message' => trans('messages.salon_registered_successfully'),
             'data' => new UserResource($user),
         ], 201);
     }

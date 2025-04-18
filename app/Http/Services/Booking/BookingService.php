@@ -426,4 +426,26 @@ class BookingService
 
         return $booking;
     }
+
+
+    // // update booking from user
+    // public function updateFromUser($booking, $data)
+    // {
+    
+    //     $current_booking_services = $booking->bookingServices()->pluck('service_id')->toArray();
+
+    //     $new_booking_services = array_column($data['services'], 'id');
+
+    //     $services_to_add = array_diff($new_booking_services, $current_booking_services);
+        
+    // }
+
+
+    public function cancelBooking($booking)
+    {
+        $booking->status = 'cancelled';
+        $booking->save();
+
+        return $booking;
+    }
 }

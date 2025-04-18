@@ -234,4 +234,8 @@ return [
         'item_not_found'            => 'نقاط الولاء غير موجودة',
     ],
 
+    'phone_already_exists' => 'رقم الهاتف موجود بالفعل',
+    'salon_registered_successfully' => 'تم تسجيل الصالون بنجاح',
+    'phone_already_taken' => 'رقم الهاتف مستخدم بالفعل',
+
 ];

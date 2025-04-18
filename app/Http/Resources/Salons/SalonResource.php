@@ -29,9 +29,20 @@ class SalonResource extends JsonResource
         return [
             'id'              => $this->id,
             'owner_id'        => $this->owner_id,
+            'merchant_legal_name' => $this->merchant_legal_name,
+            'merchant_commercial_name' => $this->merchant_commercial_name,
+            'address'         => $this->address,
+            'city_street_name' => $this->city_street_name,
+            'contact_name'    => $this->contact_name,
+            'contact_number'  => $this->contact_number,
+            'contact_email'   => $this->contact_email,
+            'business_contact_name' => $this->business_contact_name,
+            'business_contact_email' => $this->business_contact_email,
+            'business_contact_number' => $this->business_contact_number,
             'name'            => $this->name,
             'icon'            => $this->icon,
             'icon_url'        => $this->icon_url,
+            'types'           => $this->types,
             'phone'           => $this->phone,
             'whats_app_link' => $this->whats_app_link,
             'phone_code'      => $this->phone_code,
@@ -42,6 +53,9 @@ class SalonResource extends JsonResource
             'location_coords' => $this->location_coordinates,
             'is_approved'     => $this->is_approved,
             'is_active'       => $this->is_active,
+            'block_message'   => $this->block_message,
+            'bio'             => $this->bio,
+            'tags'            => $this->tags,
             'is_open' => $this->isOpen(),
             'type'            => $this->type,
             'country'         => $this->country,
@@ -63,8 +77,6 @@ class SalonResource extends JsonResource
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
-
-
         ];
     }
 }
