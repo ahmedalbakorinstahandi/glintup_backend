@@ -33,8 +33,8 @@ class UserResource extends JsonResource
             // 'location'      => $this->getLocation(),
             'otp_expire_at' => $this->otp_expire_at,
 
-            'salon' => SalonResource::collection($this->whenLoaded('salon')),
-            'salon_owner' => SalonResource::collection($this->whenLoaded('salonOwner')),
+            'salon' => new SalonResource($this->whenLoaded('salon')),
+            'salon_owner' => new SalonResource($this->whenLoaded('salonOwner')),
 
             'wallet_transactions' => WalletTransactionResource::collection($this->whenLoaded('walletTransactions')),
             'refunds'             => RefundResource::collection($this->whenLoaded('refunds')),
