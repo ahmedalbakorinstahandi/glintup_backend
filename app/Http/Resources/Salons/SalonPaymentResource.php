@@ -4,6 +4,7 @@ namespace App\Http\Resources\Salons;
 
 use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\GiftCardResource;
+use App\Http\Resources\Users\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SalonPaymentResource extends JsonResource
@@ -20,6 +21,10 @@ class SalonPaymentResource extends JsonResource
             'system_percentage' => $this->system_percentage,
             'paymentable_id'    => $this->paymentable_id,
             'paymentable_type'  => $this->paymentable_type,
+            'user_id'           => $this->user_id,
+            'user'             => new UserResource($this->whenLoaded('user')),
+            'salon_id'          => $this->salon_id,
+            'salon'             => new SalonResource($this->whenLoaded('salon')),
 
             // 'paymentable'      => $this->paymentable_type == "App\\Models\\Booking\\Booking" ?
             //     BookingResource::make($this->whenLoaded('paymentable')) :
