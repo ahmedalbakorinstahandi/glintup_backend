@@ -48,7 +48,8 @@ class SalonAuthService
         $fullPhone = $userData['phone_code'] . $userData['phone'];
 
         $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$fullPhone])
-            ->where('role', 'salon_owner')
+        // where role is salon_owner or staff    
+        ->whereIn('role', ['salon_owner', 'staff'])
             ->first();
 
 
