@@ -33,6 +33,8 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'createFromUser');
+            Route::post('{id}/reschedule', 'rescheduleBooking');
+            Route::post('{id}/cancel', 'cancelBooking');
         });
 
         Route::prefix('home')->group(function () {

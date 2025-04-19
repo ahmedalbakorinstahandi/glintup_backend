@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('salon_id');
             $table->foreign('salon_id')->references('id')->on('salons');
-            $table->dateTime('date');
+            $table->date('date');
             $table->time('time');
             $table->enum('status', ["pending", "confirmed", "completed", "cancelled", "Rejected"]);
             $table->text('notes')->nullable();

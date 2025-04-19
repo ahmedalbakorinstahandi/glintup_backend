@@ -9,6 +9,8 @@ use App\Http\Requests\Salons\Salon\UpdateRequest;
 use App\Http\Resources\Salons\SalonPermissionResource;
 use App\Http\Resources\Salons\SalonResource;
 use App\Http\Services\Salons\SalonService;
+use App\Models\Users\User;
+use App\Services\MessageService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
@@ -82,7 +84,32 @@ class SalonController extends Controller
     {
         $salon = $this->salonService->show($id);
 
-        
+
+        SalonPermission::canUpdate($salon);
+
+        $salon = $this->salonService->update($salon, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.salon.item_updated_successfully'),
+            'data' => new SalonResource($salon),
+        ]);
+    }
+
+    public function updateMySalon(UpdateRequest $request)
+    {
+
+        $user = User::auth();
+
+        if (!$user->isSalonOwner()) {
+            MessageService::abort(403, 'messages.permission_error');
+        }
+
+        $id = $user->salonOwner->first()->id;
+
+        $salon = $this->salonService->show($id);
+
+
         SalonPermission::canUpdate($salon);
 
         $salon = $this->salonService->update($salon, $request->validated());

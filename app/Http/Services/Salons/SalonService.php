@@ -151,6 +151,7 @@ class SalonService
                 'is_approved' => $data['is_approved'] ?? $salon->is_approved,
                 'block_message' => $data['block_message'] ?? $salon->block_message,
                 'tags' => $data['tags'] ?? $salon->tags,
+                'loyalty_service_id' => $data['loyalty_service_id'] ?? $salon->loyalty_service_id,
 
 
 

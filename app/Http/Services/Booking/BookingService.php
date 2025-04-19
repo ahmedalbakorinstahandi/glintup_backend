@@ -186,6 +186,11 @@ class BookingService
                 ]);
             }
         }
+        // cancelled booking
+        if ($old_status != 'cancelled' && $booking->status == 'cancelled') {
+            // TODO :: send notification to user
+            $this->cancelBooking($booking, true);
+        }
 
         return $booking;
     }
@@ -360,8 +365,8 @@ class BookingService
                 'amount' => $amount,
                 'currency' => 'AED',
                 'description' => [
-                    'en' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->name], 'en'),
-                    'ar' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->name], 'ar'),
+                    'en' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'en'),
+                    'ar' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'ar'),
                 ],
                 'status' => 'completed',
                 'type' => 'booking',
@@ -428,23 +433,244 @@ class BookingService
     }
 
 
-    // // update booking from user
-    // public function updateFromUser($booking, $data)
-    // {
-    
-    //     $current_booking_services = $booking->bookingServices()->pluck('service_id')->toArray();
-
-    //     $new_booking_services = array_column($data['services'], 'id');
-
-    //     $services_to_add = array_diff($new_booking_services, $current_booking_services);
-        
-    // }
 
 
-    public function cancelBooking($booking)
+
+    public function cancelBooking($booking, $cancelBySalon)
     {
+
+        // check if booking is already cancelled
+        if ($booking->status == 'cancelled') {
+            MessageService::abort(422, 'messages.booking.already_cancelled_booking');
+        }
+
+        if ($booking->status == 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_cancel_completed_booking');
+        }
+
         $booking->status = 'cancelled';
         $booking->save();
+
+        // TODO :: send notification to salon
+
+        $amountRefund = $booking->getTotalPriceAttribute();
+
+        $user = $booking->user;
+        $salon = $booking->salon;
+        $user_balance = $user->balance;
+
+        // if salon make up artist refund 80% of the amount to the user
+        if (!$cancelBySalon && $salon->isMakeupArtist()) {
+            $amountRefund = $amountRefund * 0.8;
+            $user->balance = $user_balance + $amountRefund;
+        } else {
+            $user->balance = $user_balance +  $amountRefund;
+        }
+        $user->save();
+
+
+        // check if user have free services and use them
+        if ($booking->freeServices) {
+            foreach ($booking->freeServices as $freeService) {
+                if ($freeService) {
+                    $freeService->is_used = 0;
+                    $freeService->booking_id = null;
+                    $freeService->save();
+                }
+            }
+        }
+
+
+
+        // create transaction for user balance
+        $transaction = WalletTransaction::create(
+            [
+                'user_id' => $user->id,
+                'amount' => $amountRefund,
+                'currency' => 'AED',
+                'description' => [
+                    'en' => __('messages.booking.booking_cancelled', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'en'),
+                    'ar' => __('messages.booking.booking_cancelled', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'ar'),
+                ],
+                'status' => 'completed',
+                'type' => 'booking',
+                'is_refund' => true,
+                'transactionable_id' => $booking->id,
+                'transactionable_type' => Booking::class,
+                'direction' => "in",
+                'metadata' => [],
+            ]
+        );
+
+
+        // booking payment
+        SalonPayment::create([
+            'paymentable_id' => $booking->id,
+            'paymentable_type' => Booking::class,
+            'user_id' => $user->id,
+            'salon_id' => $booking->salon_id,
+            'amount' => $amountRefund,
+            'currency' => 'AED',
+            'method' => 'wallet',
+            'status' => 'confirm',
+            'is_refund' => true,
+        ]);
+
+        // TODO :: send notification to user
+
+
+        return $booking;
+    }
+
+
+
+    public function updateFromUser($booking, $data)
+    {
+        if ($booking->status === 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_update_completed_booking');
+        }
+
+        if ($booking->status === 'cancelled') {
+            MessageService::abort(422, 'messages.booking.cannot_update_cancelled_booking');
+        }
+
+        $user = User::auth();
+
+        // استدعاء تفاصيل الحجز الجديدة
+        $bookingDetails = $this->returnBookingDetails($data);
+        $use_free_services = $data['use_free_services'] ?? false;
+        $service_amount_data = $use_free_services
+            ? $bookingDetails['with_free_services']
+            : $bookingDetails['with_out_free_services'];
+
+        $payment_percentage = $service_amount_data['payment_percentage'];
+        $new_total_after_discount = $service_amount_data['total_amount_after_discount'];
+
+        // المعاملة القديمة
+        $old_transaction = $booking->transactions()->where('is_refund', false)->first();
+        $old_amount_paid = $old_transaction->amount ?? 0;
+
+        // احسب الفرق
+        $amount_diff = $new_total_after_discount - $old_amount_paid;
+
+        if ($amount_diff > 0) {
+            // خصم الفرق من رصيد المستخدم
+            if ($user->balance < $amount_diff) {
+                MessageService::abort(422, 'messages.user.not_enough_balance');
+            }
+            $user->balance -= $amount_diff;
+        } elseif ($amount_diff < 0) {
+            // استرجاع الفرق للمستخدم
+            $user->balance += abs($amount_diff);
+        }
+        $user->save();
+
+        // تحديث الخدمات
+        $current_services = $booking->bookingServices()->pluck('service_id')->toArray();
+        $new_services = array_column($data['services'], 'id');
+
+        $to_add = array_diff($new_services, $current_services);
+        $to_remove = array_diff($current_services, $new_services);
+
+        if (count($to_remove) > 0) {
+            $booking->bookingServices()->whereIn('service_id', $to_remove)->delete();
+        }
+
+        foreach ($to_add as $service_id) {
+            $booking->bookingServices()->create(['service_id' => $service_id]);
+        }
+
+        // حذف الدفعات السابقة
+        $booking->payments()->delete();
+
+        // إنشاء دفعة جديدة
+        $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
+        SalonPayment::create([
+            'paymentable_id' => $booking->id,
+            'paymentable_type' => Booking::class,
+            'user_id' => $user->id,
+            'salon_id' => $booking->salon_id,
+            'amount' => $new_total_after_discount,
+            'currency' => 'AED',
+            'method' => 'wallet',
+            'status' => 'confirm',
+            'is_refund' => false,
+            'system_percentage' => $system_percentage,
+        ]);
+
+        // حذف المعاملة السابقة
+        $old_transaction?->delete();
+
+        // إنشاء معاملة جديدة
+        WalletTransaction::create([
+            'user_id' => $user->id,
+            'amount' => $new_total_after_discount,
+            'currency' => 'AED',
+            'description' => [
+                'en' => __('messages.booking.booking_updated', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'en'),
+                'ar' => __('messages.booking.booking_updated', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'ar'),
+            ],
+            'status' => 'completed',
+            'type' => 'booking',
+            'is_refund' => false,
+            'transactionable_id' => $booking->id,
+            'transactionable_type' => Booking::class,
+            'direction' => 'out',
+            'metadata' => [],
+        ]);
+
+        // تحديث الخدمات المجانية
+        if ($booking->freeServices) {
+            foreach ($booking->freeServices as $freeService) {
+                $freeService->is_used = 0;
+                $freeService->booking_id = null;
+                $freeService->save();
+            }
+        }
+
+        if ($use_free_services) {
+            foreach ($bookingDetails['selected_free_services'] as $freeService) {
+                $freeService->is_used = 1;
+                $freeService->booking_id = $booking->id;
+                $freeService->save();
+            }
+        }
+
+        // التعامل مع الكوبون المستخدم سابقًا
+        $old_coupon_usage = $booking->couponUsage;
+        $old_coupon_id = $old_coupon_usage?->coupon_id;
+        $new_coupon_id = $data['coupon_id'] ?? null;
+
+        if ($old_coupon_id && $old_coupon_id !== $new_coupon_id) {
+            $old_coupon_usage->delete();
+        }
+
+        if ($new_coupon_id) {
+            $coupon = Coupon::find($new_coupon_id);
+
+            if (!$coupon || !$coupon->getIsValidAttribute()) {
+                MessageService::abort(422, 'messages.coupon.is_invalid');
+            }
+
+            if (!$old_coupon_id || $old_coupon_id !== $new_coupon_id) {
+                CouponUsage::create([
+                    'coupon_id' => $new_coupon_id,
+                    'user_id' => $user->id,
+                    'booking_id' => $booking->id,
+                    'used_at' => now(),
+                ]);
+            }
+        }
+
+        $booking->load([
+            'user',
+            'salon',
+            'bookingServices.service',
+            'bookingDates',
+            'transactions',
+            'couponUsage',
+            'payments',
+        ]);
 
         return $booking;
     }

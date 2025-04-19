@@ -3,12 +3,14 @@
 namespace App\Http\Requests\Salons\Salon;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Models\Users\User;
 
 class UpdateRequest extends BaseFormRequest
 {
     public function rules(): array
     {
-        return [
+
+        $rules = [
             'merchant_legal_name'       => 'nullable|string|max:255',
             'merchant_commercial_name'  => 'nullable|string|max:255',
             'address'                   => 'nullable|string|max:255',
@@ -31,18 +33,33 @@ class UpdateRequest extends BaseFormRequest
             'email'                     => 'nullable|email',
             'description'               => 'nullable|string',
             'location'                  => 'nullable|string|max:255',
-            'is_approved'               => 'nullable|boolean',
-            'is_active'                 => 'nullable|boolean',
             'type'                      => 'nullable|in:salon,home_service,beautician,clinic',
             'country'                   => 'nullable|string|max:255',
             'city'                      => 'nullable|string|max:255',
-            'block_message'             => 'nullable|string|max:255',
             'tags'                      => 'nullable|string',
+            'loyalty_service_id'        => 'nullable|integer|exists:services,id,deleted_at,NULL',
 
             'images' => 'nullable|array',
             'images.*' => 'nullable|string|max:255',
             'images_remove' => 'nullable|array',
             'images_remove.*' => 'nullable|integer|exists:images,id,deleted_at,NULL',
         ];
+
+        $user = User::auth();
+
+        $rules_admin = [];
+
+        if ($user->isAdmin()) {
+            $rules_admin = [
+                'is_approved'               => 'nullable|boolean',
+                'is_active'                 => 'nullable|boolean',
+                'block_message'             => 'nullable|string|max:255',
+            ];
+        }
+
+        // merge rules
+        $rules = array_merge($rules, $rules_admin);
+
+        return $rules;
     }
 }

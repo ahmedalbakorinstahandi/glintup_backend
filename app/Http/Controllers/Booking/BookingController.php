@@ -7,6 +7,7 @@ use App\Http\Permissions\Booking\BookingPermission;
 use App\Http\Requests\Booking\Booking\CreateFromUserRequest;
 use App\Http\Requests\Booking\Booking\CreateRequest;
 use App\Http\Requests\Booking\Booking\GetBookingDetailsRequest;
+use App\Http\Requests\Booking\Booking\RescheduleRequest;
 use App\Http\Requests\Booking\Booking\UpdateRequest;
 use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\FreeServiceResource;
@@ -121,6 +122,39 @@ class BookingController extends Controller
                 'selected_free_services' =>  FreeServiceResource::collection($data['selected_free_services']),
                 'services' => ServiceResource::collection($data['services']),
             ],
+        ]);
+    }
+
+
+    // rescheduleBooking
+    public function rescheduleBooking($id, RescheduleRequest $request)
+    {
+        $booking = $this->bookingService->show($id);
+
+        BookingPermission::canUpdate($booking);
+
+        $booking = $this->bookingService->rescheduleBooking($booking, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.booking.reschedule_successfully'),
+            'data' => new BookingResource($booking),
+        ]);
+    }
+
+    // cancelBooking
+    public function cancelBooking($id)
+    {
+        $booking = $this->bookingService->show($id);
+
+        BookingPermission::canUpdate($booking);
+
+        $booking = $this->bookingService->cancelBooking($booking, false);
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.booking.cancel_successfully'),
+            'data' => new BookingResource($booking),
         ]);
     }
 }

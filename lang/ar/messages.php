@@ -73,6 +73,15 @@ return [
         'item_not_found'            => 'الحجز غير موجود',
         'service_not_in_salon' => 'الخدمة غير موجودة في الصالون',
         'booking_details' => 'الحجز #:code - :salon',
+        'cannot_reschedule_cancelled_booking' => 'لا يمكن إعادة جدولة حجز ملغي',
+        'cannot_reschedule_completed_booking' => 'لا يمكن إعادة جدولة حجز مكتمل',
+        'reschedule_successfully' => 'تم إعادة جدولة الحجز بنجاح',
+        'booking_cancelled' => 'تم إلغاء الحجز #:code - :salon',
+        'cancel_successfully' => 'تم إلغاء الحجز بنجاح',
+        'already_cancelled_booking' => 'الحجز ملغي بالفعل',
+        'cannot_cancel_completed_booking' => 'لا يمكن إلغاء حجز مكتمل',
+        'cannot_update_cancelled_booking' => 'لا يمكن تحديث حجز ملغي',
+        'cannot_update_completed_booking' => 'لا يمكن تحديث حجز مكتمل',
     ],
 
     'user' => [

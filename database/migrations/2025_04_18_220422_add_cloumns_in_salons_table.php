@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('block_message')->nullable()->after('is_active');
             $table->text('bio')->nullable()->after('block_message');
             $table->text('tags')->nullable()->after('bio');
+            $table->unsignedBigInteger('loyalty_service_id')->nullable()->after('tags');
 
             // 📌 الحقول القديمة غير المستخدمة - نجمعها آخر الجدول
             $table->string('name', 255)->nullable()->after('tags')->change();

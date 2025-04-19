@@ -74,6 +74,13 @@ class Salon extends Model
         return $this->hasMany(Booking::class);
     }
 
+
+    // is_makeup_artist
+    public function isMakeupArtist()
+    {
+        return $this->types == 'beautician';
+    }
+
     public function mostBookedServices()
     {
         // service resource

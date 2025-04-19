@@ -27,11 +27,11 @@ class BookingPermission
 
         if ($user->isCustomer()) {
             if ($booking->user_id != $user->id) {
-                MessageService::abort(403, 'messages.booking.permission_error');
+                MessageService::abort(403, 'messages.permission_error');
             }
         } elseif ($user->isUserSalon()) {
             if ($booking->salon_id != $user->salon->id) {
-                MessageService::abort(403, 'messages.booking.permission_error');
+                MessageService::abort(403, 'messages.permission_error');
             }
         }
     }
@@ -50,7 +50,7 @@ class BookingPermission
 
         Service::whereIn('id', $serviceIds)->each(function ($service) use ($data) {
             if ($service->salon_id != $data['salon_id']) {
-                MessageService::abort(422, 'messages.booking.service_not_in_salon');
+                MessageService::abort(422, 'messages.service_not_in_salon');
             }
         });
         
@@ -64,11 +64,11 @@ class BookingPermission
 
         if ($user->isCustomer()) {
             if ($booking->user_id != $user->id) {
-                MessageService::abort(403, 'messages.booking.permission_error');
+                MessageService::abort(403, 'messages.permission_error');
             }
         } elseif ($user->isUserSalon()) {
             if ($booking->salon_id != $user->salon->id) {
-                MessageService::abort(403, 'messages.booking.permission_error');
+                MessageService::abort(403, 'messages.permission_error');
             }
         }
     }
@@ -78,11 +78,11 @@ class BookingPermission
 
         if ($user->isCustomer()) {
             if ($booking->user_id != $user->id) {
-                MessageService::abort(403, 'messages.booking.permission_error');
+                MessageService::abort(403, 'messages.permission_error');
             }
         } elseif ($user->isUserSalon()) {
             if ($booking->salon_id != $user->salon->id) {
-                MessageService::abort(403, 'messages.booking.permission_error');
+                MessageService::abort(403, 'messages.permission_error');
             }
         }
     }

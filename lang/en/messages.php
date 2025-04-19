@@ -74,6 +74,15 @@ return [
         'item_not_found'            => 'Booking not found',
         'service_not_in_salon'     => 'Service not in salon',
         'booking_details' => 'Booking #:code - :salon',
+        'cannot_reschedule_cancelled_booking' => 'Cannot reschedule a cancelled booking',
+        'cannot_reschedule_completed_booking' => 'Cannot reschedule a completed booking',
+        'reschedule_successfully' => 'Booking rescheduled successfully',
+        'booking_cancelled' => 'Booking #:code - :salon has been cancelled',
+        'cancel_successfully' => 'Booking cancelled successfully',
+        'already_cancelled_booking' => 'Booking already cancelled',
+        'cannot_cancel_completed_booking' => 'Cannot cancel a completed booking',
+        'cannot_update_cancelled_booking' => 'Cannot update a cancelled booking',
+        'cannot_update_completed_booking' => 'Cannot update a completed booking',
     ],
 
 

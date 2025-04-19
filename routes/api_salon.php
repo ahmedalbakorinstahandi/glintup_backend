@@ -39,6 +39,7 @@ Route::prefix('salon')->group(function () {
         Route::prefix('me')->group(function () {
             Route::get('/permissions', [SalonController::class, 'getPermissions']);
             Route::get('/data', [SalonController::class, 'getSalonData']);
+            Route::put('/update', [SalonController::class, 'updateMySalon']);
         });
 
         //salonStatistics
