@@ -48,10 +48,10 @@ class LoyaltyPointController extends Controller
         LoyaltyPointPermission::canShow($item);
 
         $item = $this->service->receive($item);
-        
+
         return response()->json([
             'success' => true,
-            'message' => 'messages.loyalty_point.item_received_successfully',
+            'message' => trans('messages.loyalty_point.item_received_successfully'),
             'data' => new LoyaltyPointResource($item),
         ]);
     }

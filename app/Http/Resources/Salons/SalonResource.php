@@ -3,6 +3,8 @@
 namespace App\Http\Resources\Salons;
 
 use App\Http\Resources\General\ImageResource;
+use App\Http\Resources\Rewards\GiftCardResource;
+use App\Http\Resources\Rewards\LoyaltyPointResource;
 use App\Http\Resources\Services\GroupResource;
 use App\Http\Resources\Services\ReviewResource;
 use App\Http\Resources\Services\ServiceResource;
@@ -61,7 +63,8 @@ class SalonResource extends JsonResource
             'country'         => $this->country,
             'city'            => $this->city,
             'distance' => $this->when($user->isCustomer(), $this->getDistance($user)),
-            'my_loyalty_service' => $this->when($user->isCustomer(), $this->MyLoyaltyService()),
+            'my_loyalty_service' => $this->when($user->isCustomer(), new LoyaltyPointResource($this->MyLoyaltyService())),
+            'my_gift_cards' => $this->when($user->isCustomer(), GiftCardResource::collection($this->MyGiftCards())),
             'average_rating' => $this->reviews->avg('rating'),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),

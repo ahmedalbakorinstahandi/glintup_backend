@@ -36,4 +36,10 @@ class LoyaltyPoint extends Model
     {
         return $this->belongsTo(Salon::class)->withTrashed();
     }
+
+    // free service relation morph
+    public function freeService()
+    {
+        return $this->morphOne(FreeService::class, 'freeable');
+    }
 }

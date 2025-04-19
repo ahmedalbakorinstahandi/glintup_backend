@@ -14,7 +14,7 @@ class LoyaltyPointService
 {
     public function index($data)
     {
-        $query = LoyaltyPoint::with(['user', 'salon']);
+        $query = LoyaltyPoint::with(['user', 'salon', 'freeService']);
         $query = LoyaltyPointPermission::filterIndex($query);
         return FilterService::applyFilters(
             $query,
@@ -29,7 +29,7 @@ class LoyaltyPointService
 
     public function show($id)
     {
-        $item = LoyaltyPoint::with(['user', 'salon'])->find($id);
+        $item = LoyaltyPoint::with(['user', 'salon', 'freeService'])->find($id);
         if (!$item) {
             MessageService::abort(404, 'messages.loyalty_point.item_not_found');
         }
@@ -44,6 +44,8 @@ class LoyaltyPointService
     public function update($item, $data)
     {
         $item->update($data);
+
+        
         return $item;
     }
 
@@ -71,7 +73,7 @@ class LoyaltyPointService
         $salon = $item->salon;
 
         $loyalty_service_id = $salon->loyalty_service_id;
-        
+
         if (!$loyalty_service_id) {
             MessageService::abort(422, 'messages.loyalty_point.salon_deos_not_have_loyalty_service');
         }
@@ -105,6 +107,7 @@ class LoyaltyPointService
 
         // TODO: send notification to salon
 
+        $item->load(['user', 'salon', 'freeService']);
 
 
         return $item;

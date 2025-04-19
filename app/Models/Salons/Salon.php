@@ -4,6 +4,7 @@ namespace App\Models\Salons;
 
 use App\Models\Booking\Booking;
 use App\Models\General\Image;
+use App\Models\Rewards\GiftCard;
 use App\Models\Rewards\LoyaltyPoint;
 use App\Models\Services\Group;
 use App\Models\Services\Review;
@@ -98,6 +99,20 @@ class Salon extends Model
             ->first();
     }
 
+    // get my gift cards in this salon not token and not used
+    public function myGiftCards()
+    {
+        $user = User::auth();
+
+        $giftCards = GiftCard::where('salon_id', $this->id)
+            ->where('recipient_id', $user->id)
+            ->where('is_used', false)
+            ->whereNull('received_at')
+            ->get();
+
+        return $giftCards;
+    }
+
 
     // Define relationship with loyalty points
     public function loyaltyPoints()
@@ -170,7 +185,7 @@ class Salon extends Model
 
     public function services()
     {
-        return $this->hasMany(\App\Models\Services\Service::class);
+        return $this->hasMany(Service::class);
     }
 
     // public function groups()
