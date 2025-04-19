@@ -56,7 +56,6 @@ class Salon extends Model
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
         'deleted_at'  => 'datetime',
-        'block_message' => 'integer',
     ];
 
     public function owner()

@@ -66,22 +66,25 @@ class SalonController extends Controller
         ]);
     }
 
-    public function create(CreateRequest $request)
-    {
-        $data = SalonPermission::create($request->validated());
-        $salon = $this->salonService->create($data);
+    // public function create(CreateRequest $request)
+    // {
+    //     $data = SalonPermission::create($request->validated());
+    //     $salon = $this->salonService->create($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => trans('messages.salon.item_created_successfully'),
-            'data' => new SalonResource($salon),
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => trans('messages.salon.item_created_successfully'),
+    //         'data' => new SalonResource($salon),
+    //     ]);
+    // }
 
     public function update($id, UpdateRequest $request)
     {
         $salon = $this->salonService->show($id);
+
+        
         SalonPermission::canUpdate($salon);
+
         $salon = $this->salonService->update($salon, $request->validated());
 
         return response()->json([

@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('business_contact_email')->after('business_contact_name');
             $table->string('business_contact_number')->after('business_contact_email');
             $table->string('types')->after('icon');
-            $table->bigInteger('block_message')->nullable()->after('is_active');
+            $table->string('block_message')->nullable()->after('is_active');
             $table->text('bio')->nullable()->after('block_message');
             $table->text('tags')->nullable()->after('bio');
 

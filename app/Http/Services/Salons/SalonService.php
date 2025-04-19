@@ -127,7 +127,44 @@ class SalonService
             ImageService::removeImages($data['images_remove']);
         }
 
-        $salon->update($data);
+        $salon->update(
+            [
+                'merchant_legal_name' => $data['merchant_legal_name'] ?? $salon->merchant_legal_name,
+                'merchant_commercial_name' => $data['merchant_commercial_name'] ?? $salon->merchant_commercial_name,
+                'address' => $data['address'] ?? $salon->address,
+                'city_street_name' => $data['city_street_name'] ?? $salon->city_street_name,
+                'contact_name' => $data['contact_name'] ?? $salon->contact_name,
+                'contact_number' => $data['contact_number'] ?? $salon->contact_number,
+                'contact_email' => $data['contact_email'] ?? $salon->contact_email,
+                'business_contact_name' => $data['business_contact_name'] ?? $salon->business_contact_name,
+                'business_contact_email' => $data['business_contact_email'] ?? $salon->business_contact_email,
+                'business_contact_number' => $data['business_contact_number'] ?? $salon->business_contact_number,
+
+                'icon' => $data['icon'] ?? $salon->icon,
+                'description' => $data['description'] ?? $salon->description,
+                'latitude' => $data['latitude'] ?? $salon->latitude,
+                'longitude' => $data['longitude'] ?? $salon->longitude,
+                'types' => !isset($data['types']) ? $salon->types : implode(',', $data['types']),
+                'bio' => $data['bio'] ?? $salon->bio,
+
+                'is_active' => $data['is_active'] ?? $salon->is_active,
+                'is_approved' => $data['is_approved'] ?? $salon->is_approved,
+                'block_message' => $data['block_message'] ?? $salon->block_message,
+                'tags' => $data['tags'] ?? $salon->tags,
+
+
+
+                // old data
+                'name' => '',
+                'phone_code' => '',
+                'phone' => '',
+                'email' => null,
+                'location' => '',
+                'type' => 'salon',
+                'country' => '',
+                'city' => '',
+            ]
+        );
 
         $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews']);
 

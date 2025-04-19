@@ -53,7 +53,7 @@ return new class extends Migration
             // $table->text('description')->nullable();
             // $table->boolean('is_approved')->default(false);
             // $table->boolean('is_active')->default(true);
-            // $table->bigInteger('block_message')->nullable();
+            // $table->string('block_message')->nullable();
             // $table->text('bio')->nullable();
             // $table->text('tags')->nullable();
             // $table->double('latitude')->nullable();
