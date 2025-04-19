@@ -92,4 +92,21 @@ class GiftCardController extends Controller
             ]
         );
     }
+
+    //$receive
+    public function receive($id)
+    {
+        $giftCard = $this->giftCardService->show($id);
+
+
+        $giftCard = $this->giftCardService->receive($giftCard);
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => new GiftCardResource($giftCard),
+                'message' => trans('messages.gift_card.item_received_successfully'),
+            ]
+        );
+    }
 }

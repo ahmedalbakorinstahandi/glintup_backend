@@ -77,6 +77,8 @@ Route::prefix('customer')->group(function () {
         Route::prefix('gift-cards')->group(function () {
             Route::get('/', [GiftCardController::class, 'index']);
             Route::post('/send', [GiftCardController::class, 'createByUser']);
+            Route::get('{id}', [GiftCardController::class, 'show']);
+            Route::post('{id}/receive', [GiftCardController::class, 'receive']);
         });
 
 
@@ -97,6 +99,7 @@ Route::prefix('customer')->group(function () {
         Route::prefix('loyalty-points')->controller(LoyaltyPointController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+            Route::post('{id}/receive', 'receive');
         });
     });
 });

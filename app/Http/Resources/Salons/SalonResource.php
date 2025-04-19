@@ -61,6 +61,7 @@ class SalonResource extends JsonResource
             'country'         => $this->country,
             'city'            => $this->city,
             'distance' => $this->when($user->isCustomer(), $this->getDistance($user)),
+            'my_loyalty_service' => $this->when($user->isCustomer(), $this->MyLoyaltyService()),
             'average_rating' => $this->reviews->avg('rating'),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
@@ -75,6 +76,9 @@ class SalonResource extends JsonResource
             'most_booked_services' => $this->when($this_function_is_show, ServiceResource::collection($this->mostBookedServices())),
             'latest_reviews' => $this->when($this_function_is_show, ReviewResource::collection($this->reviews()->latest()->take(5)->get())),
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),
+
+            // if not null
+            'loyalty_service' => new ServiceResource($this->whenLoaded('loyaltyService')),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
         ];

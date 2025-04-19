@@ -4,6 +4,7 @@ namespace App\Models\Salons;
 
 use App\Models\Booking\Booking;
 use App\Models\General\Image;
+use App\Models\Rewards\LoyaltyPoint;
 use App\Models\Services\Group;
 use App\Models\Services\Review;
 use App\Models\Services\Service;
@@ -46,6 +47,7 @@ class Salon extends Model
         'block_message',
         'bio',
         'tags',
+        'loyalty_service_id',
     ];
 
     protected $casts = [
@@ -72,6 +74,35 @@ class Salon extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    //loyalty_service_id
+    public function loyaltyService()
+    {
+        return $this->belongsTo(Service::class, 'loyalty_service_id')->withTrashed();
+    }
+
+    // loyalties
+
+
+    // get if have current user has a loyalty service in this salon is done points = 5 and not taken
+    public function MyLoyaltyService()
+    {
+
+        $user = User::auth();
+
+        return $this->loyaltyPoints()
+            ->where('user_id', $user->id)
+            ->where('points', 5)
+            ->whereNull('taken_at')
+            ->first();
+    }
+
+
+    // Define relationship with loyalty points
+    public function loyaltyPoints()
+    {
+        return $this->hasMany(LoyaltyPoint::class, 'salon_id');
     }
 
 

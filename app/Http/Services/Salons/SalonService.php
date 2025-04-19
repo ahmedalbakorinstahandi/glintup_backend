@@ -49,7 +49,7 @@ class SalonService
 
     public function index($data)
     {
-        $query = Salon::query();
+        $query = Salon::query()->with(['loyaltyService', 'owner']);
 
         $searchFields = ['name', 'email', 'description', 'location', 'city', 'country'];
         $numericFields = [];
@@ -79,7 +79,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews','loyaltyService']);
 
         return $salon;
     }
@@ -102,7 +102,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews','loyaltyService']);
 
         return $salon;
     }
@@ -167,7 +167,7 @@ class SalonService
             ]
         );
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews','loyaltyService']);
 
         return $salon;
     }

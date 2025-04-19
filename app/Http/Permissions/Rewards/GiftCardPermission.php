@@ -4,6 +4,7 @@ namespace App\Http\Permissions\Rewards;
 
 use App\Models\Rewards\GiftCard;
 use App\Models\Users\User;
+use App\Services\MessageService;
 
 class GiftCardPermission
 {
@@ -27,7 +28,19 @@ class GiftCardPermission
 
     public static function canShow(GiftCard $item)
     {
-        return true;
+        $user = User::auth();
+
+        if ($user->isUserSalon()) {
+            if ($item->salon_id != $user->salon->id) {
+                MessageService::abort(503, 'messages.permission_error');
+            }
+        } elseif ($user->isCustomer()) {
+            if ($item->sender_id != $user->id && $item->recipient_id != $user->id) {
+                MessageService::abort(503, 'messages.permission_error');
+            }
+        }
+
+        return false;
     }
 
     public static function create($data)

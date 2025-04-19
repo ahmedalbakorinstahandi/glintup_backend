@@ -7,6 +7,7 @@ use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Http\Permissions\Rewards\GiftCardPermission;
 use App\Models\General\Setting;
+use App\Models\Rewards\FreeService;
 use App\Models\Salons\SalonPayment;
 use App\Models\Services\Service;
 use App\Models\Users\User;
@@ -41,7 +42,7 @@ class GiftCardService
 
     public function show($id)
     {
-        $item = GiftCard::with(['sender', 'recipient'])->find($id);
+        $item = GiftCard::with(['sender', 'recipient', 'salon'])->find($id);
         if (!$item) {
             MessageService::abort(404, 'messages.gift_card.item_not_found');
         }
@@ -201,7 +202,7 @@ class GiftCardService
             'amount' => $total,
             'currency' => $data['currency'] ?? null,
             'services' => $data['services'],
-            'message' => $message,
+            'message' => $data['message'],
             'tax' => null,
             'salon_id' => $data['salon_id'] ?? null,
         ]);
@@ -260,4 +261,94 @@ class GiftCardService
     // 'services' => 'nullable|array|max:3',
     // 'services.*' => 'required_if:type,services|exists:services,id,deleted_at,NULL',
     // 'message' => 'required|string',
+
+
+
+    // استلام بطاقة الهدايا
+    public function receive($giftCard)
+    {
+        $user = User::auth();
+
+
+        if ($giftCard->recipient_id != $user->id) {
+            MessageService::abort(422, 'messages.gift_card.not_your_gift_card');
+        }
+
+
+        if (!$giftCard) {
+            MessageService::abort(422, 'messages.gift_card.item_not_found');
+        }
+
+
+        // if ($giftCard->is_used) {
+        //     MessageService::abort(422, 'messages.gift_card.item_already_used');
+        // }
+
+        if ($giftCard->received_at) {
+            MessageService::abort(422, 'messages.gift_card.item_already_received');
+        }
+
+
+        if ($giftCard->type == 'services') {
+            $services = $giftCard->services;
+            $salon_id = $giftCard->salon_id;
+            $salon = $giftCard->salon;
+            foreach ($services as $serviceId) {
+                $service = Service::find($serviceId);
+                if ($service) {
+                    FreeService::create([
+                        'user_id' => $user->id,
+                        'service_id' => $service->id,
+                        'salon_id' => $salon_id,
+                        'freeable_id' => $giftCard->id,
+                        'freeable_type' => GiftCard::class,
+                        'source' => 'gift',
+                        'is_used' => false,
+                        'booking_id' => null,
+                    ]);
+                }
+            }
+
+            if ($salon) {
+                $giftCard->salon_id = $salon->id;
+            } else {
+                MessageService::abort(422, 'messages.gift_card.salon_not_found');
+            }
+        } elseif ($giftCard->type == 'amount') {
+            $user->balance += $giftCard->amount;
+            $user->save();
+
+
+            // transaction
+            WalletTransaction::create(
+                [
+                    'user_id' => $user->id,
+                    'amount' => $giftCard->amount,
+                    'currency' => 'AED',
+                    'description' => [
+                        'en' => __('messages.gift_card.received_transaction_details', ['code' => $giftCard->code, 'amount' => $giftCard->amount, 'currency' => 'AED'], 'en'),
+                        'ar' => __('messages.gift_card.received_transaction_details', ['code' => $giftCard->code, 'amount' => $giftCard->amount, 'currency' => 'AED'], 'ar'),
+                    ],
+                    'status' => 'completed',
+                    'type' => 'gift_card',
+                    'is_refund' => false,
+                    'transactionable_id' => $giftCard->id,
+                    'transactionable_type' => GiftCard::class,
+                    'direction' => "in",
+                    'metadata' => [],
+                ]
+            );
+        }
+
+
+
+        $giftCard->is_used = true;
+        $giftCard->received_at = now();
+        $giftCard->save();
+
+        // TODO: send notification to sender
+
+
+        return $giftCard;
+    }
 }

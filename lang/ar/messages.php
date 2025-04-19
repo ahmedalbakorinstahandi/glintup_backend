@@ -200,6 +200,11 @@ return [
         'item_not_found'            => 'بطاقة الهدية غير موجودة',
         'cannot_send_to_yourself' => 'لا يمكنك إرسال بطاقة هدية لنفسك',
         'transaction_details' => 'تمت إضافة تكلفة بطاقة الهدية رقم #:code بقيمة :amount :currency. التفاصيل: :details. نتمنى لك تجربة رائعة!',
+        'not_your_gift_card' => 'هذه ليست بطاقة هدية لك',
+        'item_already_used' => 'تم استخدام بطاقة الهدية بالفعل',
+        'item_already_received' => 'تم استلام بطاقة الهدية بالفعل',
+        'received_transaction_details' => 'تم استلام بطاقة الهدية رقم #:code بقيمة :amount :currency.',
+        'item_received_successfully' => 'تم استلام بطاقة الهدية بنجاح',
     ],
 
     'gift_card_message' => "مرحبًا،\n\nلقد استلمت بطاقة هدية من :sender.\n\nالتفاصيل:\n:details\n\nرسالة المرسل:\n:note\n\nيرجى تحميل التطبيق من الرابط أدناه والتسجيل للحصول على البطاقة.\n\n:link",
@@ -225,7 +230,7 @@ return [
         'item_not_found'                  => 'عضو الطاقم غير موجود',
         'permissions_updated_successfully' => 'تم تحديث صلاحيات عضو الطاقم بنجاح',
     ],
-    
+
     'salon_payment' => [
         'item_created_successfully' => 'تم إنشاء دفعة الصالون بنجاح',
         'item_updated_successfully' => 'تم تحديث دفعة الصالون بنجاح',
@@ -241,6 +246,10 @@ return [
         'item_deleted_successfully' => 'تم حذف نقاط الولاء بنجاح',
         'failed_delete_item'        => 'فشل في حذف نقاط الولاء',
         'item_not_found'            => 'نقاط الولاء غير موجودة',
+        'already_received' => 'تم استلام نقاط الولاء بالفعل',
+        'salon_deos_not_have_loyalty_service' => 'الصالون لم يحدد خدمة ولاء',
+        'item_received_successfully' => 'تم استلام نقاط الولاء بنجاح',
+        'not_enough_points' => 'يجب أن يحتوي الكوبون على 5 طوابع',
     ],
 
     'phone_already_exists' => 'رقم الهاتف موجود بالفعل',

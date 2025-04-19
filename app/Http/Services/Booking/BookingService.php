@@ -524,6 +524,96 @@ class BookingService
 
 
 
+    // reschedule booking from user
+    public function rescheduleBooking($booking, $data)
+    {
+
+        if ($booking->status == 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_reschedule_completed_booking');
+        }
+
+        if ($booking->status == 'cancelled') {
+            MessageService::abort(422, 'messages.booking.cannot_reschedule_cancelled_booking');
+        }
+
+        // TODO :: check if the new date and time is available in the salon calendar // salon work, holidays, booking dates, services capacity 
+
+        // check if same date and time
+        if ($booking->date == $data['date'] && $booking->time == $data['time']) {
+            MessageService::abort(422, 'messages.booking.same_date_time');
+        }
+
+        // update booking date
+        $booking->bookingDates()->update([
+            'date' => $data['date'],
+            'time' => $data['time'],
+            'status' => 'accepted',
+        ]);
+
+        $booking->update([
+            'date' => $data['date'],
+            'time' => $data['time'],
+        ]);
+
+        // TODO :: send notification to salon
+
+
+        return $booking;
+    }
+
+
+    // // update booking services from user
+    // public function updateFromUser($booking, $data)
+    // {
+
+
+    //     if ($booking->status == 'completed') {
+    //         MessageService::abort(422, 'messages.booking.cannot_update_completed_booking');
+    //     }
+
+    //     if ($booking->status == 'cancelled') {
+    //         MessageService::abort(422, 'messages.booking.cannot_update_cancelled_booking');
+    //     }
+
+
+    //     $current_booking_services = $booking->bookingServices()->pluck('service_id')->toArray();
+
+    //     $new_booking_services = array_column($data['services'], 'id');
+
+    //     $services_to_add = array_diff($new_booking_services, $current_booking_services);
+
+    //     $services_to_remove = array_diff($current_booking_services, $new_booking_services);
+
+    //     // remove services from booking
+    //     if (count($services_to_remove) > 0) {
+    //         $booking->bookingServices()->whereIn('service_id', $services_to_remove)->delete();
+    //     }
+
+    //     // add services to booking
+    //     if (count($services_to_add) > 0) {
+    //         foreach ($services_to_add as $service_id) {
+    //             $booking->bookingServices()->create([
+    //                 'service_id' => $service_id,
+    //             ]);
+    //         }
+    //     }
+
+    //     // check if user have free services and use them
+    //     if ($booking->freeServices) {
+    //         foreach ($booking->freeServices as $freeService) {
+    //             if ($freeService) {
+    //                 $freeService->is_used = 0;
+    //                 $freeService->booking_id = null;
+    //                 $freeService->save();
+    //             }
+    //         }
+    //     }
+
+
+
+
+
+
     public function updateFromUser($booking, $data)
     {
         if ($booking->status === 'completed') {
@@ -637,6 +727,162 @@ class BookingService
         }
 
         // التعامل مع الكوبون المستخدم سابقًا
+        $old_coupon_usage = $booking->couponUsage;
+        $old_coupon_id = $old_coupon_usage?->coupon_id;
+        $new_coupon_id = $data['coupon_id'] ?? null;
+
+        if ($old_coupon_id && $old_coupon_id !== $new_coupon_id) {
+            $old_coupon_usage->delete();
+        }
+
+        if ($new_coupon_id) {
+            $coupon = Coupon::find($new_coupon_id);
+
+            if (!$coupon || !$coupon->getIsValidAttribute()) {
+                MessageService::abort(422, 'messages.coupon.is_invalid');
+            }
+
+            if (!$old_coupon_id || $old_coupon_id !== $new_coupon_id) {
+                CouponUsage::create([
+                    'coupon_id' => $new_coupon_id,
+                    'user_id' => $user->id,
+                    'booking_id' => $booking->id,
+                    'used_at' => now(),
+                ]);
+            }
+        }
+
+        $booking->load([
+            'user',
+            'salon',
+            'bookingServices.service',
+            'bookingDates',
+            'transactions',
+            'couponUsage',
+            'payments',
+        ]);
+
+        return $booking;
+    }
+
+
+
+
+
+    public function updateFromUser2($booking, $data)
+    {
+        if ($booking->status === 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_update_completed_booking');
+        }
+
+        if ($booking->status === 'cancelled') {
+            MessageService::abort(422, 'messages.booking.cannot_update_cancelled_booking');
+        }
+
+        $user = User::auth();
+
+        // حساب تفاصيل الحجز الجديدة
+        $bookingDetails = $this->returnBookingDetails($data);
+        $use_free_services = $data['use_free_services'] ?? false;
+        $service_amount_data = $use_free_services
+            ? $bookingDetails['with_free_services']
+            : $bookingDetails['with_out_free_services'];
+
+        $payment_percentage = $service_amount_data['payment_percentage'];
+        $new_total_after_discount = $service_amount_data['total_amount_after_discount'];
+
+        // السعر المدفوع سابقًا
+        $old_transaction = $booking->transactions()->where('is_refund', false)->first();
+        $old_amount_paid = $old_transaction->amount ?? 0;
+
+        // حساب الفارق
+        $amount_diff = $new_total_after_discount - $old_amount_paid;
+
+        // تعديل رصيد المستخدم
+        if ($amount_diff > 0) {
+            if ($user->balance < $amount_diff) {
+                MessageService::abort(422, 'messages.user.not_enough_balance');
+            }
+            $user->balance -= $amount_diff;
+        } elseif ($amount_diff < 0) {
+            $user->balance += abs($amount_diff);
+        }
+        $user->save();
+
+        // تعديل الخدمات
+        $current_services = $booking->bookingServices()->pluck('service_id')->toArray();
+        $new_services = array_column($data['services'], 'id');
+
+        $to_add = array_diff($new_services, $current_services);
+        $to_remove = array_diff($current_services, $new_services);
+
+        if (count($to_remove) > 0) {
+            $booking->bookingServices()->whereIn('service_id', $to_remove)->delete();
+        }
+
+        foreach ($to_add as $service_id) {
+            $booking->bookingServices()->create(['service_id' => $service_id]);
+        }
+
+        // إضافة دفعة جديدة ومعاملة جديدة بناءً على الفارق
+        if ($amount_diff != 0) {
+            $is_refund = $amount_diff < 0;
+            $diff_amount = abs($amount_diff);
+
+            // حركة مالية
+            WalletTransaction::create([
+                'user_id' => $user->id,
+                'amount' => $diff_amount,
+                'currency' => 'AED',
+                'description' => [
+                    'en' => __('messages.booking.booking_updated', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'en'),
+                    'ar' => __('messages.booking.booking_updated', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'ar'),
+                ],
+                'status' => 'completed',
+                'type' => 'booking',
+                'is_refund' => $is_refund,
+                'transactionable_id' => $booking->id,
+                'transactionable_type' => Booking::class,
+                'direction' => $is_refund ? 'in' : 'out',
+                'metadata' => [],
+            ]);
+
+            // دفعة للصالون
+            $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
+
+            SalonPayment::create([
+                'paymentable_id' => $booking->id,
+                'paymentable_type' => Booking::class,
+                'user_id' => $user->id,
+                'salon_id' => $booking->salon_id,
+                'amount' => $diff_amount,
+                'currency' => 'AED',
+                'method' => 'wallet',
+                'status' => 'confirm',
+                'is_refund' => $is_refund,
+                'system_percentage' => $system_percentage,
+            ]);
+        }
+
+        // تنظيف الخدمات المجانية القديمة
+        if ($booking->freeServices) {
+            foreach ($booking->freeServices as $freeService) {
+                $freeService->is_used = 0;
+                $freeService->booking_id = null;
+                $freeService->save();
+            }
+        }
+
+        // إضافة الخدمات المجانية الجديدة
+        if ($use_free_services) {
+            foreach ($bookingDetails['selected_free_services'] as $freeService) {
+                $freeService->is_used = 1;
+                $freeService->booking_id = $booking->id;
+                $freeService->save();
+            }
+        }
+
+        // التعامل مع الكوبون القديم والجديد
         $old_coupon_usage = $booking->couponUsage;
         $old_coupon_id = $old_coupon_usage?->coupon_id;
         $new_coupon_id = $data['coupon_id'] ?? null;

@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\Booking\Booking;
+use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonStaff;
 use App\Models\Salons\UserSalonPermission;
@@ -144,6 +145,12 @@ class User extends Model
         }
 
         return null;
+    }
+
+    // free services
+    public function freeServices()
+    {
+        return $this->hasMany(FreeService::class, 'user_id');
     }
 
     // salon owner
