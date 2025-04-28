@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('birth_date');
             $table->string('avatar', 110)->nullable();
             $table->string('phone_code', 7);
-            $table->string('phone', 12);
+            $table->string('phone', 20);
             $table->string('password');
             $table->enum('role', ["customer", "salon_owner", "admin", "staff"]);
             $table->boolean('is_active')->default(true);

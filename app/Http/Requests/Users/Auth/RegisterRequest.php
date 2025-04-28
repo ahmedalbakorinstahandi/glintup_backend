@@ -14,7 +14,7 @@ class RegisterRequest extends BaseFormRequest
             'last_name' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
             'phone_code' => 'required|string',
-            'phone' => 'required|string',
+            'phone' => 'required|string|max:20',
             'gender' => 'required|string|in:male,female',
             'birth_date' => 'required|date|before:today',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

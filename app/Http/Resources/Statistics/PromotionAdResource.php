@@ -21,6 +21,7 @@ class PromotionAdResource extends JsonResource
             'is_active'    => $this->is_active,
             'views'        => $this->views,
             'clicks'       => $this->clicks,
+            'status'       => $this->status,
 
             'salon'        => new SalonResource($this->whenLoaded('salon')),
 
