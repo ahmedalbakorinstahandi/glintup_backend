@@ -3,6 +3,7 @@
 namespace App\Models\Salons;
 
 use App\Models\Booking\Booking;
+use App\Models\Users\User;
 use App\Services\HelperService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,6 +52,12 @@ class SalonPayment extends Model
     public function getAmountFormattedAttribute(): string
     {
         return number_format($this->amount, 2) . HelperService::getCurrencySymbol($this->currency);
+    }
+
+    // user
+    public function user()
+    {
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     // morphs

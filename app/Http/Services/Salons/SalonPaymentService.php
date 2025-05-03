@@ -11,7 +11,7 @@ class SalonPaymentService
 {
     public function index($data)
     {
-        $query = SalonPayment::with(['paymentable']);
+        $query = SalonPayment::with(['paymentable', 'user']);
         $query = SalonPaymentPermission::filterIndex($query);
         return FilterService::applyFilters(
             $query,
@@ -26,7 +26,7 @@ class SalonPaymentService
 
     public function show($id)
     {
-        $item = SalonPayment::with(['paymentable'])->find($id);
+        $item = SalonPayment::with(['paymentable', 'user'])->find($id);
         if (!$item) {
             MessageService::abort(404, 'messages.salon_payment.item_not_found');
         }
