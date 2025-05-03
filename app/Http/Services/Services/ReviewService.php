@@ -41,9 +41,8 @@ class ReviewService
                 'pending_reviews' => $pendingReviews,
                 'negative_reviews' => $negativeReviews,
             ],
-            'data' => $reviews,
+            'data' => $query->paginate($data['limit'] ?? 20),
         ];
-
     }
 
     public function show($id)
