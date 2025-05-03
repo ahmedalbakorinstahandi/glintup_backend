@@ -72,6 +72,7 @@ class UserAuthService
                     'is_active' => 1,
                     'is_verified' => 0,
                     'language' => $requestData['language'] ?? 'ar',
+                    'register_at' => Carbon::now(),
                 ]
             );
         } elseif ($user && $user->is_verified == 0) {
@@ -98,6 +99,7 @@ class UserAuthService
                 'is_verified' => 0,
                 'language' => $requestData['language'] ?? 'ar',
                 'added_by' => Auth::user() ? Auth::user()->id : null,
+                'register_at' => Carbon::now(),
             ]);
         }
 

@@ -35,9 +35,13 @@ class User extends Model
         'otp',
         'otp_expire_at',
         'is_verified',
+        'register_at',
     ];
 
     protected $casts = [
+        'id'              => 'integer',
+        'first_name'      => 'string',
+        'last_name'       => 'string',
         'balance'        => 'double',
         'birth_date'      => 'date',
         'is_active'       => 'boolean',
@@ -47,6 +51,7 @@ class User extends Model
         'is_verified'     => 'boolean',
         'created_at'      => 'datetime',
         'updated_at'      => 'datetime',
+        'register_at'     => 'datetime',
     ];
 
 

@@ -40,6 +40,7 @@ class UserResource extends JsonResource
             'refunds'             => RefundResource::collection($this->whenLoaded('refunds')),
             'salon_permissions'   => UserSalonPermissionResource::collection($this->whenLoaded('salonPermissions')),
 
+            'register_at' => $this->register_at?->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];

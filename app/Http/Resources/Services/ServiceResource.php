@@ -26,6 +26,7 @@ class ServiceResource extends JsonResource
             'discount_percentage' => $this->discount_percentage,
             'gender'              => $this->gender,
             'is_active'           => $this->is_active,
+            'is_home_service'     => $this->is_home_service,
             'order'               => $this->order,
 
             // العلاقات

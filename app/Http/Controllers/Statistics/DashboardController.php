@@ -15,8 +15,29 @@ class DashboardController extends Controller
     // statistics dashboard end point
     public function index()
     {
-        // daily,weekly,monthly,yearly
+        // daily,weekly,monthly,yearly,custom
         $date = request('date', 'daily');
+
+        if (!in_array($date, ['daily', 'weekly', 'monthly', 'yearly', 'custom'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid date range',
+            ], 400);
+        }
+
+        if ($date == 'custom') {
+            $from = request('from');
+            $to = request('to');
+
+            if (!$from || !$to) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid date range',
+                ], 400);
+            }
+
+            $date = [$from, $to];
+        }
 
         $salons_count = 0;
         $users_count = 0;
@@ -77,6 +98,16 @@ class DashboardController extends Controller
                 $completed_booking_count = Booking::where('date', '>=', now()->subYear())->where('status', 'completed')->count();
                 $canceled_booking_count = Booking::where('date', '>=', now()->subYear())->where('status', 'canceled')->count();
                 $ads_count = PromotionAd::where('created_at', '>=', now()->subYear())->count();
+                break;
+            case 'custom':
+                $salons_count = Salon::where('created_at', '>=', $date[0])->where('created_at', '<=', $date[1])->count();
+                $users_count = User::where('created_at', '>=', $date[0])->where('created_at', '<=', $date[1])->where('role', 'customer')->count();
+                $all_bookings_count = Booking::where('date', '>=', $date[0])->where('date', '<=', $date[1])->count();
+                $pending_booking_count = Booking::where('date', '>=', $date[0])->where('date', '<=', $date[1])->where('status', 'pending')->count();
+                $confirmed_booking_count = Booking::where('date', '>=', $date[0])->where('date', '<=', $date[1])->where('status', 'confirmed')->count();
+                $completed_booking_count = Booking::where('date', '>=', $date[0])->where('date', '<=', $date[1])->where('status', 'completed')->count();
+                $canceled_booking_count = Booking::where('date', '>=', $date[0])->where('date', '<=', $date[1])->where('status', 'canceled')->count();
+                $ads_count = PromotionAd::where('created_at', '>=', $date[0])->where('created_at', '<=', $date[1])->count();
                 break;
             default:
                 $salons_count = Salon::where('created_at', '>=', now()->subDay())->count();

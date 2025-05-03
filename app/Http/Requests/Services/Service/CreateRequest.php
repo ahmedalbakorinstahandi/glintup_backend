@@ -23,6 +23,7 @@ class CreateRequest extends BaseFormRequest
             'gender' => 'required|in:male,female,both',
             'is_active' => 'required|boolean',
             'currency' => 'required|string|max:3',
+            'is_home_service' => 'nullable|boolean',
         ];
 
         if ($user->isAdmin()) {

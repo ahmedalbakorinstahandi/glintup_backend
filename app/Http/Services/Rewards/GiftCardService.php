@@ -29,15 +29,66 @@ class GiftCardService
         }
 
 
-        return FilterService::applyFilters(
+        $query = FilterService::applyFilters(
             $query,
             $data,
             ['code', 'message'],
             ['amount'],
             ['created_at', 'received_at'],
             ['type', 'is_used', 'sender_id', 'recipient_id', 'salon_id'],
-            ['id']
+            ['id'],
+            false,
         );
+
+        $giftCards = $query->get();
+
+        // statistics: 
+        // - كم شخص له هدية غير مسجل
+        // - كم شخص له هدية مسجل بعد الهدية
+        // - كم شخص له هدية مسجل قبل الهدية
+
+
+
+        $total = $giftCards->count();
+        $notRegistered = $giftCards->where('recipient_id', null)->unique(function ($giftCard) {
+            return $giftCard->phone_code . $giftCard->phone;
+        })->count();
+
+        $registered = $giftCards
+            ->whereNotNull('recipient_id')
+            ->filter(fn($g) => $g->recipient && $g->created_at > $g->recipient->register_at)
+            ->unique(fn($g) => $g->phone_code . $g->phone)
+            ->count();
+
+        $registeredBefore = $giftCards
+            ->whereNotNull('recipient_id')
+            ->filter(fn($g) => $g->recipient && $g->created_at < $g->recipient->register_at)
+            ->unique(fn($g) => $g->phone_code . $g->phone)
+            ->count();
+
+
+
+        return [
+            'info' => [
+                'total' => [
+                    'lable' => 'الاجمالي',
+                    'value' => $total,
+                ],
+                'not_registered' => [
+                    'lable' => 'عدد الأشخاص الذين لديهم هدية غير مسجلين',
+                    'value' => $notRegistered,
+                ],
+                'registered' => [
+                    'lable' => 'عدد الأشخاص الذين لديهم هدية مسجلين بعد حصولهم عليها',
+                    'value' => $registered,
+                ],
+                'registered_before' => [
+                    'lable' => 'عدد الأشخاص الذين لديهم هدية مسجلين قبل حصولهم عليها',
+                    'value' => $registeredBefore,
+                ],
+            ],
+            'data' => $query->paginate($data['limit'] ?? 20),
+        ];
     }
 
     public function show($id)
@@ -199,7 +250,7 @@ class GiftCardService
             'phone_code' => str_replace(' ', '', $data['phone_code']),
             'phone' => str_replace(' ', '', $data['phone']),
             'type' => $data['type'],
-            'amount' => $total,
+            'amount' => $data['amount'] ?? null,
             'currency' => $data['currency'] ?? null,
             'services' => $data['services'],
             'message' => $data['message'],

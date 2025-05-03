@@ -101,11 +101,12 @@ class SalonController extends Controller
 
         $user = User::auth();
 
-        if (!$user->isSalonOwner()) {
-            MessageService::abort(403, 'messages.permission_error');
-        }
+        // if (!$user->isSalonOwner()) {
+        //     MessageService::abort(403, 'messages.permission_error');
+        // }
 
-        $id = $user->salonOwner->first()->id;
+ 
+        $id = $user->salon->id;
 
         $salon = $this->salonService->show($id);
 

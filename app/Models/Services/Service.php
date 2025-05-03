@@ -27,6 +27,7 @@ class Service extends Model
         'discount_percentage',
         'gender',
         'is_active',
+        'is_home_service',
         'order',
     ];
 
@@ -35,8 +36,10 @@ class Service extends Model
         'discount_percentage' => 'decimal:2',
         'is_active'           => 'boolean',
         'duration_minutes'    => 'integer',
+        'is_home_service'     => 'boolean',
         'order'               => 'integer',
         'created_at'          => 'datetime',
+        'salon_id'           => 'integer',
         'updated_at'          => 'datetime',
         'deleted_at'          => 'datetime',
     ];

@@ -73,11 +73,13 @@ class GiftCard extends Model
         return $this->belongsTo(User::class, 'sender_id')->withTrashed();
     }
 
+
     // salon
     public function salon()
     {
         return $this->belongsTo(User::class, 'salon_id')->withTrashed();
     }
+
 
     public static function generateCode(): string
     {

@@ -19,6 +19,7 @@ class UpdateRequest extends BaseFormRequest
             'discount_percentage' => 'nullable|numeric|min:0|max:100',
             'gender' => 'nullable|in:male,female,both',
             'is_active' => 'nullable|boolean',
+            'is_home_service' => 'nullable|boolean',
             'order' => 'nullable|integer',
         ];
     }

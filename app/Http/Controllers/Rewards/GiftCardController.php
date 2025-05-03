@@ -27,8 +27,8 @@ class GiftCardController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => GiftCardResource::collection($items->items()),
-            'meta' => ResponseService::meta($items),
+            'data' => GiftCardResource::collection($items['data']->items()),
+            'meta' => ResponseService::meta($items['data']),
         ]);
     }
 

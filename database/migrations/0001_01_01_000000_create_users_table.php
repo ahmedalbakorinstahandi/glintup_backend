@@ -31,6 +31,7 @@ return new class extends Migration
             $table->boolean('is_verified')->default(false);
             $table->string('language', 10)->nullable();
             $table->enum('added_by', ['admin', 'salon', 'register'])->default('register');
+            $table->timestamp('register_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

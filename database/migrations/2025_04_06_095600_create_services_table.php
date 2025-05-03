@@ -26,6 +26,7 @@ return new class extends Migration
             $table->decimal('discount_percentage', 5, 2)->nullable()->default(0);
             $table->enum('gender', ["male","female","both"]);
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_home_service')->default(false);
             $table->unsignedBigInteger('order');
             $table->timestamps();
             $table->softDeletes();
