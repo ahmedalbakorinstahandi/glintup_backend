@@ -13,9 +13,7 @@ class SettingSeeder extends Seeder
      */
     public function run(): void
     {
-        // تكلفة الاعلان في اليوم
-        // نسبة النظام من الهدايا
-        // نسبة النظام من الحجوزات
+
 
         $settings = [
             [
@@ -35,6 +33,34 @@ class SettingSeeder extends Seeder
             [
                 'key' => 'system_percentage_booking',
                 'value' => 4.5,
+                'type' => 'float',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'salons_provider_percentage',
+                'value' => 10,
+                'type' => 'float',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'clinics_provider_percentage',
+                'value' => 10,
+                'type' => 'float',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'home_service_provider_percentage',
+                'value' => 10,
+                'type' => 'float',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'makeup_artists_provider_percentage',
+                'value' => 10,
                 'type' => 'float',
                 'allow_null' => false,
                 'is_settings' => true,
@@ -102,7 +128,10 @@ class SettingSeeder extends Seeder
                 'allow_null' => false,
                 'is_settings' => true,
             ],
+
         ];
+
+
 
         foreach ($settings as $setting) {
             Setting::updateOrCreate(
