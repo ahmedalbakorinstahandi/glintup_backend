@@ -19,9 +19,10 @@ class ReviewService
             $query,
             $data,
             ['comment', 'salon_reply', 'salon_report'],
-            ['rating'],
+            ['rating'], // min_rating, max_rating
+
             ['created_at'],
-            ['user_id', 'salon_id'],
+            ['user_id', 'salon_id', 'rating'],
             ['id']
         );
     }
