@@ -26,6 +26,7 @@ return new class extends Migration
             $table->text('salon_report')->nullable();
             $table->enum('reason_for_report', ['inappropriate_content', 'spam', 'fake_review', 'other'])->nullable();
             $table->timestamp('salon_reported_at')->nullable();
+            $table->boolean('is_reviewed')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

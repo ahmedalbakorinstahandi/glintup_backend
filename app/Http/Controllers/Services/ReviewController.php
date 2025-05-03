@@ -27,8 +27,9 @@ class ReviewController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => ReviewResource::collection($reviews->items()),
-            'meta' => ResponseService::meta($reviews),
+            'info' => $reviews['info'],
+            'data' => ReviewResource::collection($reviews['data']->items()),
+            'meta' => ResponseService::meta($reviews['data']),
         ]);
     }
 

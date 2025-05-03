@@ -15,16 +15,35 @@ class ReviewService
 
         $query = ReviewPermission::filterIndex($query);
 
-        return FilterService::applyFilters(
+        $query = FilterService::applyFilters(
             $query,
             $data,
             ['comment', 'salon_reply', 'salon_report'],
-            ['rating'], // min_rating, max_rating
-
+            ['rating'],
             ['created_at'],
             ['user_id', 'salon_id', 'rating'],
-            ['id']
+            ['id'],
+            false,
         );
+
+        $reviews = $query->get();
+
+        $totalReviews = $reviews->count();
+        $averageRating = $reviews->avg('rating');
+        $pendingReviews = $reviews->whereNotNull('salon_reply')->where('is_reviewed', false)->count();
+        $negativeReviews = $reviews->where('rating', '<', 3)->count();
+
+
+        return [
+            'info' => [
+                'total_reviews' => $totalReviews,
+                'average_rating' => $averageRating,
+                'pending_reviews' => $pendingReviews,
+                'negative_reviews' => $negativeReviews,
+            ],
+            'data' => $reviews,
+        ];
+
     }
 
     public function show($id)
