@@ -38,7 +38,13 @@ class SalonStaffPermission
     public static function create($data)
     {
 
-        $data['salon_id'] = User::auth()->salon->id;
+        $user = User::auth();
+
+        if (!$user->isAdmin()) {
+            $data['salon_id'] =  $user->salon->id;
+        } else {
+            $data['salon_id'] = $data['salon_id'] ?? null;
+        }
 
         return $data;
     }
@@ -54,7 +60,7 @@ class SalonStaffPermission
             if ($item->salon_id != $salon->id) {
                 MessageService::abort(403, 'messages.permission_error');
             }
-        } 
+        }
 
         return true;
     }
