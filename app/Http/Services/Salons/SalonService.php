@@ -44,12 +44,21 @@ class SalonService
 
         $salon = $user->salon;
 
+        $salon->load([
+            'socialMediaSites',
+            'images',
+            'workingHours',
+            'owner',
+            'latestReviews',
+            'loyaltyService',
+        ]);
+
         return $salon;
     }
 
     public function index($data)
     {
-        $query = Salon::query()->with(['loyaltyService', 'owner']);
+        $query = Salon::query()->with(['loyaltyService', 'owner', 'images']);
 
         $searchFields = ['name', 'email', 'description', 'location', 'city', 'country'];
         $numericFields = [];
@@ -79,7 +88,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews','loyaltyService']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
 
         return $salon;
     }
@@ -102,7 +111,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews','loyaltyService']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
 
         return $salon;
     }
@@ -167,7 +176,7 @@ class SalonService
             ]
         );
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews','loyaltyService']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
 
         return $salon;
     }

@@ -115,6 +115,8 @@ class SalonController extends Controller
 
         $salon = $this->salonService->update($salon, $request->validated());
 
+        
+
         return response()->json([
             'success' => true,
             'message' => trans('messages.salon.item_updated_successfully'),
