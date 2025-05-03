@@ -31,7 +31,7 @@ class SalonPermission
             if ($user->id != $salon->owner_id) {
                 MessageService::abort(403, 'messages.permission_error');
             }
-        } elseif (!$salon->isAdmin()) {
+        } elseif (!$user->isAdmin()) {
             MessageService::abort(403, 'messages.permission_error');
         }
 
