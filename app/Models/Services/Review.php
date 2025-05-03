@@ -21,6 +21,8 @@ class Review extends Model
         'salon_reported_at',
         'reason_for_report',
         'salon_reply_at',
+        'is_reviewed',
+        'is_visible',
     ];
 
     protected $casts = [

@@ -21,7 +21,7 @@ class ReviewService
             ['comment', 'salon_reply', 'salon_report'],
             ['rating'],
             ['created_at'],
-            ['user_id', 'salon_id', 'rating'],
+            ['user_id', 'salon_id', 'rating', 'is_reviewed', 'is_visible'],
             ['id'],
             false,
         );

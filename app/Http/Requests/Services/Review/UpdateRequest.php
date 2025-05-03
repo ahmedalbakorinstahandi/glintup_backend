@@ -17,6 +17,8 @@ class UpdateRequest extends BaseFormRequest
             'salon_reply'      => 'nullable|string|max:1000',
             'salon_report'     => 'nullable|string|max:1000',
             'salon_reported_at' => 'nullable|date',
+            'is_reviewed'     => 'nullable|boolean',
+            'is_visible'      => 'nullable|boolean',
         ];
     }
 }

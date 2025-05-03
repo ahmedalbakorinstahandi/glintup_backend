@@ -22,6 +22,8 @@ class ReviewResource extends JsonResource
             'salon_report'       => $this->salon_report,
             'reason_for_report'  => $this->reason_for_report,
             'salon_reported_at'  => $this->salon_reported_at,
+            'is_reviewed'        => $this->is_reviewed,
+            'is_visible'         => $this->is_visible,
 
             'user'   => new UserResource($this->whenLoaded('user')),
             'salon'  => new SalonResource($this->whenLoaded('salon')),
