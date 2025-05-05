@@ -48,8 +48,8 @@ class SalonAuthService
         $fullPhone = $userData['phone_code'] . $userData['phone'];
 
         $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$fullPhone])
-        // where role is salon_owner or staff    
-        ->whereIn('role', ['salon_owner', 'staff'])
+            // where role is salon_owner or staff    
+            ->whereIn('role', ['salon_owner', 'staff'])
             ->first();
 
 
@@ -86,6 +86,7 @@ class SalonAuthService
             'description' => $requestData['description'],
             'latitude' => $requestData['latitude'],
             'longitude' => $requestData['longitude'],
+            'type' => $data['type'] ?? 'salon',
             'types' => implode(',', $requestData['types']),
             'bio' => $requestData['bio'],
 
@@ -97,7 +98,6 @@ class SalonAuthService
             'phone' => '',
             'email' => null,
             'location' => '',
-            'type' => 'salon',
             'country' => '',
             'city' => '',
         ]);
