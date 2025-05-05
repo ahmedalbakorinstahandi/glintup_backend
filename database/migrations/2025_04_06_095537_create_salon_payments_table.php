@@ -15,6 +15,8 @@ return new class extends Migration
 
         Schema::create('salon_payments', function (Blueprint $table) {
             $table->id();
+            //code
+            $table->string('code',50)->unique()->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('salon_id');

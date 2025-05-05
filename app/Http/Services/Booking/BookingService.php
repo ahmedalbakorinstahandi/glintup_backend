@@ -381,7 +381,7 @@ class BookingService
         $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
 
         // booking payment
-        SalonPayment::create([
+        $salonPayment =  SalonPayment::create([
             'paymentable_id' => $booking->id,
             'paymentable_type' => Booking::class,
             'user_id' => $user->id,
@@ -393,6 +393,9 @@ class BookingService
             'is_refund' => false,
             'system_percentage' => $system_percentage,
         ]);
+
+        $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
+        $salonPayment->save();
 
 
         // check if user have free services and use them
@@ -504,7 +507,7 @@ class BookingService
 
 
         // booking payment
-        SalonPayment::create([
+        $salonPayment =   SalonPayment::create([
             'paymentable_id' => $booking->id,
             'paymentable_type' => Booking::class,
             'user_id' => $user->id,
@@ -515,6 +518,9 @@ class BookingService
             'status' => 'confirm',
             'is_refund' => true,
         ]);
+
+        $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
+        $salonPayment->save();
 
         // TODO :: send notification to user
 
@@ -675,7 +681,7 @@ class BookingService
 
         // إنشاء دفعة جديدة
         $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
-        SalonPayment::create([
+        $salonPayment =  SalonPayment::create([
             'paymentable_id' => $booking->id,
             'paymentable_type' => Booking::class,
             'user_id' => $user->id,
@@ -687,6 +693,9 @@ class BookingService
             'is_refund' => false,
             'system_percentage' => $system_percentage,
         ]);
+
+        $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
+        $salonPayment->save();
 
         // حذف المعاملة السابقة
         $old_transaction?->delete();
@@ -850,7 +859,7 @@ class BookingService
             // دفعة للصالون
             $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
 
-            SalonPayment::create([
+            $salonPayment =  SalonPayment::create([
                 'paymentable_id' => $booking->id,
                 'paymentable_type' => Booking::class,
                 'user_id' => $user->id,
@@ -862,6 +871,9 @@ class BookingService
                 'is_refund' => $is_refund,
                 'system_percentage' => $system_percentage,
             ]);
+
+            $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
+            $salonPayment->save();
         }
 
         // تنظيف الخدمات المجانية القديمة

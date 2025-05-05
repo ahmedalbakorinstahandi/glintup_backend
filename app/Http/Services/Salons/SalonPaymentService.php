@@ -35,7 +35,12 @@ class SalonPaymentService
 
     public function create($data)
     {
-        return SalonPayment::create($data);
+        $salonPayment = SalonPayment::create($data);
+
+        $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
+        $salonPayment->save();
+
+        return $salonPayment;
     }
 
     public function update($item, $data)

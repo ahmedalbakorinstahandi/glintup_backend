@@ -283,7 +283,7 @@ class GiftCardService
 
 
         if ($data['type'] == 'services') {
-            SalonPayment::create([
+            $salonPayment =  SalonPayment::create([
                 'paymentable_id' => $giftCard->id,
                 'paymentable_type' => GiftCard::class,
                 'user_id' => $user->id,
@@ -295,6 +295,9 @@ class GiftCardService
                 'is_refund' => false,
                 'system_percentage' => $system_percentage,
             ]);
+
+            $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
+            $salonPayment->save();
         }
 
 

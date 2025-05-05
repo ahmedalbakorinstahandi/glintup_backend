@@ -13,6 +13,7 @@ class SalonPayment extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'code',
         'paymentable_id',
         'paymentable_type',
         'user_id',
@@ -27,6 +28,7 @@ class SalonPayment extends Model
     ];
 
     protected $casts = [
+        'code'         => 'string',
         'paymentable_id' => 'integer',
         'paymentable_type' => 'string',
         'user_id'      => 'integer',

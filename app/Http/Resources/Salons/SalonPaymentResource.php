@@ -13,6 +13,7 @@ class SalonPaymentResource extends JsonResource
     {
         return [
             'id'                => $this->id,
+            'code'              => $this->code,
             'amount'            => $this->amount,
             'currency'          => $this->currency,
             'method'            => $this->method,
