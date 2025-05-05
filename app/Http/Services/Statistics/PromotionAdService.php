@@ -101,7 +101,7 @@ class PromotionAdService
         $ad = PromotionAd::create([
             'salon_id' => $user->salon->id,
             'title' => $data['title'],
-            'description' => $data['description'],
+            'button_text' => $data['button_text'],
             'image' => $data['image'],
             'valid_from' => $data['valid_from'],
             'valid_to' => $data['valid_to'],
