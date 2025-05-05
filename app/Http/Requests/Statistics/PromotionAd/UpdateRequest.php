@@ -12,7 +12,7 @@ class UpdateRequest extends BaseFormRequest
     {
         return [
             'title'       => LanguageService::translatableFieldRules('nullable|string|max:255'),
-            'button_text' => LanguageService::translatableFieldRules('nullable|string|max:1000'),
+            'button_text' => LanguageService::translatableFieldRules('nullable|string|max:15|min:3'),
             'image'       => 'nullable|string|max:110',
             'valid_from'  => 'nullable|date',
             'valid_to'    => 'nullable|date|after_or_equal:valid_from',
