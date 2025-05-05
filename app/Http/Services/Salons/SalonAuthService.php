@@ -25,9 +25,7 @@ class SalonAuthService
         if (!$user || !Hash::check($loginUserData['password'], $user->password)) {
             return null;
         }
-
-        FirebaseService::subscribeToAllTopic($loginUserData, $user);
-
+        
         // $user->load(['salonPermissions.permission']);
 
         return $user;

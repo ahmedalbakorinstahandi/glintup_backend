@@ -3,6 +3,7 @@
 namespace App\Http\Services\Users;
 
 use App\Models\Users\User;
+use App\Services\FirebaseService;
 use Illuminate\Support\Facades\Hash;
 
 class AdminAuthService
@@ -19,8 +20,6 @@ class AdminAuthService
             return null;
         }
 
-
-        
 
         // $user->load(['salonPermissions.permission']);
 
