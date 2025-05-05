@@ -105,6 +105,8 @@ return [
         'failed_delete_item'        => 'Failed to delete promotion ad',
         'item_not_found'            => 'Promotion ad not found',
         'request_post_ad_successfully' => 'Request to post ad successfully',
+        'ad_already_sent_to_review' => 'Ad already sent to review',
+        'ad_sent_to_review_successfully' => 'Ad sent to review successfully',
     ],
 
     'working_hour' => [

@@ -16,6 +16,7 @@ class GetAdDetailsRrequest extends BaseFormRequest
             'image' => 'required|string|max:110',
             'valid_from' => 'required|date',
             'valid_to' => 'required|date|after_or_equal:start_date',
+            'action' => 'required|in:create_as_draft,send_to_review'
         ];
     }
 }

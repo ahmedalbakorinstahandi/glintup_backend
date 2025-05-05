@@ -102,6 +102,22 @@ class PromotionAdController extends Controller
         ]);
     }
 
+    public function sendToReview($id, PostAdRequest $request)
+    {
+        $ad = $this->promotionAdService->show($id);
+
+        PromotionAdPermission::canUpdate($ad, $request->validated());
+
+        $data = $this->promotionAdService->sendToReview($ad, $request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.promotion_ad.ad_sent_to_review_successfully'),
+            'stripe' => $data['stripe'],
+            'data' => new PromotionAdResource($data['ad']),
+        ]);
+    }
+
     public function getAdDetails(GetAdDetailsRrequest $request)
     {
         $data = $this->promotionAdService->requestPostAd($request->validated(), true);

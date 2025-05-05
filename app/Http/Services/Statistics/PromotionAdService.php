@@ -61,6 +61,9 @@ class PromotionAdService
 
     public function requestPostAd($data, $get_details)
     {
+
+        $action = $data['action'] ?? 'create_as_draft';
+
         $validatedData = LanguageService::prepareTranslatableData($data, new PromotionAd);
 
 
@@ -100,18 +103,52 @@ class PromotionAdService
         // Create the ad
         $ad = PromotionAd::create([
             'salon_id' => $user->salon->id,
-            'title' => $data['title'],
-            'button_text' => $data['button_text'],
-            'image' => $data['image'],
-            'valid_from' => $data['valid_from'],
-            'valid_to' => $data['valid_to'],
+            'title' => $validatedData['title'],
+            'button_text' => $validatedData['button_text'],
+            'image' => $validatedData['image'],
+            'valid_from' => $validatedData['valid_from'],
+            'valid_to' => $validatedData['valid_to'],
             'is_active' => true,
             'views' => 0,
             'clicks' => 0,
             'status' => 'draft',
         ]);
 
-        // Store payment session in the database
+        $stripe_data = null;
+
+        if ($action == 'send_to_review') {
+            $stripe_data =   $this->sendToReview($ad, $data);
+        }
+
+
+
+        // Return checkout session details
+        return [
+            'stripe' => $stripe_data ?? null,
+            'ad' => $ad,
+        ];
+    }
+
+    public function sendToReview($ad, $data)
+    {
+
+        if ($ad->status == 'in_review') {
+            MessageService::abort(400, 'messages.promotion_ad.ad_already_sent_to_review');
+        }
+
+        $user = User::auth();
+
+        $startDate = new \DateTime($ad->valid_from);
+        $endDate = new \DateTime($ad->valid_to);
+
+        $interval = $startDate->diff($endDate);
+
+        $ad_price_day = Setting::where('key', 'adver_cost_per_day')->first()->value;
+
+        $hours = $interval->h;
+        $minutes = $interval->i;
+        $amount = $interval->days * $ad_price_day + ($hours / 24) * $ad_price_day + ($minutes / 1440) * $ad_price_day;
+
         $walletTransaction = WalletTransaction::create([
             'user_id' => $user->id,
             'amount' => $amount,
@@ -170,15 +207,9 @@ class PromotionAdService
             ],
         ]);
 
-
-
-        // Return checkout session details
         return [
-            'stripe' => [
-                'checkout_session' => $checkoutSession->id,
-                'stripe_payment_id' => $checkoutSession->payment_intent,
-            ],
-            'ad' => $ad,
+            'checkout_session' => $checkoutSession->id,
+            'stripe_payment_id' => $checkoutSession->payment_intent,
         ];
     }
 }
