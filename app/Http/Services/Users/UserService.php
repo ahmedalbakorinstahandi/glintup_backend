@@ -8,6 +8,7 @@ use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Http\Permissions\Users\UserPermission;
 use App\Models\Users\WalletTransaction;
+use App\Services\LocationService;
 
 class UserService
 {
@@ -133,7 +134,17 @@ class UserService
             $validatedData['password'] = bcrypt($validatedData['password']);
         }
 
-        // update location
+        if (isset($validatedData['latitude']) && isset($validatedData['longitude'])) {
+            $user->latitude = $validatedData['latitude'];
+            $user->longitude = $validatedData['longitude'];
+
+            $address = LocationService::getLocationData($validatedData['latitude'], $validatedData['longitude'])['address'] ?? null;
+            if ($address) {
+                $user->address = $address;
+            }
+            $user->save();
+        }
+
 
         $user->update($validatedData);
 
