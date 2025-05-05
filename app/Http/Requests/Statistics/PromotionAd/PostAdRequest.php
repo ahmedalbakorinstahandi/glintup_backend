@@ -18,6 +18,7 @@ class PostAdRequest extends BaseFormRequest
             'valid_to' => 'required|date|after_or_equal:start_date',
             'success_url' => 'required|url|max:255',
             'cancel_url' => 'required|url|max:255',
+            'action' => 'required|in:create_as_draft,send_to_review'
         ];
     }
 }
