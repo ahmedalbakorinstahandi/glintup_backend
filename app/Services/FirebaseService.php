@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Services\General\NotificationService;
 use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
@@ -44,44 +45,52 @@ class FirebaseService
 
     public static function subscribeToAllTopic($request, $user)
     {
-        if ($request->has('device_token')) {
-            $deviceToken = $request->device_token;
 
-            $latestToken = $user->tokens()->latest()->first();
-            if ($latestToken) {
-                $latestToken->update([
+
+        $deviceToken = $request->device_token;
+
+        Log::info('device_token' . $deviceToken);
+
+        $latestToken = $user->tokens()->latest()->first();
+
+        Log::info('latestToken' . $latestToken);
+        if ($latestToken) {
+            DB::table('personal_access_tokens')
+                ->where('id', $latestToken->id)
+                ->update(['device_token' => $deviceToken]);
+        }
+
+        $APP_ENV_TYPE = env('APP_ENV_TYPE', 'staging');
+
+        $topics = [
+            'user-' . $user->id,
+            'role-' . $user->role,
+            'all-users',
+        ];
+
+        if ($APP_ENV_TYPE != 'production') {
+            for ($i = 0; $i < count($topics); $i++) {
+                $topics[$i] = $topics[$i] . '-' . $APP_ENV_TYPE;
+            }
+        }
+
+
+        foreach ($topics as $topic) {
+
+            $subscriptionResult = FirebaseService::subscribeToTopic($deviceToken, $topic);
+
+            // i need store device token in personal access token table
+
+            if (!$subscriptionResult['success']) {
+                Log::error('Failed to subscribe to topic', [
+                    'topic' => $topic,
                     'device_token' => $deviceToken,
+                    'error' => $subscriptionResult['error'] ?? 'Unknown error',
                 ]);
-            }
-
-            $APP_ENV_TYPE = env('APP_ENV_TYPE', 'staging');
-
-            $topics = [
-                'user-' . $user->id,
-                'role-' . $user->role,
-                'all-users',
-            ];
-
-            if ($APP_ENV_TYPE != 'production') {
-                for ($i = 0; $i < count($topics); $i++) {
-                    $topics[$i] = $topics[$i] . '-' . $APP_ENV_TYPE;
-                }
-            }
-
-
-            foreach ($topics as $topic) {
-                $subscriptionResult = FirebaseService::subscribeToTopic($deviceToken, $topic);
-
-                if (!$subscriptionResult['success']) {
-                    Log::error('Failed to subscribe to topic', [
-                        'topic' => $topic,
-                        'device_token' => $deviceToken,
-                        'error' => $subscriptionResult['error'] ?? 'Unknown error',
-                    ]);
-                }
             }
         }
     }
+
 
     /**
      * Send notification to a specific topic.

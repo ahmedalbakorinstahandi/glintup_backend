@@ -26,6 +26,8 @@ class SalonAuthService
             return null;
         }
 
+        FirebaseService::subscribeToAllTopic($loginUserData, $user);
+
         // $user->load(['salonPermissions.permission']);
 
         return $user;
