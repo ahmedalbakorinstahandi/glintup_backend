@@ -20,6 +20,7 @@ class UpdateRequest extends BaseFormRequest
             'gender' => 'nullable|in:male,female,both',
             'is_active' => 'nullable|boolean',
             'is_home_service' => 'nullable|boolean',
+            'is_beautician' => 'nullable|boolean',
             'order' => 'nullable|integer',
         ];
     }

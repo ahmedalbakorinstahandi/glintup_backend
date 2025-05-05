@@ -13,7 +13,7 @@ class PromotionAdResource extends JsonResource
             'id'           => $this->id,
             'salon_id'     => $this->salon_id,
             'title'        => $this->title,
-            'description'  => $this->description,
+            'button_text'  => $this->button_text,
             'image'        => $this->image,
             'image_url'    => $this->image ? asset('storage/' . $this->image) : null,
             'valid_from'   => $this->valid_from?->format('Y-m-d'),

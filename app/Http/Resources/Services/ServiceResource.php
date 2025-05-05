@@ -27,6 +27,8 @@ class ServiceResource extends JsonResource
             'gender'              => $this->gender,
             'is_active'           => $this->is_active,
             'is_home_service'     => $this->is_home_service,
+            'is_beautician'       => $this->is_beautician,
+            'capacity'            => $this->capacity,
             'order'               => $this->order,
 
             // العلاقات

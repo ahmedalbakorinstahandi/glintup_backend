@@ -40,7 +40,6 @@ class LoyaltyPointController extends Controller
         ]);
     }
 
-    // receive
     public function receive($id)
     {
         $item = $this->service->show($id);

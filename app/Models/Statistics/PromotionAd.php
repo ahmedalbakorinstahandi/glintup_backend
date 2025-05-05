@@ -18,7 +18,7 @@ class PromotionAd extends Model
     protected $fillable = [
         'salon_id',
         'title',
-        'description',
+        'button_text',
         'image',
         'valid_from',
         'valid_to',
@@ -31,7 +31,7 @@ class PromotionAd extends Model
     protected $casts = [
         'salon_id'    => 'integer',
         'title'       => 'string',
-        'description' => 'string',
+        'button_text' => 'string',
         'image'       => 'string',
         'valid_from'  => 'date',
         'valid_to'    => 'date',
@@ -43,7 +43,7 @@ class PromotionAd extends Model
         'deleted_at'  => 'datetime',
     ];
 
-    protected $translatable = ['title', 'description'];
+    protected $translatable = ['title', 'button_text'];
 
     public function salon()
     {
@@ -59,12 +59,12 @@ class PromotionAd extends Model
         );
     }
 
-    protected function description(): Attribute
+    protected function buttonText(): Attribute
     {
         $multi = LanguageService::getMultiLanguage();
 
         return Attribute::make(
-            get: fn(?string $value) => $multi ? $this->getAllTranslations('description') : $value,
+            get: fn(?string $value) => $multi ? $this->getAllTranslations('button_text') : $value,
         );
     }
 

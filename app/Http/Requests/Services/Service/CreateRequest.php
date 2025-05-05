@@ -24,6 +24,7 @@ class CreateRequest extends BaseFormRequest
             'is_active' => 'required|boolean',
             'currency' => 'required|string|max:3',
             'is_home_service' => 'nullable|boolean',
+            'is_beautician' => 'nullable|boolean',
         ];
 
         if ($user->isAdmin()) {

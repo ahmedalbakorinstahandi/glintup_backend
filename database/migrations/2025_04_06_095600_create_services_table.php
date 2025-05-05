@@ -27,6 +27,8 @@ return new class extends Migration
             $table->enum('gender', ["male","female","both"]);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_home_service')->default(false);
+            $table->boolean('is_beautician')->default(false);
+            $table->integer('capacity')->default(1);
             $table->unsignedBigInteger('order');
             $table->timestamps();
             $table->softDeletes();

@@ -28,6 +28,8 @@ class Service extends Model
         'gender',
         'is_active',
         'is_home_service',
+        'is_beautician',
+        'capacity',
         'order',
     ];
 
@@ -37,6 +39,8 @@ class Service extends Model
         'is_active'           => 'boolean',
         'duration_minutes'    => 'integer',
         'is_home_service'     => 'boolean',
+        'is_beautician'       => 'boolean',
+        'capacity'            => 'integer',
         'order'               => 'integer',
         'created_at'          => 'datetime',
         'salon_id'           => 'integer',

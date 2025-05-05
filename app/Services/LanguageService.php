@@ -20,11 +20,15 @@ class LanguageService
     {
         $locales = config('translatable.locales');
         $defaultLocale = config('translatable.default_locale');
-        $rules = ['required', 'array'];
+        $rules = ['nullable', 'array'];
 
         $rules[] = function ($attribute, $value, $fail) use ($locales, $defaultLocale, $baseRule) {
-
             $attributeName = trans("attributes.{$attribute}");
+
+            // إذا القيمة null، نوقف المعالجة (بما أنها nullable)
+            if (is_null($value)) {
+                return;
+            }
 
             if (!is_array($value)) {
                 $fail(trans('validation.translatable.required_array', [
@@ -36,6 +40,7 @@ class LanguageService
             foreach ($locales as $locale) {
                 $localizedValue = $value[$locale] ?? null;
 
+                // التحقق من required فقط إذا كان جزء من الـ baseRule واللغة هي الافتراضية
                 if (strpos($baseRule, 'required') !== false && $locale === $defaultLocale && ($localizedValue === null || $localizedValue === '')) {
                     $fail(trans('validation.translatable.required_locale', [
                         'attribute' => $attributeName,
@@ -43,7 +48,8 @@ class LanguageService
                     ]));
                 }
 
-                if ($localizedValue !== null) {
+                // تحقق من باقي القواعد لو فيه قيمة
+                if (!is_null($localizedValue)) {
                     $validator = validator([$locale => $localizedValue], [$locale => $baseRule]);
                     if ($validator->fails()) {
                         $fail(trans('validation.translatable.invalid_locale', [
@@ -58,6 +64,7 @@ class LanguageService
 
         return $rules;
     }
+
 
 
 

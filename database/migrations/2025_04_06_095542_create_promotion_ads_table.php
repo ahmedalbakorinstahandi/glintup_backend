@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('salon_id')->nullable();
             $table->foreign('salon_id')->references('id')->on('salons');
             $table->string('title', 255);
-            $table->text('description')->nullable();
+            $table->stirng('button_text')->nullable();
             $table->string('image', 110)->nullable();
             $table->date('valid_from');
             $table->date('valid_to');
