@@ -14,15 +14,19 @@ use App\Models\Salons\Salon;
 use App\Models\Salons\SalonSocialMidiaSite;
 use App\Models\Users\User;
 use Google\Api\ResourceDescriptor\History;
+use Illuminate\Support\Facades\Auth;
 
 class SalonResource extends JsonResource
 {
     public function toArray($request)
     {
+        $is_admin = false;
 
-        $user = User::auth();
+        if (Auth::check()) {
+            $user = User::auth();
 
-        $is_admin = $user->isAdmin();
+            $is_admin = $user->isAdmin();
+        }
 
         $local_lang = app()->getLocale();
 
