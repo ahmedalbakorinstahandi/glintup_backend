@@ -96,6 +96,7 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');
+            Route::delete('{id}', 'destroy');
         });
 
         // wallet transactions

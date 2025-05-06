@@ -167,6 +167,7 @@ return [
         'item_not_found'            => 'المراجعة غير موجودة',
         'replied_successfully' => 'تم الرد على المراجعة بنجاح',
         'reported_successfully' => 'تم الإبلاغ عن المراجعة بنجاح',
+        'create_review_error' => 'لا يمكنك إنشاء مراجعة بدون حجز واحد مكتمل على الأقل في هذا الصالون، أو لديك مراجعة بالفعل',
     ],
 
     'ad_payment_description' => 'دفع للإعلان #:ad_id',

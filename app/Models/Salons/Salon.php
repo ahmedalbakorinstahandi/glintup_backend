@@ -2,6 +2,7 @@
 
 namespace App\Models\Salons;
 
+use App\Http\Services\Services\GroupService;
 use App\Models\Booking\Booking;
 use App\Models\General\Image;
 use App\Models\Rewards\GiftCard;
@@ -12,6 +13,7 @@ use App\Models\Services\Service;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Salon extends Model
@@ -111,6 +113,37 @@ class Salon extends Model
             ->get();
 
         return $giftCards;
+    }
+
+    // can user review
+    public function canUserReview()
+    {
+        if (!Auth::check()) {
+            return false;
+        }
+
+        $user = User::auth();
+
+        if (!$user->isCustomer()) {
+            return false;
+        }
+
+        // Check if the user already has a review for this salon
+        $existingReview = $this->reviews()
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($existingReview) {
+            return false;
+        }
+
+        // Check if the user has at least one completed booking for this salon
+        $booking = $user->bookings()
+            ->where('salon_id', $this->id)
+            ->where('status', 'completed')
+            ->first();
+
+        return $booking ? true : false;
     }
 
 
@@ -387,12 +420,12 @@ class Salon extends Model
 
     public function reviews()
     {
-        return $this->hasMany(\App\Models\Services\Review::class);
+        return $this->hasMany(Review::class);
     }
 
     public function groupServices()
     {
-        return $this->hasMany(\App\Models\Services\GroupService::class);
+        return $this->hasMany(GroupService::class);
     }
 
     public function getIconUrlAttribute(): string

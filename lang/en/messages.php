@@ -173,6 +173,7 @@ return [
         'item_not_found'            => 'Review not found',
         'replied_successfully'      => 'Review replied successfully',
         'reported_successfully'     => 'Review reported successfully',
+        'create_review_error' => 'You cannot create a review without at least one completed booking at this salon, or you already have a review',
     ],
 
     'ad_payment_description' => 'Payment for ad #:ad_id',

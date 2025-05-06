@@ -70,6 +70,7 @@ class SalonResource extends JsonResource
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
             //TODO اجمالي الايرادات 
             'total_revenue' => $this->when($is_admin,  5000),
+            'can_review' => $this->when($user->isCustomer(), $this->canUserReview()),
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),
             'working_status' => $this->getWorkingStatus($local_lang),

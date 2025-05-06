@@ -126,13 +126,27 @@ class UserController extends Controller
         // ]);
 
 
+
         $prmomtionAds = PromotionAd::where('valid_from', '<=', now())
             ->where('valid_to', '>=', now())
             ->where('is_active', 1)->get();
 
+        // location
+        $latitude = request()->get('latitude');
+        $longitude = request()->get('longitude');
+
+
+        # TODO
 
         $trendingSalons = Salon::inRandomOrder()->limit(2)->get();
+
+
+
+
         $salons_have_discount = Salon::inRandomOrder()->limit(2)->get();
+
+
+
         $nearby_salons = Salon::inRandomOrder()->limit(2)->get();
 
 
