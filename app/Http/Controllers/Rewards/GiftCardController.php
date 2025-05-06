@@ -9,6 +9,7 @@ use App\Http\Permissions\Rewards\GiftCardPermission;
 use App\Http\Requests\Rewards\GiftCard\CreateByUserRequest;
 use App\Http\Services\Rewards\GiftCardService;
 use App\Http\Resources\Rewards\GiftCardResource;
+use App\Models\Users\User;
 use App\Services\ResponseService;
 
 class GiftCardController extends Controller
@@ -24,9 +25,12 @@ class GiftCardController extends Controller
     {
         $items = $this->giftCardService->index(request()->all());
 
+        $user = User::auth();
+
 
         return response()->json([
             'success' => true,
+            'info' => $user->isAdmin() ? $items['info'] : null,
             'data' => GiftCardResource::collection($items['data']->items()),
             'meta' => ResponseService::meta($items['data']),
         ]);
