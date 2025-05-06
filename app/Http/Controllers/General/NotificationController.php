@@ -104,7 +104,7 @@ class NotificationController extends Controller
     }
 
 
-    public function getNotificationsUnreadCount()
+    public function unreadCount()
     {
         $user = User::auth();
         $count = $user->notificationsUnreadCount();

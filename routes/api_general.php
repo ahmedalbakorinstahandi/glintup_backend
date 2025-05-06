@@ -13,7 +13,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
         Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
-            Route::get('/unread-count', [NotificationController::class, 'getNotificationsUnreadCount']);
+            Route::get('/unread-count', 'unreadCount');
             Route::get('/', 'index');
             Route::get('{id}', 'show');
         });
