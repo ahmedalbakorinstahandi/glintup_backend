@@ -22,6 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('profile')->group(function () {
             Route::get('/', [UserController::class, 'getProfile']);
             Route::put('/', [UserController::class, 'updateProfile']);
+            Route::post('/{id}/read',  'readNotification');
         });
 
         Route::get('/salon-permissions', [SalonPermissionController::class, 'index']);

@@ -116,4 +116,16 @@ class NotificationService
 
         return $last_notification;
     }
+
+
+    public function readNotification($id)
+    {
+        $notifications = Notification::where('id', '<=', $id)->get();
+
+        foreach ($notifications as $notification) {
+            $notification->update(['read_at' => now()]);
+        }
+
+        return $notifications;
+    }
 }

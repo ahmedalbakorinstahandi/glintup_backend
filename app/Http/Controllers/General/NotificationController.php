@@ -116,4 +116,16 @@ class NotificationController extends Controller
             ],
         ]);
     }
+
+    public function readNotification($id)
+    {
+        $notification = $this->notificationService->show($id);
+
+        $notifications = $this->notificationService->readNotification($notification->id);
+
+        return response()->json([
+            'success' => true,
+            'data' => NotificationResource::collection($notifications),
+        ]);
+    }
 }
