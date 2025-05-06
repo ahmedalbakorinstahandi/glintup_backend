@@ -6,26 +6,36 @@ use App\Models\Salons\Salon;
 use App\Models\Services\Review;
 use App\Models\Users\User;
 use App\Services\MessageService;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewPermission
 {
     public static function filterIndex($query)
     {
-        $user = User::auth();
+        if (Auth::check()) {
+            $user = User::auth();
 
-        if ($user->isUserSalon()) {
-            $query->where('salon_id', $user->salon?->id);
+            if ($user->isUserSalon()) {
+                $query->where('salon_id', $user->salon?->id);
+            }
         }
 
-        // if ($user->isCustomer()) {
-        //     $query->where('user_id', $user->id);
-        // }
+
 
         return $query;
     }
 
     public static function canShow(Review $review)
     {
+        if (Auth::check()) {
+            $user = User::auth();
+
+            if ($user->isUserSalon()) {
+                if ($review->salon_id !== $user->salon?->id) {
+                    MessageService::abort(403, 'messages.permission_error');
+                }
+            }
+        }
         return true;
     }
 

@@ -40,6 +40,12 @@ Route::prefix('guests')->group(function () {
         Route::get('/', 'index');
         Route::get('{id}', 'show');
     });
+
+    Route::prefix('reviews')->controller(ReviewController::class)->group(function () {
+        Route::get('/', 'index');
+
+        Route::get('{id}', 'show');
+    });
 });
 
 Route::prefix('customer')->group(function () {
