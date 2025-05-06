@@ -6,15 +6,19 @@ namespace App\Http\Permissions\General;
 use App\Models\General\Notification;
 use App\Models\Users\User;
 use App\Services\MessageService;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationPermission
 {
     public static function filterIndex($query)
     {
-        $user = User::auth();
+        if (Auth::check()) {
+            $user = User::auth();
 
-
-        $query->where('user_id', $user->id);
+            $query->where('user_id', $user->id);
+        } else {
+            $query->where('user_id', null);
+        }
 
 
         return $query;

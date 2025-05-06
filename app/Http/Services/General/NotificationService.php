@@ -8,6 +8,7 @@ use App\Services\MessageService;
 use App\Http\Permissions\General\NotificationPermission;
 use App\Http\Services\Salons\SalonService;
 use App\Models\Salons\Salon;
+use App\Models\Users\User;
 use App\Services\FirebaseService;
 use PDO;
 
@@ -117,10 +118,35 @@ class NotificationService
         return $last_notification;
     }
 
+    public function sendNotificationToAllUsers($data)
+    {
+
+        FirebaseService::sendToTopicAndStorage(
+            'all-users',
+            [null],
+            [
+                'id' => null,
+                'type' => User::class,
+            ],
+            $data['title'],
+            $data['message'],
+            [],
+            [],
+            true,
+        );
+
+
+        $last_notification = Notification::whereNull('user_id')->latest()->first();
+
+        return $last_notification;
+    }
+
 
     public function readNotification($id)
     {
-        $notifications = Notification::where('id', '<=', $id)->get();
+
+        $user = User::auth();
+        $notifications = Notification::where('id', '<=', $id)->where('read_at', null)->where('user_id', $user->id)->get();
 
         foreach ($notifications as $notification) {
             $notification->update(['read_at' => now()]);

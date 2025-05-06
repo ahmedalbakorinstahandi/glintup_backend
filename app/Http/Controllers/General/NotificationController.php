@@ -103,13 +103,24 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function sendNotificationToAllUsers(SendNotificationToSalonRequest $request)
+    {
+        $last_notification = $this->notificationService->sendNotificationToAllUsers($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.notification.send_notification_successfully'),
+            'data' => new NotificationResource($last_notification),
+        ]);
+    }
+
 
     public function unreadCount()
     {
-        $user = User::auth();
-        $count = $user->notificationsUnreadCount();
-        
-        
+
+        $count = User::notificationsUnreadCount();
+
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -117,13 +128,13 @@ class NotificationController extends Controller
             ],
         ]);
     }
-    
+
     public function readNotification($id)
     {
-        
-        
+
+
         $notification = $this->notificationService->show($id);
-        
+
         NotificationPermission::canShow($notification);
 
         $notifications = $this->notificationService->readNotification($notification->id);

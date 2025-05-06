@@ -26,6 +26,30 @@ Route::prefix('customer')->group(function () {
         Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
     });
 
+    Route::prefix('home')->group(function () {
+        Route::get('/search', [SalonController::class, 'index']);
+        Route::get('/data', [UserController::class, 'homeData']);
+    });
+
+
+    // salons
+    Route::prefix('salons')->controller(SalonController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{id}', 'show');
+    });
+
+
+    Route::prefix('groups')->controller(GroupController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{id}', 'show');
+    });
+
+    // services
+    Route::prefix('services')->controller(ServiceController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::get('{id}', 'show');
+    });
+
     Route::middleware('auth:sanctum')->group(function () {
         // Booking
         Route::prefix('bookings')->controller(BookingController::class)->group(function () {
@@ -37,16 +61,6 @@ Route::prefix('customer')->group(function () {
             Route::post('{id}/cancel', 'cancelBooking');
         });
 
-        Route::prefix('home')->group(function () {
-            Route::get('/search', [SalonController::class, 'index']);
-            Route::get('/data', [UserController::class, 'homeData']);
-        });
-
-        // salons
-        Route::prefix('salons')->controller(SalonController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('{id}', 'show');
-        });
 
         Route::get('/salons/{id}/coupons/{code}', [CouponController::class, 'check']);
 
@@ -54,15 +68,7 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');
-            // Route::put('{id}', 'update');
-            // Route::delete('{id}', 'destroy');
         });
-
-        Route::prefix('groups')->controller(GroupController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('{id}', 'show');
-        });
-
 
         // wallet transactions
         Route::prefix('wallet')->group(function () {
@@ -82,18 +88,10 @@ Route::prefix('customer')->group(function () {
         });
 
 
-        // services
-        Route::prefix('services')->controller(ServiceController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::get('{id}', 'show');
-        });
 
         Route::prefix('salon-payments')->controller(SalonPaymentController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
-            // Route::post('/', 'create');
-            // Route::put('{id}', 'update');
-            // Route::delete('{id}', 'destroy');
         });
 
         Route::prefix('loyalty-points')->controller(LoyaltyPointController::class)->group(function () {

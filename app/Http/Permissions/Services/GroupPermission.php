@@ -5,15 +5,19 @@ namespace App\Http\Permissions\Services;
 use App\Models\Services\Group;
 use App\Models\Users\User;
 use App\Services\MessageService;
+use Illuminate\Support\Facades\Auth;
 
 class GroupPermission
 {
     public static function filterIndex($query)
     {
-        $user = User::auth();
 
-        if ($user->isUserSalon()) {
-            $query->where('salon_id', $user->salon->id)->orWhereNull('salon_id');
+        if (Auth::check()) {
+            $user = User::auth();
+
+            if ($user->isUserSalon()) {
+                $query->where('salon_id', $user->salon->id)->orWhereNull('salon_id');
+            }
         }
 
         return $query;
@@ -22,11 +26,13 @@ class GroupPermission
     public static function canShow(Group $group)
     {
 
-        $user = User::auth();
+        if (Auth::check()) {
+            $user = User::auth();
 
-        if ($user->isUserSalon()) {
-            if ($group->salon_id != $user->salon->id && $group->salon_id != null) {
-                MessageService::abort(403, 'messages.permission_error');
+            if ($user->isUserSalon()) {
+                if ($group->salon_id != $user->salon->id && $group->salon_id != null) {
+                    MessageService::abort(403, 'messages.permission_error');
+                }
             }
         }
 

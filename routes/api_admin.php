@@ -211,6 +211,7 @@ Route::prefix('admin')->group(function () {
 
 
         // users
+        Route::post('users/{id}/send-notification', [NotificationController::class, 'sendNotificationToAllUsers']);
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index']);
             Route::get('{id}', [UserController::class, 'show']);

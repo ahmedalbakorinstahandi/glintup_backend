@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('general/upload-image', [ImageController::class, 'uploadImage']);
 
+Route::get('general/notifications', [NotificationController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('general')->group(function () {
 
 
         Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
+            // Route::get('/', 'index');
             Route::get('/unread-count', 'unreadCount');
             Route::post('/{id}/read',  'readNotification');
-            Route::get('/', 'index');
             Route::get('{id}', 'show');
         });
 

@@ -207,8 +207,13 @@ class User extends Model
     }
 
 
-    public function notificationsUnreadCount()
+    public static function notificationsUnreadCount()
     {
-        return Notification::where('user_id', $this->id)->whereNull('read_at')->count();
+        if (Auth::check()) {
+            $user = User::auth();
+            return  Notification::where('user_id', $user->id)->whereNull('read_at')->count();
+        } else {
+            return  Notification::whereNull('user_id')->count();
+        }
     }
 }

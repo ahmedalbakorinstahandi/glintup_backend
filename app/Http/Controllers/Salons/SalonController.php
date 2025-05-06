@@ -80,6 +80,7 @@ class SalonController extends Controller
     //     ]);
     // }
 
+  
     public function update($id, UpdateRequest $request)
     {
         $salon = $this->salonService->show($id);
@@ -100,11 +101,6 @@ class SalonController extends Controller
     {
 
         $user = User::auth();
-
-        // if (!$user->isSalonOwner()) {
-        //     MessageService::abort(403, 'messages.permission_error');
-        // }
-
  
         $id = $user->salon->id;
 
