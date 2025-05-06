@@ -16,13 +16,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/unread-count', 'unreadCount');
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+            Route::post('/{id}/read',  'readNotification');
         });
 
         // me
         Route::prefix('profile')->group(function () {
             Route::get('/', [UserController::class, 'getProfile']);
             Route::put('/', [UserController::class, 'updateProfile']);
-            Route::post('/{id}/read',  'readNotification');
         });
 
         Route::get('/salon-permissions', [SalonPermissionController::class, 'index']);
