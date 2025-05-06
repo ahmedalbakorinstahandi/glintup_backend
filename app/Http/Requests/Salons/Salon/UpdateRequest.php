@@ -33,7 +33,7 @@ class UpdateRequest extends BaseFormRequest
             'description'               => 'nullable|string',
             'location'                  => 'nullable|string|max:255',
             'types' => [
-                'required',
+                'nullable',
                 'array',
                 'distinct',
                 function ($attribute, $value, $fail) {
