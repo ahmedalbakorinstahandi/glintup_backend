@@ -108,7 +108,8 @@ class NotificationController extends Controller
     {
         $user = User::auth();
         $count = $user->notificationsUnreadCount();
-
+        
+        
         return response()->json([
             'success' => true,
             'data' => [
@@ -116,10 +117,14 @@ class NotificationController extends Controller
             ],
         ]);
     }
-
+    
     public function readNotification($id)
     {
+        
+        
         $notification = $this->notificationService->show($id);
+        
+        NotificationPermission::canShow($notification);
 
         $notifications = $this->notificationService->readNotification($notification->id);
 
