@@ -25,12 +25,12 @@ class GiftCardController extends Controller
     {
         $items = $this->giftCardService->index(request()->all());
 
-        $user = User::auth();
+        // $user = User::auth();
 
 
         return response()->json([
             'success' => true,
-            'info' => $user->isAdmin() ? $items['info'] : null,
+            'info' =>  $items['info'],
             'data' => GiftCardResource::collection($items['data']->items()),
             'meta' => ResponseService::meta($items['data']),
         ]);
