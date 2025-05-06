@@ -150,9 +150,9 @@ Route::prefix('admin')->group(function () {
         Route::prefix('salon-customers')->controller(SalonCustomerController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
-            Route::post('/', 'create');
+            // Route::post('/', 'create');
             Route::put('{id}', 'update');
-            Route::delete('{id}', 'destroy');
+            // Route::delete('{id}', 'destroy');
         });
 
 
