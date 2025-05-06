@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\Booking\Booking;
+use App\Models\General\Notification;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonStaff;
@@ -100,6 +101,7 @@ class User extends Model
     //     return $this->hasOne(\App\Models\Salons\SalonStaff::class, 'user_id')->withTrashed();
     // }
 
+
     public function salon()
     {
         return $this->hasOneThrough(
@@ -174,11 +176,6 @@ class User extends Model
         return $this->hasMany(UserSalonPermission::class, 'user_id');
     }
 
-    // salon staff
-    // public function salonStaff()
-    // {
-    //     return $this->hasMany(SalonStaff::class, 'user_id');
-    // }
 
 
     public function walletTransactions()
@@ -197,7 +194,6 @@ class User extends Model
     }
 
 
-
     public function getLocation()
     {
         if (is_null($this->latitude) || is_null($this->longitude)) {
@@ -208,5 +204,11 @@ class User extends Model
             'lat' => $this->latitude,
             'lng' => $this->longitude,
         ];
+    }
+
+
+    public function notificationsUnreadCount()
+    {
+        return Notification::where('user_id', $this->id)->whereNull('read_at')->count();
     }
 }

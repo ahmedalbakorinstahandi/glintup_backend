@@ -12,6 +12,7 @@ use App\Http\Resources\General\NotificationResource;
 use App\Http\Services\Salons\SalonService;
 use App\Models\General\Notification;
 use App\Models\Salons\Salon;
+use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\ResponseService;
 
@@ -99,6 +100,20 @@ class NotificationController extends Controller
             'success' => true,
             'message' => trans('messages.notification.send_notification_successfully'),
             'data' => new NotificationResource($last_notification),
+        ]);
+    }
+
+
+    public function getNotificationsUnreadCount()
+    {
+        $user = User::auth();
+        $count = $user->notificationsUnreadCount();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'count' => $count
+            ],
         ]);
     }
 }
