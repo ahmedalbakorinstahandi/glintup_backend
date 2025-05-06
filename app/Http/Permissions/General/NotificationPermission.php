@@ -15,9 +15,9 @@ class NotificationPermission
         if (Auth::check()) {
             $user = User::auth();
 
-            $query->where('user_id', $user->id);
+            $query->where('user_id', $user->id)->orWhereNull('user_id');
         } else {
-            $query->where('user_id', null);
+            $query->whereNull('user_id');
         }
 
 
