@@ -15,6 +15,7 @@ use App\Models\Salons\Salon;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\ResponseService;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -124,7 +125,8 @@ class NotificationController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'count' => $count
+                'count' => $count,
+                'test' => Auth::check(),
             ],
         ]);
     }

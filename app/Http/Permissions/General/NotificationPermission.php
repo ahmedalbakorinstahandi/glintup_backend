@@ -15,7 +15,11 @@ class NotificationPermission
         if (Auth::check()) {
             $user = User::auth();
 
-            $query->where('user_id', $user->id)->orWhereNull('user_id');
+            if ($user->isCustomer()) {
+                $query->where('user_id', $user->id)->orWhereNull('user_id');
+            } else {
+                $query->where('user_id', $user->id);
+            }
         } else {
             $query->whereNull('user_id');
         }
