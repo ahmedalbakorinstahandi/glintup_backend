@@ -65,7 +65,7 @@ class SalonResource extends JsonResource
             'distance' => $this->when($user->isCustomer(), $this->getDistance($user)),
             'my_loyalty_service' => $this->when($user->isCustomer(), new LoyaltyPointResource($this->MyLoyaltyService())),
             'my_gift_cards' => $this->when($user->isCustomer(), GiftCardResource::collection($this->MyGiftCards())),
-            'average_rating' => rand($this->reviews->avg('rating'), 2),
+            'average_rating' => number_format($this->reviews->avg('rating'), 2),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
             //TODO اجمالي الايرادات 
