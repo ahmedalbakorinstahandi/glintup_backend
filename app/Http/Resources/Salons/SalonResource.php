@@ -34,7 +34,7 @@ class SalonResource extends JsonResource
 
         $this_function_is_show = $request->route()->getActionMethod() == 'show';
 
-        return [
+        $data = [
             'id'              => $this->id,
             'owner_id'        => $this->owner_id,
             'merchant_legal_name' => $this->merchant_legal_name,
@@ -68,9 +68,7 @@ class SalonResource extends JsonResource
             'type'            => $this->type,
             'country'         => $this->country,
             'city'            => $this->city,
-            'distance' =>  $this->when($is_customer, $is_customer ? $this->getDistance($user) : null),
-            'my_loyalty_service' => $this->when($is_customer, new LoyaltyPointResource($this->MyLoyaltyService())),
-            'my_gift_cards' => $this->when($is_customer, GiftCardResource::collection($this->MyGiftCards())),
+
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
@@ -92,5 +90,19 @@ class SalonResource extends JsonResource
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
+
+
+        if ($is_customer) {
+            $user_data = [
+                'distance' =>  $this->when($is_customer,  $this->getDistance($user)),
+                'my_loyalty_service' => $this->when($is_customer, new LoyaltyPointResource($this->MyLoyaltyService())),
+                'my_gift_cards' => $this->when($is_customer, GiftCardResource::collection($this->MyGiftCards())),
+            ];
+
+            $data = array_merge($data, $user_data);
+        }
+
+
+        return $data;
     }
 }
