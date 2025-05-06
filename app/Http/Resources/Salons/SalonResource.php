@@ -21,11 +21,13 @@ class SalonResource extends JsonResource
     public function toArray($request)
     {
         $is_admin = false;
+        $is_customer = false;
 
         if (Auth::check()) {
             $user = User::auth();
 
             $is_admin = $user->isAdmin();
+            $is_customer = $user->isCustomer();
         }
 
         $local_lang = app()->getLocale();
@@ -66,15 +68,15 @@ class SalonResource extends JsonResource
             'type'            => $this->type,
             'country'         => $this->country,
             'city'            => $this->city,
-            'distance' => $this->when($user->isCustomer(), $this->getDistance($user)),
-            'my_loyalty_service' => $this->when($user->isCustomer(), new LoyaltyPointResource($this->MyLoyaltyService())),
-            'my_gift_cards' => $this->when($user->isCustomer(), GiftCardResource::collection($this->MyGiftCards())),
+            'distance' => $this->when($is_customer, $this->getDistance($user)),
+            'my_loyalty_service' => $this->when($is_customer, new LoyaltyPointResource($this->MyLoyaltyService())),
+            'my_gift_cards' => $this->when($is_customer, GiftCardResource::collection($this->MyGiftCards())),
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
             //TODO اجمالي الايرادات 
             'total_revenue' => $this->when($is_admin,  5000),
-            'can_review' => $this->when($user->isCustomer(), $this->canUserReview()),
+            'can_review' => $this->when($is_customer, $this->canUserReview()),
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),
             'working_status' => $this->getWorkingStatus($local_lang),
