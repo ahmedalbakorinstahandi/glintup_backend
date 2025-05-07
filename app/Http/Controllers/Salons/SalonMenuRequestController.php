@@ -50,7 +50,7 @@ class SalonMenuRequestController extends Controller
     public function create(CreateRequest $request)
     {
 
-        // SalonMenuRequestPermission::create($request->validated());
+        SalonMenuRequestPermission::create($request->validated());
 
         $data = $this->salonMenuRequestService->create($request->validated());
 

@@ -2,17 +2,14 @@
 
 namespace App\Http\Requests\Salons\SalonMenuRequest;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreateRequest extends JsonResource
+class CreateRequest extends BaseFormRequest
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+
+    public function rules(): array
     {
         return [
             'notes' => 'required|string',
