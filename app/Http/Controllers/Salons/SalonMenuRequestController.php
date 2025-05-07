@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Salons;
 use App\Http\Controllers\Controller;
 use App\Http\Permissions\Salons\SalonMenuRequestPermission;
 use App\Http\Permissions\Salons\SalonMenuRequestService;
+use App\Http\Resources\Salons\SalonMenuRequest\CreateRequest;
+use App\Http\Resources\Salons\SalonMenuRequest\UpdateRequest;
 use App\Http\Resources\Salons\SalonMenuRequestResource;
+use App\Models\Salons\Salon;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
@@ -45,9 +48,12 @@ class SalonMenuRequestController extends Controller
     }
 
 
-    public function create(Request $request)
+    public function create(CreateRequest $request)
     {
-        $data = $this->salonMenuRequestService->create($request->all());
+
+        SalonMenuRequestPermission::create($request->validated());
+
+        $data = $this->salonMenuRequestService->create($request->validated());
 
         return response()->json([
             'success' => true,
@@ -58,7 +64,7 @@ class SalonMenuRequestController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = $this->salonMenuRequestService->update($id, $request->all());
+        $data = $this->salonMenuRequestService->update($id, $request->validated());
 
         return response()->json([
             'success' => true,

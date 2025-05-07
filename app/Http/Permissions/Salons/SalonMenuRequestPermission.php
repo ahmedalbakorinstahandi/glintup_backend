@@ -30,4 +30,15 @@ class SalonMenuRequestPermission
 
         return $request;
     }
+
+    public static function create($data)
+    {
+        $user = User::auth();
+
+        if (!$user->isSalonOwner()) {
+            MessageService::abort(503, 'messages.permission_error');
+        }
+
+        return $data;
+    }
 }
