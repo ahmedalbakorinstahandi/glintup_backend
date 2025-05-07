@@ -128,18 +128,20 @@ class SalonMenuRequestService
 
     public function update($request, $data)
     {
-        if ($data['status'] == 'approved' && $request->status == 'pending') {
-            $request->update([
-                'approved_at' => now(),
-            ]);
+        if (isset($data['status'])) {
+            if ($data['status'] == 'approved' && $request->status == 'pending') {
+                $request->update([
+                    'approved_at' => now(),
+                ]);
 
-            // TODO send notification to salon
-        } elseif ($data['status'] == 'rejected' && $request->status == 'pending') {
-            $request->update([
-                'rejected_at' => now(),
-            ]);
+                // TODO send notification to salon
+            } elseif ($data['status'] == 'rejected' && $request->status == 'pending') {
+                $request->update([
+                    'rejected_at' => now(),
+                ]);
 
-            // TODO send notification to salon
+                // TODO send notification to salon
+            }
         }
 
         $request->update($data);

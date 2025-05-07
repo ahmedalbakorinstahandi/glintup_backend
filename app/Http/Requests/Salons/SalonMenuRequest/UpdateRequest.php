@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Salons\SalonMenuRequest;
+namespace App\Http\Requests\Salons\SalonMenuRequest;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -15,9 +15,10 @@ class UpdateRequest extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'notes' => ['required', 'string'],
-            'success_url' => ['required', 'string'],
-            'cancel_url' => ['required', 'string'],
+            'status' => 'nullable|in:approved,rejected',
+            'approved_at' => 'nullable|date',
+            'rejected_at' => 'nullable|date',
+            'admin_note' => 'nullable|string',
         ];
     }
 }
