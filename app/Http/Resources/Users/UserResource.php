@@ -7,13 +7,22 @@ use App\Http\Resources\Salons\UserSalonPermissionResource;
 use App\Http\Resources\Users\RefundResource;
 use App\Http\Resources\Users\WalletResource;
 use App\Http\Resources\Users\WalletTransactionResource;
+use App\Models\Users\User;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends JsonResource
 {
     public function toArray($request)
     {
+
+        $is_admin = false;
+        if (Auth::check()) {
+            $user = User::auth();
+
+            $is_admin = $user->is_admin;
+        }
+
         return [
             'id'            => $this->id,
             'first_name'    => $this->first_name,
@@ -33,8 +42,8 @@ class UserResource extends JsonResource
             'address'       => $this->address,
             'is_active'     => $this->is_active,
             'is_verified'   => $this->is_verified,
-            // 'location'      => $this->getLocation(),
             'otp_expire_at' => $this->otp_expire_at,
+            'notes'         => $this->when($is_admin, $this->notes),
 
             'salon' => new SalonResource($this->whenLoaded('salon')),
             'salon_owner' => new SalonResource($this->whenLoaded('salonOwner')),

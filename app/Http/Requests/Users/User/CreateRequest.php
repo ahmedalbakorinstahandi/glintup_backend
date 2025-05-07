@@ -22,6 +22,7 @@ class CreateRequest extends BaseFormRequest
             'latitude'    => 'nullable|numeric',
             'longitude'   => 'nullable|numeric',
             'language'    => 'nullable|string|max:10',
+            'notes'       => 'nullable|string|max:1000',
         ];
     }
 }

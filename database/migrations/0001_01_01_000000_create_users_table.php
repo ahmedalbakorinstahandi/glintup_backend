@@ -27,6 +27,7 @@ return new class extends Migration
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->text('address')->nullable();
+            $table->text('notes')->nullable();
             $table->string('otp')->nullable();
             $table->dateTime('otp_expire_at')->nullable();
             $table->boolean('is_verified')->default(false);
