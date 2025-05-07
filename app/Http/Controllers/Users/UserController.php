@@ -177,10 +177,6 @@ class UserController extends Controller
                     'en' => Setting::where('key', 'about_app_en')->first()->value,
                     'ar' => Setting::where('key', 'about_app_ar')->first()->value,
                 ],
-                'ad_policy' => [
-                    'en' => Setting::where('key', 'ad_policy_en')->first()->value,
-                    'ar' => Setting::where('key', 'ad_policy_ar')->first()->value,
-                ],
                 'contacts' => [
                     'phone' => Setting::where('key', 'phone')->first()->value,
                     'email' => Setting::where('key', 'email')->first()->value,
