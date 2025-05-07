@@ -141,6 +141,7 @@ Route::prefix('salon')->group(function () {
             Route::post('/get-ad-details', 'getAdDetails');
             Route::post('/request-post-ad', 'requestPostAd');
             Route::post('{id}/send-to-review', 'sendToReview');
+            Route::put('{id}', 'update');
         });
 
         Route::prefix('coupons')->controller(CouponController::class)->group(function () {

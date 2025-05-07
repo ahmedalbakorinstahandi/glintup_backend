@@ -49,7 +49,13 @@ class PromotionAdService
     public function update($ad, $validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $ad);
+
         $ad->update($validatedData);
+
+
+        // TODO : check if approved or rejected and send notification to salon
+
+
         return $ad;
     }
 
