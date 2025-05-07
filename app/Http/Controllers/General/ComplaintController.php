@@ -51,7 +51,9 @@ class ComplaintController extends Controller
     public function update($id, UpdateRequest $request)
     {
         $item = $this->service->show($id);
-        ComplaintPermission::canUpdate($item, $request->validated());
+
+        // ComplaintPermission::canUpdate($item, $request->validated());
+        
         $item = $this->service->update($item, $request->validated());
         return response()->json([
             'success' => true,

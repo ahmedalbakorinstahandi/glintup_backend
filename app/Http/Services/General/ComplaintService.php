@@ -6,6 +6,7 @@ use App\Models\General\Complaint;
 use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Http\Permissions\General\ComplaintPermission;
+use App\Models\Users\User;
 
 class ComplaintService
 {
@@ -46,6 +47,12 @@ class ComplaintService
 
     public function update($item, $data)
     {
+        $user = User::auth();
+
+        $data['reviewed_by'] = $user->id;
+        $data['reviewed_at'] = now();
+
+
         $item->update($data);
 
         $item->load(['user', 'reviewer']);
