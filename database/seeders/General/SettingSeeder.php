@@ -129,6 +129,13 @@ class SettingSeeder extends Seeder
                 'is_settings' => true,
             ],
             [
+                'key' => 'menu_request_cost',
+                'value' => 300,
+                'type' => 'float',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
                 'key' => 'help_ar',
                 'value' => '<!DOCTYPE html>
             <html lang="ar" dir="rtl">

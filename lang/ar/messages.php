@@ -267,5 +267,14 @@ return [
         'item_not_found'            => 'الشكوى غير موجودة',
     ],
 
+    'salon_menu_request' => [
+        'created' => 'تم إنشاء طلب القائمة بنجاح.',
+        'updated' => 'تم تحديث طلب القائمة بنجاح.',
+        'deleted' => 'تم حذف طلب القائمة بنجاح.',
+        'not_found' => 'طلب القائمة غير موجود.',
+    ],
+
+    'menu_request_payment_description' => 'دفع لطلب تعبئة المنيو',
+
 
 ];

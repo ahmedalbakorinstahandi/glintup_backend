@@ -273,4 +273,13 @@ return [
         'failed_delete_item'        => 'Failed to delete complaint',
         'item_not_found'            => 'Complaint not found',
     ],
+
+    'salon_menu_request' => [
+        'created' => 'Salon menu request created successfully.',
+        'updated' => 'Salon menu request updated successfully.',
+        'deleted' => 'Salon menu request deleted successfully.',
+        'not_found' => 'Salon menu request not found.',
+    ],
+
+    'menu_request_payment_description' => 'Payment for menu request',
 ];

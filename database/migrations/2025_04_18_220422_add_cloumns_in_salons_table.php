@@ -30,7 +30,6 @@ return new class extends Migration {
             $table->string('phone_code', 7)->nullable()->after('name')->change();
             $table->string('email')->nullable()->after('phone_code')->change();
             $table->string('location', 255)->nullable()->after('email')->change();
-            $table->enum('type', ["salon", "home_service", "beautician", "clinic"])->nullable()->after('location')->change();
             $table->string('country')->nullable()->after('type')->change();
             $table->string('city')->nullable()->after('country')->change();
         });

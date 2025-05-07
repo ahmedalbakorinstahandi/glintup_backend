@@ -60,7 +60,24 @@ class SalonService
     {
         $query = Salon::query()->with(['loyaltyService', 'owner', 'images']);
 
-        $searchFields = ['name', 'email', 'description', 'location', 'city', 'country'];
+        $searchFields = [
+            'name',
+            'email',
+            'description',
+            'location',
+            'city',
+            'country',
+            'merchant_legal_name',
+            'merchant_commercial_name',
+            'address',
+            'city_street_name',
+            'contact_name',
+            'contact_email',
+            'business_contact_name',
+            'business_contact_email',
+            'bio',
+            'tags',
+        ];
         $numericFields = [];
         $dateFields = ['created_at'];
         $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country'];

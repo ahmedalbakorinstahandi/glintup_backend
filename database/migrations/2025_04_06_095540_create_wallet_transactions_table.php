@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('currency')->default('AED');
             $table->text('description');
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
-            $table->enum('type', ['deposit', 'withdrawal', 'ad', 'booking', 'gift_card']);
+            $table->enum('type', ['deposit', 'withdrawal', 'ad', 'booking', 'gift_card', 'menu_request']);
             $table->boolean('is_refund')->default(false);
             $table->unsignedBigInteger('transactionable_id')->nullable();
             $table->string('transactionable_type')->nullable();
