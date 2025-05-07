@@ -11,6 +11,7 @@ use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
 use App\Http\Controllers\Salons\SalonHolidayController;
+use App\Http\Controllers\Salons\SalonMenuRequestController;
 use App\Http\Controllers\Salons\SalonPaymentController;
 use App\Http\Controllers\Salons\SalonPermissionController;
 use App\Http\Controllers\Salons\SalonSocialMediaSiteController;
@@ -227,6 +228,14 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::prefix('complaints')->controller(ComplaintController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+
+        Route::prefix('salon-menu-requests')->controller(SalonMenuRequestController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::put('{id}', 'update');

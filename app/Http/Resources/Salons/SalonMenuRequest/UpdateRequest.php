@@ -15,13 +15,9 @@ class UpdateRequest extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'salon_id' => ['required', 'exists:salons,id'],
-            'notes' => ['nullable', 'string'],
-            'cost' => ['required', 'numeric', 'min:0'],
-            'status' => ['nullable', 'in:pending,approved,rejected'],
-            'approved_at' => ['nullable', 'date'],
-            'rejected_at' => ['nullable', 'date'],
-            'admin_note' => ['nullable', 'string'],
+            'notes' => ['required', 'string'],
+            'success_url' => ['required', 'string'],
+            'cancel_url' => ['required', 'string'],
         ];
     }
 }

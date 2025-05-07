@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Providers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Salons\SalonMenuRequest;
 use App\Models\Statistics\PromotionAd;
 use App\Models\Users\WalletTransaction;
 use Google\Cloud\Iam\V1\GetPolicyOptions;
@@ -105,6 +106,22 @@ class StripeWebhookController extends Controller
                         $user->update([
                             'balance' => $user->balance + $walletTransaction->amount,
                         ]);
+                    }
+
+                    if ($type == 'menu_request') {
+                        $request = SalonMenuRequest::create([
+                            'salon_id' => $session->metadata->salon_id,
+                            'notes' => $session->metadata->menu_request_data['notes'] ?? null,
+                            'cost' => $session->metadata->menu_request_data['cost'] ?? null,
+                            'status' => 'pending',
+                        ]);
+
+                        $walletTransaction->update(
+                            [
+                                'transactionable_id' => $request->id,
+                                'transactionable_type' => SalonMenuRequest::class,
+                            ]
+                        );
                     }
                 }
 

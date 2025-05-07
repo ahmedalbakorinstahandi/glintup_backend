@@ -9,6 +9,7 @@ use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
 use App\Services\FilterService;
 use App\Services\MessageService;
+use Stripe\Checkout\Session;
 use Stripe\Stripe;
 
 class SalonMenuRequestService
@@ -48,7 +49,6 @@ class SalonMenuRequestService
 
     public function create($data)
     {
-        // $request = SalonMenuRequest::create($data);
 
         $user = User::auth();
 
@@ -75,7 +75,7 @@ class SalonMenuRequestService
         // Create Stripe checkout session
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $checkoutSession = \Stripe\Checkout\Session::create([
+        $checkoutSession = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
@@ -94,10 +94,17 @@ class SalonMenuRequestService
                 'transaction_id' => $walletTransaction->id,
                 'phone' => $user->phone_code . ' ' . $user->phone,
                 'user_id' => $user->id,
-                'type' => 'ad',
-                // 'ad_id' => $ad->id,
+                'type' => 'menu_request',
+                'menu_request_data' => [
+                    'salon_id' =>   $user->salon->id,
+                    'notes' => $data['notes'],
+                    'cost' => $menuRequestCost,
+                    'status' => 'pending',
+                ],
             ],
         ]);
+
+
 
 
         $walletTransaction->update([
@@ -108,7 +115,7 @@ class SalonMenuRequestService
                     'phone' => $user->phone_code . ' ' . $user->phone,
                     'user_id' => $user->id,
                     'salon_id' => $user->salon->id,
-                    'type' => 'ad',
+                    'type' => 'menu_request',
                 ]
             ],
         ]);
@@ -117,22 +124,31 @@ class SalonMenuRequestService
             'checkout_session' => $checkoutSession->id,
             'stripe_payment_id' => $checkoutSession->payment_intent,
         ];
-
-
-        return $request;
     }
 
     public function update($request, $data)
     {
+        if ($data['status'] == 'approved' && $request->status == 'pending') {
+            $request->update([
+                'approved_at' => now(),
+            ]);
+
+            // TODO send notification to salon
+        } elseif ($data['status'] == 'rejected' && $request->status == 'pending') {
+            $request->update([
+                'rejected_at' => now(),
+            ]);
+
+            // TODO send notification to salon
+        }
+
         $request->update($data);
 
         return $request;
     }
 
-    public function delete($request)
+    public function destroy($request)
     {
-        $request->delete();
-
-        return $request;
+        return $request->delete();
     }
 }

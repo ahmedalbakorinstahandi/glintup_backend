@@ -275,10 +275,10 @@ return [
     ],
 
     'salon_menu_request' => [
-        'created' => 'Salon menu request created successfully.',
-        'updated' => 'Salon menu request updated successfully.',
-        'deleted' => 'Salon menu request deleted successfully.',
-        'not_found' => 'Salon menu request not found.',
+        'created' => 'Menu request created successfully.',
+        'updated' => 'Menu request updated successfully.',
+        'deleted' => 'Menu request deleted successfully.',
+        'not_found' => 'Menu request not found.',
     ],
 
     'menu_request_payment_description' => 'Payment for menu request',

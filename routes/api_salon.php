@@ -8,6 +8,7 @@ use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
 use App\Http\Controllers\Salons\SalonCustomerController;
 use App\Http\Controllers\Salons\SalonHolidayController;
+use App\Http\Controllers\Salons\SalonMenuRequestController;
 use App\Http\Controllers\Salons\SalonPaymentController;
 use App\Http\Controllers\Salons\SalonPermissionController;
 use App\Http\Controllers\Salons\SalonSocialMediaSiteController;
@@ -175,6 +176,13 @@ Route::prefix('salon')->group(function () {
         Route::prefix('loyalty-points')->controller(LoyaltyPointController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+        });
+
+
+        Route::prefix('salon-menu-requests')->controller(SalonMenuRequestController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
         });
     });
 });
