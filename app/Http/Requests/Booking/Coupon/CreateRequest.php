@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Booking\Coupon;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Models\Users\User;
 
 class CreateRequest extends BaseFormRequest
 {
     public function rules(): array
     {
-        return [
+        $rules = [
             'code'               => 'required|string|max:255|unique:coupons,code,NULL,id,deleted_at,NULL',
             'discount_type'      => 'required|in:percentage,fixed',
             'discount_value'     => 'required|numeric|min:0',
@@ -21,5 +22,14 @@ class CreateRequest extends BaseFormRequest
             'gender'             => 'nullable|in:male,female',
             'is_active'          => 'nullable|boolean',
         ];
+
+
+        $user = User::auth();
+
+        if ($user->isAdmin()) {
+            $rules['salon_id'] = 'required|exists:salons,id,deleted_at,NULL';
+        }
+
+        return $rules;
     }
 }
