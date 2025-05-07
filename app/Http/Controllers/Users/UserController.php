@@ -181,7 +181,6 @@ class UserController extends Controller
                     'contacts' => [
                         'phone' => Setting::where('key', 'phone')->first()->value,
                         'email' => Setting::where('key', 'email')->first()->value,
-                        // 'address' => Data::where('key', 'address')->first()->value,
                     ],
                 ]
             ],

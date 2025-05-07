@@ -10,6 +10,8 @@ use Spatie\Translatable\HasTranslations;
 use App\Services\LanguageService;
 use App\Traits\LanguageTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Auth;
+use PDO;
 
 class Group extends Model
 {
@@ -44,14 +46,21 @@ class Group extends Model
 
     public function groupServices()
     {
-        $user = User::auth();
 
-        $salon_id = 0;
-        if ($user->isUserSalon()) {
-            $salon_id = $user->salon->id;
+        if (Auth::check()) {
+            $user = User::auth();
+
+            $salon_id = 0;
+            if ($user->isUserSalon()) {
+                $salon_id = $user->salon->id;
+            } else {
+                $salon_id = request()->salon_id;
+            }
         } else {
             $salon_id = request()->salon_id;
         }
+
+
 
 
         return $this->hasMany(GroupService::class)->where('salon_id', $salon_id);
