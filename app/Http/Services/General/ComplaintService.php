@@ -11,14 +11,13 @@ class ComplaintService
 {
     public function index($data)
     {
-        $query = Complaint::query();
+        $query = Complaint::with(['user', 'reviewer']);
 
 
         $query = ComplaintPermission::filterIndex($query);
 
 
-
-        $result = FilterService::applyFilters(
+        return FilterService::applyFilters(
             $query,
             $data,
             ['content', 'phone_number'],
@@ -27,11 +26,6 @@ class ComplaintService
             ['reviewed_by', 'user_id', 'hide_identity'],
             ['id']
         );
-
-
-        $result->load(['user', 'reviewer']);
-
-        return $result;
     }
 
     public function show($id)

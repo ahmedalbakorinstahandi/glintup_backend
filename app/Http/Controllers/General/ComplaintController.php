@@ -17,6 +17,7 @@ class ComplaintController extends Controller
     public function index()
     {
         $items = $this->service->index(request()->all());
+
         return response()->json([
             'success' => true,
             'data'    => ComplaintResource::collection($items->items()),
@@ -29,7 +30,7 @@ class ComplaintController extends Controller
         $item = $this->service->show($id);
 
         ComplaintPermission::canShow($item);
-        
+
         return response()->json([
             'success' => true,
             'data'    => new ComplaintResource($item),
