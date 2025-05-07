@@ -11,12 +11,14 @@ class ComplaintService
 {
     public function index($data)
     {
-        $query = Complaint::with(['user', 'reviewer']);
+        $query = Complaint::query();
 
 
         $query = ComplaintPermission::filterIndex($query);
 
-        
+        $query->load(['user', 'reviewer']);
+
+
         return FilterService::applyFilters(
             $query,
             $data,
