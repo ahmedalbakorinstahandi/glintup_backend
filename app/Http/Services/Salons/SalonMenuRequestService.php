@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Http\Permissions\Salons;
+namespace App\Http\Services\Salons;
 
+use App\Http\Permissions\Salons\SalonMenuRequestPermission;
 use App\Models\General\Setting;
 use App\Models\Salons\SalonMenuRequest;
 use App\Models\Users\User;
