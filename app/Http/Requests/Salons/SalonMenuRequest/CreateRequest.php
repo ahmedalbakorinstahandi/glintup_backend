@@ -13,8 +13,8 @@ class CreateRequest extends BaseFormRequest
     {
         return [
             'notes' => 'required|string',
-            'success_url' => 'required|string',
-            'cancel_url' => 'required|string',
+            'success_url' => 'required|url',
+            'cancel_url' => 'required|url',
         ];
     }
 }
