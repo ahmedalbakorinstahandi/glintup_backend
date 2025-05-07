@@ -20,7 +20,7 @@ class UserResource extends JsonResource
         if (Auth::check()) {
             $user = User::auth();
 
-            $is_admin = $user->is_admin;
+            $is_admin = $user->isAdmin();
         }
 
         return [
