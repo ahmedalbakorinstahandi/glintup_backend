@@ -77,7 +77,9 @@ class SalonMenuRequestController extends Controller
 
     public function destroy($id)
     {
-        $this->salonMenuRequestService->destroy($id);
+        $menuRequest = $this->salonMenuRequestService->show($id);
+
+        $this->salonMenuRequestService->destroy($menuRequest);
 
         return response()->json([
             'success' => true,
