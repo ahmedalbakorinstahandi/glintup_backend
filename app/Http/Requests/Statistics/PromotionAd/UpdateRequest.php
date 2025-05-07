@@ -19,6 +19,7 @@ class UpdateRequest extends BaseFormRequest
             'is_active'   => 'nullable|boolean',
             'views'       => 'nullable|integer|min:0',
             'clicks'      => 'nullable|integer|min:0',
+            'status'      => 'nullable|in:draft,in_review,approved,rejected',
         ];
     }
 }

@@ -17,6 +17,7 @@ class CreateRequest extends BaseFormRequest
             'valid_from'  => 'required|date',
             'valid_to'    => 'required|date|after_or_equal:valid_from',
             'is_active'   => 'required|boolean',
+            'status'     => 'required|in:draft,in_review,approved,rejected',
         ];
     }
 }

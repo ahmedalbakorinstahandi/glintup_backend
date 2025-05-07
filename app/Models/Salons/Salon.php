@@ -115,6 +115,12 @@ class Salon extends Model
         return $giftCards;
     }
 
+    // SalonMenuRequest
+    public function menuRequests()
+    {
+        return $this->hasMany(SalonMenuRequest::class, 'salon_id');
+    }
+
     // can user review
     public function canUserReview()
     {
