@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Statistics\PromotionAd;
 
+use App\Models\Statistics\PromotionAd;
 use App\Services\MessageService;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\BaseFormRequest;
@@ -17,14 +18,6 @@ class UpdateRequest extends BaseFormRequest
 
         $user = User::auth();
 
-        $salon_id = $this->route('id');
-
-        $salon = Salon::where('id', $salon_id)->first();
-
-        if (!$salon) {
-            MessageService::abort(404, 'messages.salon.item_not_found');
-        }
-
 
         if ($user->isAdmin()) {
             return [
@@ -36,8 +29,21 @@ class UpdateRequest extends BaseFormRequest
                 'is_active'   => 'nullable|boolean',
                 'status'      => 'nullable|in:approved,rejected',
             ];
-        } elseif ($user->isUserSalon() && $user->salon->id == $salon->id) {
-            if ($salon->status == 'draft') {
+        }
+
+        $ad_id = $this->route('id');
+
+        $ad = PromotionAd::find($ad_id);
+
+        if (!$ad) {
+            MessageService::abort(404, 'messages.promotion_ad.item_not_found');
+        }
+
+        $salon = $ad->salon;
+
+
+        if ($user->isUserSalon() && $user->salon->id == $salon->id) {
+            if ($ad->status == 'draft') {
                 return [
                     'title'       => LanguageService::translatableFieldRules('nullable|string|max:255'),
                     'button_text' => LanguageService::translatableFieldRules('nullable|string|max:15|min:3'),
