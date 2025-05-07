@@ -42,7 +42,7 @@ class SalonMenuRequestService
 
 
         if (!$request) {
-            MessageService::abort(404, 'salon_menu_request.not_found');
+            MessageService::abort(404, 'messages.salon_menu_request.not_found');
         }
 
         return $request;

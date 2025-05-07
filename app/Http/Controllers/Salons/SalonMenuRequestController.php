@@ -56,7 +56,7 @@ class SalonMenuRequestController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'salon_menu_request.created',
+            'message' => trans('messages.salon_menu_request.created'),
             'data' => $data,
         ]);
     }
@@ -70,7 +70,7 @@ class SalonMenuRequestController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'salon_menu_request.updated',
+            'message' => trans('messages.salon_menu_request.updated'),
             'data' => new SalonMenuRequestResource($data),
         ]);
     }
@@ -83,7 +83,7 @@ class SalonMenuRequestController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'salon_menu_request.deleted',
+            'message' => trans('messages.salon_menu_request.deleted'),
         ]);
     }
 }
