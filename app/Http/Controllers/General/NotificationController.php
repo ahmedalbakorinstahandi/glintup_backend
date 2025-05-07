@@ -137,7 +137,7 @@ class NotificationController extends Controller
 
         $notification = $this->notificationService->show($id);
 
-        NotificationPermission::canShow($notification);
+        // NotificationPermission::canShow($notification);
 
         $notifications = $this->notificationService->readNotification($notification->id);
 
