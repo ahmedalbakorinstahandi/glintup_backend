@@ -193,7 +193,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -262,7 +262,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -290,7 +290,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -318,7 +318,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -345,7 +345,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -405,7 +405,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -433,7 +433,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
@@ -461,7 +461,7 @@ class SettingSeeder extends Seeder
                 </div>
             </body>
             </html>',
-                'type' => 'html',,
+                'type' => 'html',
                 'allow_null' => false,
                 'is_settings' => true,
             ],
