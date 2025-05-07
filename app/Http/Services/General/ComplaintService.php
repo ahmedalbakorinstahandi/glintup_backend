@@ -23,7 +23,7 @@ class ComplaintService
             ['content', 'phone_number'],
             [],
             [],
-            ['reviewed_by', 'user_id', 'hide_identity'],
+            ['reviewed_by', 'user_id'],
             ['id']
         );
     }
