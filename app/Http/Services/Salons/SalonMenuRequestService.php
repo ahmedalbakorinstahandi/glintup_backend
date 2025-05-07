@@ -93,15 +93,15 @@ class SalonMenuRequestService
             'cancel_url' => $data['cancel_url'],
             'metadata' => [
                 'transaction_id' => $walletTransaction->id,
-                'phone' => $user->phone_code . ' ' . $user->phone,
+                'phone' => "{$user->phone_code} {$user->phone}",
                 'user_id' => $user->id,
                 'type' => 'menu_request',
-                'menu_request_data' => [
-                    'salon_id' =>   $user->salon->id,
-                    'notes' => $data['notes'],
-                    'cost' => $menuRequestCost,
-                    'status' => 'pending',
-                ],
+
+                'data_salon_id' => $user->salon->id,
+                'data_notes' => $data['notes'],
+                'data_cost' => $menuRequestCost,
+                'data_status' => 'pending',
+
             ],
         ]);
 

@@ -110,9 +110,9 @@ class StripeWebhookController extends Controller
 
                     if ($type == 'menu_request') {
                         $request = SalonMenuRequest::create([
-                            'salon_id' => $session->metadata->salon_id,
-                            'notes' => $session->metadata->menu_request_data['notes'] ?? null,
-                            'cost' => $session->metadata->menu_request_data['cost'] ?? null,
+                            'salon_id' => $session->metadata->data_salon_id,
+                            'notes' => $session->metadata->data_notes,
+                            'cost' => $session->metadata->data_cost,
                             'status' => 'pending',
                         ]);
 
