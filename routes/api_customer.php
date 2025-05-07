@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
+use App\Http\Controllers\General\ComplaintController;
 use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Rewards\LoyaltyPointController;
 use App\Http\Controllers\Salons\SalonController;
@@ -133,6 +134,10 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('{id}/receive', 'receive');
+        });
+
+        Route::prefix('complaints')->controller(ComplaintController::class)->group(function () {
+            Route::post('/', 'create');
         });
     });
 });

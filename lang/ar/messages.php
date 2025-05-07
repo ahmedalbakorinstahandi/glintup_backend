@@ -259,4 +259,13 @@ return [
     'salon_registered_successfully' => 'تم تسجيل الصالون بنجاح',
     'phone_already_taken' => 'رقم الهاتف مستخدم بالفعل',
 
+    'complaint' => [
+        'item_created_successfully' => 'تم إرسال الشكوى بنجاح',
+        'item_updated_successfully' => 'تم تحديث حالة الشكوى',
+        'item_deleted_successfully' => 'تم حذف الشكوى بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الشكوى',
+        'item_not_found'            => 'الشكوى غير موجودة',
+    ],
+
+
 ];

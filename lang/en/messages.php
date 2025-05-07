@@ -31,7 +31,7 @@ return [
 
     'activation_code_message' => 'Your activation code in GlintUp is: :verifyCode. Please use this code to activate your account. This code will expire in 10 minutes.',
     'password_reset_code_message' => 'Your password reset code in GlintUp is: :verifyCode. Please use this code to reset your password. This code will expire in 10 minutes.',
-    
+
     'user_logged_in_successfully' => 'User logged in successfully.',
     'service' => [
         'item_created_successfully' => 'Service created successfully',
@@ -236,7 +236,7 @@ return [
         'item_deleted_successfully'       => 'Salon staff member deleted successfully',
         'failed_delete_item'              => 'Failed to delete salon staff member',
         'item_not_found'                  => 'Salon staff member not found',
-        'permissions_updated_successfully'=> 'Salon staff member permissions updated successfully',
+        'permissions_updated_successfully' => 'Salon staff member permissions updated successfully',
     ],
 
 
@@ -264,4 +264,13 @@ return [
     'phone_already_exists' => 'Phone number already exists',
     'salon_registered_successfully' => 'Salon registered successfully',
     'phone_already_taken' => 'Phone number already taken',
+
+
+    'complaint' => [
+        'item_created_successfully' => 'Complaint submitted successfully',
+        'item_updated_successfully' => 'Complaint status updated',
+        'item_deleted_successfully' => 'Complaint deleted successfully',
+        'failed_delete_item'        => 'Failed to delete complaint',
+        'item_not_found'            => 'Complaint not found',
+    ],
 ];
