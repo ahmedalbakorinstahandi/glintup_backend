@@ -12,6 +12,7 @@ use App\Http\Resources\Statistics\PromotionAdResource;
 use App\Http\Services\Users\UserService;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Services\Statistics\PromotionAdService;
+use App\Models\General\Setting;
 use App\Models\Salons\Salon;
 use App\Models\Statistics\PromotionAd;
 use App\Services\ResponseService;
@@ -160,6 +161,32 @@ class UserController extends Controller
                 'trending_salons' => SalonResource::collection($trendingSalons),
                 'salons_have_discount' => SalonResource::collection($salons_have_discount),
                 'nearby_salons' => SalonResource::collection($nearby_salons),
+                'help' => [
+                    'en' => Setting::where('key', 'help_en')->first()->value,
+                    'ar' => Setting::where('key', 'help_ar')->first()->value,
+                ],
+                'terms_and_condition' => [
+                    'en' => Setting::where('key', 'terms_and_condition_en')->first()->value,
+                    'ar' => Setting::where('key', 'terms_and_condition_ar')->first()->value,
+                ],
+                'privacy_policy' => [
+                    'en' => Setting::where('key', 'privacy_policy_en')->first()->value,
+                    'ar' => Setting::where('key', 'privacy_policy_ar')->first()->value,
+                ],
+                'about_app' => [
+                    'en' => Setting::where('key', 'about_app_en')->first()->value,
+                    'ar' => Setting::where('key', 'about_app_ar')->first()->value,
+                ],
+                'ad_policy' => [
+                    'en' => Setting::where('key', 'ad_policy_en')->first()->value,
+                    'ar' => Setting::where('key', 'ad_policy_ar')->first()->value,
+                ],
+                'ad_price_day' => Setting::where('key', 'ad_price_day')->first()->value,
+                'contacts' => [
+                    'phone' => Setting::where('key', 'phone')->first()->value,
+                    'email' => Setting::where('key', 'email')->first()->value,
+                    // 'address' => Data::where('key', 'address')->first()->value,
+                ],
             ],
         ]);
     }
