@@ -18,7 +18,7 @@ class NotificationResource extends JsonResource
             'notificationable_type' => $this->notificationable_type,
             'notificationable' => $this->whenLoaded('notificationable'),
             'read_at'          => $this->read_at?->format('Y-m-d H:i:s'),
-            'is_read'          => $this->is_read,
+            'is_read'          => $this->is_read || $this->user_id == null,
             'metadata'         => $this->metadata,
 
             'user'             => new UserResource($this->whenLoaded('user')),
