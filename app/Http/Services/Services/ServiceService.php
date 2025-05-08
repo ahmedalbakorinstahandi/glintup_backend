@@ -3,6 +3,7 @@
 namespace App\Http\Services\Services;
 
 use App\Http\Permissions\Services\ServicePermission;
+use App\Models\Salons\Salon;
 use App\Models\Services\Service;
 use App\Services\FilterService;
 use App\Services\LanguageService;
@@ -52,6 +53,16 @@ class ServiceService
         $validatedData = LanguageService::prepareTranslatableData($validatedData, new Service);
 
         $validatedData['order'] = rand(1, 1000);
+
+
+        $salon = Salon::find($validatedData['salon_id']);
+        
+        // is_home_service,is_beautician
+        if ($salon->type == "beautician") {
+            // $validatedData['is_home_service'] = 1;
+            $validatedData['is_beautician'] = 1;
+        }
+
 
         $service = Service::create($validatedData);
 

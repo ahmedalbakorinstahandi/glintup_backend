@@ -22,7 +22,15 @@ class BookingService
 {
     public function index($data)
     {
-        $query = Booking::query()->with(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        $query = Booking::query()->with([
+            'user',
+            'salon',
+            'bookingServices.service',
+            'bookingDates',
+            'transactions',
+            'couponUsage',
+            'payments'
+        ]);
 
 
 
@@ -378,7 +386,28 @@ class BookingService
             ]
         );
 
-        $system_percentage = Setting::where('key', 'system_percentage_booking')->first()->value ?? 0;
+
+        $salon = $booking->salon;
+
+        $salon_type = $salon->type; // "salon", "home_service", "beautician", "clinic"
+        // salons_provider_percentage,clinics_provider_percentage,home_service_provider_percentage,makeup_artists_provider_percentage
+
+        switch ($salon_type) {
+            case 'salon':
+                $system_percentage = Setting::where('key', 'salons_provider_percentage')->first()->value ?? 0;
+                break;
+            case 'home_service':
+                $system_percentage = Setting::where('key', 'home_service_provider_percentage')->first()->value ?? 0;
+                break;
+            case 'beautician':
+                $system_percentage = Setting::where('key', 'makeup_artists_provider_percentage')->first()->value ?? 0;
+                break;
+            case 'clinic':
+                $system_percentage = Setting::where('key', 'clinics_provider_percentage')->first()->value ?? 0;
+                break;
+            default:
+                $system_percentage = 0;
+        }
 
         // booking payment
         $salonPayment =  SalonPayment::create([

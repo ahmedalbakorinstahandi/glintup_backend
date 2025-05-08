@@ -104,6 +104,38 @@ class Booking extends Model
         return $totalPrice;
     }
 
+    // // getTotalAmountRefundedAttribute
+    // public function getTotalAmountRefundedForAttribute()
+    // {
+    //     $totalPrice = 0;
+
+    //     foreach ($this->bookingServices as $service) {
+    //         $finalPrice = $service->service->getFinalPriceAttribute();
+
+    //         // Check if the service is free for the user
+    //         $freeService = FreeService::where([
+    //             'user_id' => $this->user_id,
+    //             'service_id' => $service->id,
+    //             'booking_id' => $this->id,
+    //         ])->first();
+
+    //         if (!$freeService) {
+    //             // Check if the service has is_beautician = 1
+    //             if ($service->service->is_beautician == 1) {
+    //                 $totalPrice += $finalPrice * 0.8; // Refund 80% of the service price
+    //             } else {
+    //                 $totalPrice += $finalPrice;
+    //             }
+    //         }
+    //     }
+
+    //     if ($this->couponUsage) {
+    //         $totalPrice = $this->couponUsage->coupon->getAmountAfterDiscount($totalPrice);
+    //     }
+
+    //     return $totalPrice;
+    // }
+
 
     // free service
     public function freeService()
