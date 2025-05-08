@@ -36,6 +36,7 @@ class User extends Model
         'address',
         'notes',
         'otp',
+        'stripe_customer_id',
         'otp_expire_at',
         'is_verified',
         'register_at',

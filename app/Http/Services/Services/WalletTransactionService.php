@@ -6,6 +6,8 @@ use App\Http\Permissions\Users\WalletTransactionPermission;
 use App\Models\Users\WalletTransaction;
 use App\Services\FilterService;
 use App\Services\MessageService;
+use Stripe\Customer;
+use Stripe\EphemeralKey;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -14,6 +16,22 @@ class WalletTransactionService
     public function createPaymentIntent($user, $amount)
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        if (!$user->stripe_customer_id) {
+            $customer = Customer::create([
+                'email' => $user->email,
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'phone' =>  $user->phone,
+            ]);
+
+            $user->stripe_customer_id = $customer->id;
+            $user->save();
+        }
+
+        $ephemeralKey = EphemeralKey::create(
+            ['customer' => $user->stripe_customer_id],
+            ['stripe_version' => '2023-10-16']
+        );
 
 
         $walletTransaction = WalletTransaction::create([
@@ -35,20 +53,24 @@ class WalletTransactionService
 
         $paymentIntent = PaymentIntent::create([
             'amount' => $amount * 100,
-            'currency' => 'aed', // درهم اماراتي
-            'payment_method_types' => ['card'],
+            'currency' => 'aed',
+            'customer' => $user->stripe_customer_id,
+            'setup_future_usage' => 'off_session',
+            'automatic_payment_methods' => ['enabled' => true],
             'metadata' => [
                 'transaction_id' => $walletTransaction->id,
                 'phone' => $user->phone_code . ' ' . $user->phone,
                 'user_id' => $user->id,
                 'type' => 'deposit',
             ],
-
         ]);
+
 
         return [
             'transaction_id' => $walletTransaction->id,
             'client_secret' => $paymentIntent->client_secret,
+            'customer_id' => $user->stripe_customer_id,
+            'ephemeral_key' => $ephemeralKey->secret,
         ];
     }
 
@@ -66,7 +88,7 @@ class WalletTransactionService
             ['amount'],
             ['created_at'],
             ['user_id', 'status', 'type', 'direction', 'is_refund'],
-            ['id','status']
+            ['id', 'status']
         );
     }
 
