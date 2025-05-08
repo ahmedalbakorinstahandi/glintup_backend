@@ -101,10 +101,7 @@ class WalletTransactionController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'transaction_id' => $paymentData['transaction_id'],
-                'client_secret' => $paymentData['client_secret'],
-            ],
+            'data' => $paymentData,
         ]);
     }
 }
