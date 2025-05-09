@@ -28,6 +28,7 @@ use App\Http\Controllers\Users\AdminAuthController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\WalletTransactionController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
@@ -39,7 +40,7 @@ Route::prefix('admin')->group(function () {
     });
 
 
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
 
 
         //DashboardController

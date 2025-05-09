@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CustomerMiddleware
+class SalonMiddleware
 {
     /**
      * Handle an incoming request.
@@ -20,10 +20,9 @@ class CustomerMiddleware
 
         $user = User::auth();
 
-        if (!$user->isCustomer()) {
+        if (!$user->isUserSalon()) {
             MessageService::abort(503, 'message.permission_error');
         }
-
 
         return $next($request);
     }

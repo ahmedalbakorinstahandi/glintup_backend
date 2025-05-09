@@ -23,6 +23,7 @@ use App\Http\Controllers\Statistics\DashboardController;
 use App\Http\Controllers\Statistics\PromotionAdController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
+use App\Http\Middleware\SalonMiddleware;
 use App\Http\Services\Salons\SalonService;
 use Illuminate\Support\Facades\Route;
 
@@ -35,7 +36,7 @@ Route::prefix('salon')->group(function () {
         Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
     });
 
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['auth:sanctum', SalonMiddleware::class])->group(function () {
         // group me
         Route::prefix('me')->group(function () {
             Route::get('/permissions', [SalonController::class, 'getPermissions']);

@@ -56,24 +56,20 @@ class Notification extends Model
     }
 
 
-    // // title
     protected function title(): Attribute
     {
         return Attribute::make(
             get: function (string $value) {
                 $raw = $this->getRawOriginal('title');
 
-                // Decode if it's a JSON string
                 if (is_string($raw)) {
                     $raw = json_decode($raw, true);
                 }
 
-                // Return 'cu' if exists
                 if (is_array($raw) && isset($raw['cu'])) {
                     return $raw['cu'];
                 }
 
-                // Fallback to default translation
                 return $value;
             }
         );
@@ -84,17 +80,14 @@ class Notification extends Model
             get: function (string $value) {
                 $raw = $this->getRawOriginal('message');
 
-                // Decode if it's a JSON string
                 if (is_string($raw)) {
                     $raw = json_decode($raw, true);
                 }
 
-                // Return 'cu' if exists
                 if (is_array($raw) && isset($raw['cu'])) {
                     return $raw['cu'];
                 }
 
-                // Fallback to default translation
                 return $value;
             }
         );

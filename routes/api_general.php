@@ -15,6 +15,7 @@ Route::prefix('guests')->group(function () {
         Route::get('/unread-count', 'unreadCount');
     });
 });
+
 Route::prefix('general')->group(function () {
 
 

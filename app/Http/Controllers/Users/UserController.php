@@ -130,7 +130,9 @@ class UserController extends Controller
 
         $prmomtionAds = PromotionAd::where('valid_from', '<=', now())
             ->where('valid_to', '>=', now())
-            ->where('is_active', 1)->get();
+            ->where('is_active', 1)
+            ->where('status', 'approved')
+            ->get();
 
         // location
         $latitude = request()->get('latitude');

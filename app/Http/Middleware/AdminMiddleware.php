@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CustomerMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,14 +17,12 @@ class CustomerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         $user = User::auth();
 
-        if (!$user->isCustomer()) {
+        if (!$user->isAdmin()) {
             MessageService::abort(503, 'message.permission_error');
         }
-
-
+        
         return $next($request);
     }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\WalletTransactionController;
+use App\Http\Middleware\CustomerMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
@@ -61,7 +62,7 @@ Route::prefix('customer')->group(function () {
     });
 
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', CustomerMiddleware::class])->group(function () {
         // Booking
         Route::prefix('bookings')->controller(BookingController::class)->group(function () {
             Route::post('/details', 'returnBookingDetails');
