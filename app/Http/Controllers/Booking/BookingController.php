@@ -14,7 +14,7 @@ use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Http\Resources\Services\ServiceResource;
 use App\Http\Services\Booking\BookingService; 
 use App\Services\ResponseService;
-
+  
    class BookingController extends Controller
 {
     protected $bookingService;
