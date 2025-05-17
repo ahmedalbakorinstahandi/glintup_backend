@@ -12,7 +12,7 @@ use App\Http\Requests\Booking\Booking\UpdateRequest;
 use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Http\Resources\Services\ServiceResource;
-use App\Http\Services\Booking\BookingService;
+use App\Http\Services\Booking\BookingService; 
 use App\Services\ResponseService;
 
 class BookingController extends Controller
