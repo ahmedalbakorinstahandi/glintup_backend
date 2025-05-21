@@ -18,6 +18,8 @@ class UpdateProfileRequest extends BaseFormRequest
             'latitude'    => 'nullable|numeric',
             'longitude'   => 'nullable|numeric',
             'language'    => 'nullable|string|max:10',
+            'email'      => 'nullable|email|max:255',
+            'email_offers' => 'nullable|boolean',
         ];
     }
 }

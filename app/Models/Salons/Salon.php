@@ -153,6 +153,13 @@ class Salon extends Model
     }
 
 
+    //isHomeServiceSalon
+    public function isHomeServiceSalon()
+    {
+        return $this->types == 'home_service' || $this->types == 'beautician';
+    }
+
+
     // Define relationship with loyalty points
     public function loyaltyPoints()
     {

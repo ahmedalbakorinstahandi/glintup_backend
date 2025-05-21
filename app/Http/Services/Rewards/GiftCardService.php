@@ -12,6 +12,7 @@ use App\Models\Salons\SalonPayment;
 use App\Models\Services\Service;
 use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
+use App\Services\PhoneService;
 use App\Services\WhatsappMessageService;
 
 class GiftCardService
@@ -102,6 +103,12 @@ class GiftCardService
 
     public function create($data)
     {
+
+        $phoneParts = PhoneService::parsePhoneParts($data['phone']);
+        $data['phone_code'] = $phoneParts['country_code'];
+        $data['phone'] = $phoneParts['national_number'];
+
+
         return GiftCard::create($data);
     }
 
@@ -404,5 +411,28 @@ class GiftCardService
 
 
         return $giftCard;
+    }
+
+
+    // get phone numbers i am send gift cards to them
+    public function getSentGiftCards()
+    {
+        $user = User::auth();
+        $giftCards = GiftCard::where('sender_id', $user->id)
+            // ->where('recipient_id', null)
+            ->get();
+
+
+        // filter unique phone numbers and  i need only phone_code and phone and full user name if exist
+        $giftCards = $giftCards->unique(function ($item) {
+            return $item->phone_code . $item->phone;
+        })->map(function ($item) {
+            return [
+                'phone_number' => $item->phone_code . $item->phone,
+                'full_name' => $item->recipient ? $item->recipient->first_name . ' ' . $item->recipient->last_name : null,
+            ];
+        });
+
+        return $giftCards;
     }
 }

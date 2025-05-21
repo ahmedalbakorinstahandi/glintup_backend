@@ -17,6 +17,7 @@ use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
 use App\Services\FilterService;
 use App\Services\MessageService;
+use App\Services\PhoneService;
 
 class BookingService
 {
@@ -88,17 +89,22 @@ class BookingService
     public function create($data)
     {
 
-        $fullPhone = str_replace(' ', '', $data['phone_code']) . str_replace(' ', '', $data['phone']);
+        // $fullPhone = str_replace(' ', '', $data['phone_code']) . str_replace(' ', '', $data['phone']);
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$fullPhone])
+        $phoneParts = PhoneService::parsePhoneParts($data['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 
 
         if (!$user) {
             $user = User::create([
-                'phone_code' => $data['phone_code'],
-                'phone'      => $data['phone'],
+                'phone_code' =>  $countryCode,
+                'phone'      =>  $phoneNumber,
                 'role'       => 'customer',
                 'first_name' => $data['first_name'],
                 'last_name'  => $data['last_name'],

@@ -8,6 +8,7 @@ use App\Models\Salons\UserSalonPermission;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\MessageService;
+use App\Services\PhoneService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -16,16 +17,21 @@ class SalonAuthService
 {
     public function login($loginUserData)
     {
-        $inputPhone = str_replace(' ', '', $loginUserData['phone']);
+        // $inputPhone = str_replace(' ', '', $loginUserData['phone']);
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $phoneParts = PhoneService::parsePhoneParts($loginUserData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->whereIn('role', ['staff', 'salon_owner'])
             ->first();
 
         if (!$user || !Hash::check($loginUserData['password'], $user->password)) {
             return null;
         }
-        
+
         // $user->load(['salonPermissions.permission']);
 
         return $user;
@@ -42,12 +48,17 @@ class SalonAuthService
 
         $userData = $requestData['user'];
 
-        $userData['phone_code'] = str_replace(' ', '', $userData['phone_code']);
-        $userData['phone'] = str_replace(' ', '', $userData['phone']);
 
-        $fullPhone = $userData['phone_code'] . $userData['phone'];
+        $phoneParts = PhoneService::parsePhoneParts($userData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$fullPhone])
+        $userData['phone_code'] = $countryCode;
+        $userData['phone'] = $phoneNumber;
+
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             // where role is salon_owner or staff    
             ->whereIn('role', ['salon_owner', 'staff'])
             ->first();
@@ -125,9 +136,12 @@ class SalonAuthService
     {
 
 
-        $inputPhone = str_replace(' ', '', $requestData['phone']);
+        $phoneParts = PhoneService::parsePhoneParts($requestData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 
@@ -158,9 +172,12 @@ class SalonAuthService
 
     public function forgotPassword($requestData)
     {
-        $inputPhone = str_replace(' ', '', $requestData['phone']);
+        $phoneParts = PhoneService::parsePhoneParts($requestData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 

@@ -10,7 +10,7 @@ class VerifyCodeRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|string',
+            'phone' => ['required', 'phone:AUTO'],
             'verify_code' => 'required|string|max:6',
         ];
     }

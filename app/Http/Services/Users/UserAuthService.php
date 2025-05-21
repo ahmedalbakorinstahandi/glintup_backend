@@ -6,6 +6,7 @@ use App\Models\Rewards\GiftCard;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\MessageService;
+use App\Services\PhoneService;
 use App\Services\WhatsappMessageService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,14 @@ class UserAuthService
 {
     public function login($loginUserData)
     {
-        $inputPhone = str_replace(' ', '', $loginUserData['phone']);
+        // $inputPhone = str_replace(' ', '', $loginUserData['phone']);
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $phoneParts = PhoneService::parsePhoneParts($loginUserData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 
@@ -33,18 +39,17 @@ class UserAuthService
 
     public function register($requestData)
     {
-        $requestData['phone_code'] = str_replace(' ', '', $requestData['phone_code']);
-        $requestData['phone'] = str_replace(' ', '', $requestData['phone']);
 
-        $fullPhone = $requestData['phone_code'] . $requestData['phone'];
+        $phoneParts = PhoneService::parsePhoneParts($requestData['phone']);
 
-        $inputPhone = str_replace(' ', '', $fullPhone);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
-
 
 
         $verifyCode = rand(100000, 999999);
@@ -112,9 +117,11 @@ class UserAuthService
 
         // check have gift card for this user phone 
 
-        $giftCards = GiftCard::where('phone', $user->phone, 'phone_code', $user->phone_code)
-            ->where('recipient_id', null)
+        $giftCards = GiftCard::where('phone', $user->phone)
+            ->where('phone_code', $user->phone_code)
+            ->whereNull('recipient_id')
             ->get();
+
 
 
         if ($giftCards) {
@@ -135,9 +142,12 @@ class UserAuthService
     {
 
 
-        $inputPhone = str_replace(' ', '', $requestData['phone']);
+        $phoneParts = PhoneService::parsePhoneParts($requestData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 
@@ -167,9 +177,14 @@ class UserAuthService
 
     public function forgotPassword($requestData)
     {
-        $inputPhone = str_replace(' ', '', $requestData['phone']);
+        // $inputPhone = str_replace(' ', '', $requestData['phone']);
+        $phoneParts = PhoneService::parsePhoneParts($requestData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 

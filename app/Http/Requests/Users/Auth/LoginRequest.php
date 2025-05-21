@@ -11,7 +11,7 @@ class LoginRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|string',
+            'phone' => ['required', 'phone:AUTO'],
             'password' => 'required|min:8',
             'device_token' => 'nullable|string',
         ];

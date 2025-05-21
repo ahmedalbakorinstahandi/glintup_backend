@@ -17,10 +17,18 @@ class UserResource extends JsonResource
     {
 
         $is_admin = false;
+        $show_user_location = false;
         if (Auth::check()) {
             $user = User::auth();
 
-            $is_admin = $user->isAdmin();
+            if ($user->isAdmin()) {
+                $is_admin = true;
+                $show_user_location = true;
+            } else if ($user->isUserSalon()) {
+                $is_home_service_salon = $user->salon->isHomeServiceSalon();
+            } elseif ($user->isUser() && $user->id == $this->id) {
+                $show_user_location = true;
+            }
         }
 
         return [
@@ -36,9 +44,11 @@ class UserResource extends JsonResource
             'avatar'        => $this->avatar != null ? asset('storage/' . $this->avatar) : null,
             'phone_code'    => $this->phone_code,
             'phone'         => $this->phone,
+            'email'         => $this->email,
+            'email_offers'  => $this->email_offers,
             'role'          => $this->role,
-            'latitude'     => $this->latitude,
-            'longitude'    => $this->longitude,
+            'latitude'     => $show_user_location ? $this->latitude : null,
+            'longitude'    => $show_user_location ? $this->longitude : null,
             'address'       => $this->address,
             'is_active'     => $this->is_active,
             'is_verified'   => $this->is_verified,

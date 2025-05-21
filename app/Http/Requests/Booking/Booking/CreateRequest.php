@@ -5,21 +5,27 @@ namespace App\Http\Requests\Booking\Booking;
 use App\Http\Requests\BaseFormRequest;
 use App\Models\Users\User;
 use App\Services\MessageService;
+use App\Services\PhoneService;
 
 class CreateRequest extends BaseFormRequest
 {
     public function rules(): array
     {
         $phone = $this->input('phone');
-        $phoneCode = $this->input('phone_code');
 
-        if (!$phone || !$phoneCode) {
-            MessageService::abort(422, 'messages.phone_code_or_phone_required');
+
+        if (!$phone) {
+            // TODO: Phone is required translation
+            MessageService::abort(422, 'messages.phone_is_required');
         }
 
-        $phone = str_replace(' ', '', $phoneCode) . str_replace(' ', '', $phone);
+        $phoneParts = PhoneService::parsePhoneParts($phone);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$phone])
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'customer')
             ->first();
 
@@ -33,8 +39,7 @@ class CreateRequest extends BaseFormRequest
             }
         } else {
             $rules = [
-                'phone_code' => 'required|string',
-                'phone'      => 'required|string',
+                'phone' => ['required', 'phone:AUTO'],
                 'first_name' => 'required|string',
                 'last_name' => 'required|string',
                 'gender' => 'required|string|in:male,female',
@@ -52,8 +57,7 @@ class CreateRequest extends BaseFormRequest
         ];
 
         if ($user) {
-            $rules2['phone_code'] = 'required|string';
-            $rules2['phone'] = 'required|string';
+            $rules2['phone'] = ['required', 'phone:AUTO'];
         }
 
 

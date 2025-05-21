@@ -118,6 +118,7 @@ Route::prefix('customer')->group(function () {
 
         // gift cards
         Route::prefix('gift-cards')->group(function () {
+            Route::get('/sent', [GiftCardController::class, 'getSentGiftCards']);
             Route::get('/', [GiftCardController::class, 'index']);
             Route::post('/send', [GiftCardController::class, 'createByUser']);
             Route::get('{id}', [GiftCardController::class, 'show']);

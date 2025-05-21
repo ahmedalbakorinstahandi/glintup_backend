@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('phone_code', 7);
             $table->string('phone', 20);
             $table->string('password');
+            $table->string('email')->nullable();
+            $table->boolean('email_offers')->default(false);
             $table->enum('role', ["customer", "salon_owner", "admin", "staff"]);
             $table->boolean('is_active')->default(true);
             $table->double('latitude')->nullable();

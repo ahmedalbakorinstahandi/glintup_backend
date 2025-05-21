@@ -4,15 +4,19 @@ namespace App\Http\Services\Users;
 
 use App\Models\Users\User;
 use App\Services\FirebaseService;
+use App\Services\PhoneService;
 use Illuminate\Support\Facades\Hash;
 
 class AdminAuthService
 {
     public function login($loginUserData)
     {
-        $inputPhone = str_replace(' ', '', $loginUserData['phone']);
+        $phoneParts = PhoneService::parsePhoneParts($loginUserData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
 
-        $user = User::whereRaw("REPLACE(CONCAT(phone_code, phone), ' ', '') = ?", [$inputPhone])
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
             ->where('role', 'admin')
             ->first();
 

@@ -113,4 +113,17 @@ class GiftCardController extends Controller
             ]
         );
     }
+
+    //getSentGiftCards
+    public function getSentGiftCards()
+    {
+        $giftCards = $this->giftCardService->getSentGiftCards();
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => GiftCardResource::collection($giftCards),
+            ]
+        );
+    }
 }
