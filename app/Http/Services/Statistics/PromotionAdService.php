@@ -22,7 +22,15 @@ class PromotionAdService
 
         $query = PromotionAdPermission::filterIndex($query);
 
-        return FilterService::applyFilters($query, $data, ['title', 'description'], [], ['valid_from', 'valid_to'], ['salon_id', 'is_active'], ['id']);
+        return FilterService::applyFilters(
+            $query,
+            $data,
+            ['title', 'button_text'],
+            [],
+            ['valid_from', 'valid_to'],
+            ['salon_id', 'is_active'],
+            ['id']
+        );
     }
 
     public function show($id)
