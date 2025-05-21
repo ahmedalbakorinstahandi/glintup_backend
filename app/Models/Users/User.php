@@ -111,7 +111,7 @@ class User extends Model
     // }
 
 
-    public function adminPermissionsDirect()
+    public function adminPermissions()
     {
         return $this->belongsToMany(
             AdminPermission::class,
