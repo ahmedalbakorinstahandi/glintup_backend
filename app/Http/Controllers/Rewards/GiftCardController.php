@@ -122,7 +122,7 @@ class GiftCardController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'data' => GiftCardResource::collection($giftCards),
+                'data' => $giftCards,
             ]
         );
     }
