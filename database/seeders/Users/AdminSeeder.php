@@ -20,7 +20,7 @@ class AdminSeeder extends Seeder
             'birth_date' => '1990-01-01',
             'avatar' => null,
             'phone_code' => '+971',
-            'phone' => '1234567890',
+            'phone' => '9711234567890',
             'password' => bcrypt('password'),
             'role' => 'admin',
             'is_active' => true,

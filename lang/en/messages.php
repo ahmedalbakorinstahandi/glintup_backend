@@ -282,4 +282,14 @@ return [
     ],
 
     'menu_request_payment_description' => 'Payment for menu request',
+
+
+    'admin_users' => [
+        'item_created_successfully' => 'Admin user created successfully.',
+        'item_updated_successfully' => 'Admin user updated successfully.',
+        'item_deleted_successfully' => 'Admin user deleted successfully.',
+        'failed_delete_item' => 'Failed to delete admin user.',
+        'permissions_updated_successfully' => 'Admin user permissions updated successfully.',
+        'item_not_found' => 'Admin user not found.',
+    ],
 ];

@@ -277,4 +277,15 @@ return [
     'menu_request_payment_description' => 'دفع لطلب تعبئة المنيو',
 
 
+    'admin_users' => [
+        'item_created_successfully' => 'تم إنشاء المستخدم الإداري بنجاح.',
+        'item_updated_successfully' => 'تم تعديل بيانات المستخدم الإداري بنجاح.',
+        'item_deleted_successfully' => 'تم حذف المستخدم الإداري بنجاح.',
+        'failed_delete_item' => 'فشل في حذف المستخدم الإداري.',
+        'permissions_updated_successfully' => 'تم تحديث صلاحيات المستخدم الإداري بنجاح.',
+        'item_not_found' => 'المستخدم الإداري غير موجود.',
+    ],
+
+
+
 ];

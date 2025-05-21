@@ -31,6 +31,9 @@ class AdStatisticService
             ]);
         }
 
+        $ad->clicks += 1;
+        $ad->save();
+
         return true;
     }
 
@@ -54,6 +57,9 @@ class AdStatisticService
                 'viewed' => true,
             ]);
         }
+
+        $ad->views += 1;
+        $ad->save();
 
         return true;
     }

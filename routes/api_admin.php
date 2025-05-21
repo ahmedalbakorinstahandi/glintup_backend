@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admins\AdminUserController;
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\General\ComplaintController;
@@ -55,9 +56,21 @@ Route::prefix('admin')->group(function () {
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
         });
-        // Route::prefix('me')->group(function () {
-        //     Route::get('/permissions', [AdminAuthController::class, 'getPermissions']);
-        // });
+
+
+        Route::prefix('admin-users')->group(function () {
+            Route::get('/', [AdminUserController::class, 'index']);
+            Route::get('/{id}', [AdminUserController::class, 'show']);
+            Route::post('/', [AdminUserController::class, 'create']);
+            Route::put('/{id}', [AdminUserController::class, 'update']);
+            Route::delete('/{id}', [AdminUserController::class, 'destroy']);
+            Route::post('/{id}/update-permissions', [AdminUserController::class, 'updatePermissions']);
+        });
+
+        Route::get('/admin-permissions', [AdminUserController::class, 'getPermissions']);
+
+
+
 
         Route::prefix('groups')->controller(GroupController::class)->group(function () {
             Route::get('/', 'index');

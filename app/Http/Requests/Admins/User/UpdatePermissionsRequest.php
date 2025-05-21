@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Salons\SalonStaff;
+namespace App\Http\Requests\Admins\User;
 
 use App\Http\Requests\BaseFormRequest;
 
@@ -10,7 +10,7 @@ class UpdatePermissionsRequest extends BaseFormRequest
     {
         return [
             'permissions' => 'required|array',
-            'permissions.*' => 'exists:salon_permissions,id,deleted_at,NULL',
+            'permissions.*' => 'exists:admin_permissions,id,deleted_at,NULL',
         ];
     }
 }

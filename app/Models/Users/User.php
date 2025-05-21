@@ -2,12 +2,14 @@
 
 namespace App\Models\Users;
 
+use App\Models\Admins\AdminPermission;
 use App\Models\Booking\Booking;
 use App\Models\General\Notification;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonStaff;
 use App\Models\Salons\UserSalonPermission;
+use App\Models\User\UserAdminPermission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -107,6 +109,19 @@ class User extends Model
     // {
     //     return $this->hasOne(\App\Models\Salons\SalonStaff::class, 'user_id')->withTrashed();
     // }
+
+
+    public function adminPermissionsDirect()
+    {
+        return $this->belongsToMany(
+            AdminPermission::class,
+            'user_admin_permissions',
+            'user_id',
+            'permission_id'
+        )->withTimestamps()->withTrashed();
+    }
+
+
 
 
     public function salon()

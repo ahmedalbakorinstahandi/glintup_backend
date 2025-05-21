@@ -13,7 +13,7 @@ use App\Services\ResponseService;
 
 class SalonStaffController extends Controller
 {
-    public function __construct(protected SalonStaffService $service) 
+    public function __construct(protected SalonStaffService $service)
     {
         $this->service = $service;
     }
@@ -84,4 +84,36 @@ class SalonStaffController extends Controller
             'message' => trans('messages.salon_staff.permissions_updated_successfully'),
         ]);
     }
+
+    //     public function updatePermissions(SalonStaff $staff, array $data)
+    // {
+    //     $userId = $staff->user_id;
+    //     $salonId = $staff->salon_id;
+    //     $newPermissions = collect($data['permissions'])->unique()->values()->all(); // مصفوفة نظيفة
+
+    //     // جلب الصلاحيات الحالية من قاعدة البيانات
+    //     $existingPermissions = UserSalonPermission::where('user_id', $userId)
+    //         ->where('salon_id', $salonId)
+    //         ->get();
+
+    //     // حذف أي صلاحية حالية غير موجودة في الجديدة
+    //     foreach ($existingPermissions as $permission) {
+    //         if (!in_array($permission->permission_id, $newPermissions)) {
+    //             $permission->delete();
+    //         }
+    //     }
+
+    //     // إضافة أي صلاحية جديدة غير موجودة حاليًا
+    //     foreach ($newPermissions as $permissionId) {
+    //         $exists = $existingPermissions->firstWhere('permission_id', $permissionId);
+    //         if (!$exists) {
+    //             UserSalonPermission::create([
+    //                 'user_id' => $userId,
+    //                 'salon_id' => $salonId,
+    //                 'permission_id' => $permissionId,
+    //             ]);
+    //         }
+    //     }
+    // }
+
 }
