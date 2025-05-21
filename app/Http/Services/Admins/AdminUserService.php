@@ -4,7 +4,7 @@ namespace App\Http\Services\Admins;
 
 use App\Models\Users\User;
 use App\Models\Admins\{AdminPermission, UserAdminPermission};
-use App\Services\{FilterService, MessageService};
+use App\Services\{FilterService, MessageService, PhoneService};
 use Illuminate\Support\Facades\{DB, Hash};
 
 class AdminUserService
@@ -35,6 +35,13 @@ class AdminUserService
 
     public function create(array $data)
     {
+
+        $phoneParts = PhoneService::parsePhoneParts($data['phone']);
+
+        $data['phone_code'] = $phoneParts['country_code'];
+        $data['phone'] = $phoneParts['national_number'];
+
+
         return DB::transaction(function () use ($data) {
             $user = User::create([
                 'first_name' => $data['first_name'],
@@ -43,6 +50,9 @@ class AdminUserService
                 'password' => Hash::make($data['password']),
                 'role' => 'admin',
                 'is_active' => $data['is_active'] ?? true,
+                'birth_date' => '2000-01-01',
+                'phone_code' => $data['phone_code'],
+                'phone' => $data['phone'],
             ]);
 
             if (isset($data['permissions'])) {
