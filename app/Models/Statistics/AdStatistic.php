@@ -6,8 +6,11 @@ use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AdStatisic extends Model
+class AdStatistic extends Model
 {
+
+    protected $table = 'ad_statistics';
+
     use SoftDeletes;
 
     protected $fillable = [

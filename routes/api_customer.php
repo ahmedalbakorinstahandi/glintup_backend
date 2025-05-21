@@ -10,6 +10,7 @@ use App\Http\Controllers\Salons\SalonPaymentController;
 use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Services\ServiceController;
+use App\Http\Controllers\Statistics\AdStatisticController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\WalletTransactionController;
@@ -140,6 +141,13 @@ Route::prefix('customer')->group(function () {
 
         Route::prefix('complaints')->controller(ComplaintController::class)->group(function () {
             Route::post('/', 'create');
+        });
+
+
+
+        Route::prefix('ads')->controller(AdStatisticController::class)->group(function () {
+            Route::post('{id}/clicked', 'clicked');
+            Route::post('{id}/viewed', 'viewed');
         });
     });
 });

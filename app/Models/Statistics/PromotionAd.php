@@ -4,12 +4,14 @@ namespace App\Models\Statistics;
 
 use App\Models\General\Setting;
 use App\Models\Salons\Salon;
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 use App\Services\LanguageService;
 use App\Traits\LanguageTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Auth;
 
 class PromotionAd extends Model
 {
@@ -68,7 +70,27 @@ class PromotionAd extends Model
         );
     }
 
-    // amount
+
+    // id valid  date and is_active = true and status approved
+    protected function isValid(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $currentDate = new \DateTime();
+                $validFrom = new \DateTime($this->valid_from);
+                $validTo = new \DateTime($this->valid_to);
+
+                return (
+                    $currentDate >= $validFrom &&
+                    $currentDate <= $validTo &&
+                    $this->is_active === true &&
+                    $this->status === 'approved'
+                );
+            }
+        );
+    }
+
+
 
     protected function amount(): Attribute
     {
@@ -89,4 +111,43 @@ class PromotionAd extends Model
         );
     }
 
+
+    public function userViewed()
+    {
+        if (Auth::check()) {
+            $user = User::auth();
+
+            $adStatistic = AdStatistic::where('user_id', $user->id)
+                ->where('promotion_ad_id', $this->id)
+                ->first();
+
+            if ($adStatistic) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    public function userClicked()
+    {
+        if (Auth::check()) {
+            $user = User::auth();
+
+            $adStatistic = AdStatistic::where('user_id', $user->id)
+                ->where('promotion_ad_id', $this->id)
+                ->first();
+
+            if ($adStatistic) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }

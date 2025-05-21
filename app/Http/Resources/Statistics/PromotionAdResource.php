@@ -23,6 +23,11 @@ class PromotionAdResource extends JsonResource
             'clicks'       => $this->clicks,
             'status'       => $this->status,
 
+
+            'user_viewed'   => $this->userViewed(),
+            'user_clicked'  => $this->userClicked(),
+
+            
             'salon'        => new SalonResource($this->whenLoaded('salon')),
 
             'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
