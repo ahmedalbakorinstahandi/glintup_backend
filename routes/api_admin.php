@@ -67,7 +67,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/update-permissions', [AdminUserController::class, 'updatePermissions']);
         });
 
-        Route::get('/admin-permissions', [AdminUserController::class, 'getPermissions']);
+        Route::get('/permissions', [AdminUserController::class, 'getPermissions']);
 
 
 
