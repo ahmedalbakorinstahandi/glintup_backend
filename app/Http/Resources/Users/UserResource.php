@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Users;
 
+use App\Http\Resources\Admins\AdminPermissionResource;
 use App\Http\Resources\Salons\SalonResource;
 use App\Http\Resources\Salons\UserSalonPermissionResource;
 use App\Http\Resources\Users\RefundResource;
@@ -64,6 +65,8 @@ class UserResource extends JsonResource
             'wallet_transactions' => WalletTransactionResource::collection($this->whenLoaded('walletTransactions')),
             'refunds'             => RefundResource::collection($this->whenLoaded('refunds')),
             'salon_permissions'   => UserSalonPermissionResource::collection($this->whenLoaded('salonPermissions')),
+
+            'admin_permissions' => AdminPermissionResource::collection($this->whenLoaded('adminPermissions')),
 
             'register_at' => $this->register_at?->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

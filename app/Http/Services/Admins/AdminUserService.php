@@ -11,7 +11,7 @@ class AdminUserService
 {
     public function index($data)
     {
-        $query = User::where('role', 'admin')->with(['adminPermissions.permission']);
+        $query = User::where('role', 'admin')->with(['adminPermissions']);
 
         return FilterService::applyFilters(
             $query,
@@ -26,7 +26,7 @@ class AdminUserService
 
     public function show($id)
     {
-        $user = User::where('role', 'admin')->with(['adminPermissions.permission'])->find($id);
+        $user = User::where('role', 'admin')->with(['adminPermissions'])->find($id);
         if (!$user) {
             MessageService::abort(404, 'messages.admin_users.item_not_found');
         }
@@ -54,7 +54,7 @@ class AdminUserService
                 }
             }
 
-            return $user->load(['adminPermissions.permission']);
+            return $user->load(['adminPermissions']);
         });
     }
 
@@ -68,7 +68,7 @@ class AdminUserService
             'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
         ]);
 
-        return $user->refresh()->load(['adminPermissions.permission']);
+        return $user->refresh()->load(['adminPermissions']);
     }
 
     public function destroy(User $user)
