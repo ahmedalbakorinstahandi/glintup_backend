@@ -426,12 +426,14 @@ class GiftCardService
         // filter unique phone numbers and  i need only phone_code and phone and full user name if exist
         $giftCards = $giftCards->unique(function ($item) {
             return $item->phone_code . $item->phone;
-        })->map(function ($item) {
+        })->values()->map(function ($item) {
             return [
                 'phone_number' => $item->phone_code . $item->phone,
-                'full_name' => $item->recipient ? $item->recipient->first_name . ' ' . $item->recipient->last_name : null,
+                'full_name' => $item->recipient
+                    ? trim(($item->recipient->first_name ?? '') . ' ' . ($item->recipient->last_name ?? ''))
+                    : null,
             ];
-        });
+        })->values()->all();
 
         return $giftCards;
     }
