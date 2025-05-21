@@ -26,7 +26,7 @@ class UserResource extends JsonResource
                 $show_user_location = true;
             } else if ($user->isUserSalon()) {
                 $is_home_service_salon = $user->salon->isHomeServiceSalon();
-            } elseif ($user->isUser() && $user->id == $this->id) {
+            } elseif ($user->isCustomer() && $user->id == $this->id) {
                 $show_user_location = true;
             }
         }
