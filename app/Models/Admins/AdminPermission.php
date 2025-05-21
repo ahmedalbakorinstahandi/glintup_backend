@@ -3,13 +3,15 @@
 namespace App\Models\Admins;
 
 use App\Services\LanguageService;
+use App\Traits\LanguageTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Translatable\HasTranslations;
 
 class AdminPermission extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LanguageTrait, HasTranslations;
 
     protected $fillable = ['name', 'key', 'orders'];
 
