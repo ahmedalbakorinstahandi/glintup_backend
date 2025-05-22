@@ -156,7 +156,7 @@ class Salon extends Model
     //isHomeServiceSalon
     public function isHomeServiceSalon()
     {
-        return $this->types == 'home_service' || $this->types == 'beautician';
+        return $this->type == 'home_service' || $this->type == 'beautician';
     }
 
 

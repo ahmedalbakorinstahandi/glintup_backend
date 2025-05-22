@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
+use function PHPSTORM_META\type;
+
 class SalonAuthService
 {
     public function login($loginUserData)
@@ -100,7 +102,7 @@ class SalonAuthService
             'description' => $requestData['description'],
             'latitude' => $requestData['latitude'],
             'longitude' => $requestData['longitude'],
-            'types' => implode(',', $requestData['types']),
+            'type' => $data['type'] ?? 'salon',
             'bio' => $requestData['bio'],
 
 
@@ -113,7 +115,7 @@ class SalonAuthService
             'location' => '',
             'country' => '',
             'city' => '',
-            'type' => $data['type'] ?? 'salon',
+            'types' => '',
         ]);
 
         $salonPermissions = SalonPermission::get();
