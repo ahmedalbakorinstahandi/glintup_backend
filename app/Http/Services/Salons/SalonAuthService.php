@@ -129,7 +129,6 @@ class SalonAuthService
         $report = $this->registerMessage(
             $userSalonOnwer,
             $salon,
-            $requestData,
             app()->getLocale()
         );
 
@@ -146,7 +145,6 @@ class SalonAuthService
     public function registerMessage(
         $userSalonOnwer,
         $salon,
-        $requestData,
         $lang // 'ar','en'
     ) {
 
