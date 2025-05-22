@@ -12,9 +12,9 @@ class CreateRequest extends BaseFormRequest
             'first_name'  => 'required|string|max:255',
             'last_name'   => 'required|string|max:255',
             'phone' => ['required', 'phone:AUTO'],
-            'email'       => 'required|email|unique:users,email',
             'password'    => 'required|string|min:6',
             'is_active'   => 'nullable|boolean',
+            'email'       => 'nullable:users,email',
 
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:admin_permissions,id,deleted_at,NULL',

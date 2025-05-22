@@ -12,6 +12,7 @@ use App\Models\Users\User;
 use App\Services\FilterService;
 use App\Services\ImageService;
 use App\Services\MessageService;
+use App\Services\PhoneService;
 
 class SalonService
 {
@@ -135,6 +136,14 @@ class SalonService
 
     public function update($salon, $data)
     {
+
+        // if (isset($data['phone'])) {
+        //     $phoneParts = PhoneService::parsePhoneParts($data['phone']);
+
+        //     $data['phone_code'] = $phoneParts['country_code'];
+        //     $data['phone'] = $phoneParts['national_number'];
+        // }
+
 
         if (isset($data['images']) && is_array($data['images'])) {
             foreach ($data['images'] as $key => $image) {
