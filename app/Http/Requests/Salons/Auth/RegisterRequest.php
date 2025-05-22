@@ -28,24 +28,24 @@ class RegisterRequest extends BaseFormRequest
             'business_contact_number' => 'required|string|max:25',
             'icon' => 'required|string',
             'type' => 'required|string|in:salon,home_service,beautician,clinic',
-            'types' => [
-                'required',
-                'array',
-                'distinct',
-                function ($attribute, $value, $fail) {
-                    $type = request()->input('type');
-                    $allowedTypes = match ($type) {
-                        'salon' => ['home_service', 'beautician'],
-                        'clinic' => ['home_service'],
-                        default => [],
-                    };
+            // 'types' => [
+            //     'required',
+            //     'array',
+            //     'distinct',
+            //     function ($attribute, $value, $fail) {
+            //         $type = request()->input('type');
+            //         $allowedTypes = match ($type) {
+            //             'salon' => ['home_service', 'beautician'],
+            //             'clinic' => ['home_service'],
+            //             default => [],
+            //         };
 
-                    if (!empty($value) && array_diff($value, $allowedTypes)) {
-                        $fail("The selected {$attribute} is invalid for the type {$type}.");
-                    }
-                },
-            ],
-            'types.*' => 'required|string|in:salon,home_service,beautician,clinic',
+            //         if (!empty($value) && array_diff($value, $allowedTypes)) {
+            //             $fail("The selected {$attribute} is invalid for the type {$type}.");
+            //         }
+            //     },
+            // ],
+            // 'types.*' => 'required|string|in:salon,home_service,beautician,clinic',
             'description' => 'nullable|string',
             'bio' => 'nullable|string',
             'latitude' => 'required|numeric',
