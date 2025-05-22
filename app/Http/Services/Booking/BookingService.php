@@ -35,13 +35,40 @@ class BookingService
 
 
 
-        $searchFields = ['code', 'notes'];
+        $searchFields = [
+            'code',
+            'notes',
+            ['user.first_name', 'user.last_name'],
+            'salon.merchant_commercial_name',
+            'salon.merchant_legal_name',
+            'salon.address',
+            'salon.city_street_name',
+            'salon.contact_name',
+            'salon.contact_number',
+            'salon.contact_email',
+            'salon.business_contact_name',
+            'salon.business_contact_email',
+            'salon.business_contact_number',
+            'salon.tags',
+            'salon.city',
+            'salon.country',
+            'salon.description',
+        ];
         $numericFields = [];
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
 
+
+        if (isset($data['search']) && $data['search'] != '') {
+            $data['search'] =  str_replace(' ', '', $data['search']);
+            $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
+        }
+
+
         $query = BookingPermission::filterIndex($query);
+
+
 
         $query = FilterService::applyFilters(
             $query,

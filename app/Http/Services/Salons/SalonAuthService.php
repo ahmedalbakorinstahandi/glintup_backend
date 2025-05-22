@@ -9,6 +9,7 @@ use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\MessageService;
 use App\Services\PhoneService;
+use App\Services\WhatsappMessageService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -56,6 +57,8 @@ class SalonAuthService
         $userData['phone_code'] = $countryCode;
         $userData['phone'] = $phoneNumber;
 
+        $fulPhoneNumber = $countryCode . $phoneNumber;
+
 
         $user = User::where('phone', $phoneNumber)
             ->where('phone_code', $countryCode)
@@ -97,7 +100,6 @@ class SalonAuthService
             'description' => $requestData['description'],
             'latitude' => $requestData['latitude'],
             'longitude' => $requestData['longitude'],
-            'type' => $data['type'] ?? 'salon',
             'types' => implode(',', $requestData['types']),
             'bio' => $requestData['bio'],
 
@@ -111,6 +113,7 @@ class SalonAuthService
             'location' => '',
             'country' => '',
             'city' => '',
+            'type' => $data['type'] ?? 'salon',
         ]);
 
         $salonPermissions = SalonPermission::get();
@@ -123,11 +126,110 @@ class SalonAuthService
             ]);
         }
 
+        $report = $this->registerMessage(
+            $userSalonOnwer,
+            $salon,
+            $requestData,
+            app()->getLocale()
+        );
+
+
+        WhatsappMessageService::send($fulPhoneNumber, $report);
 
         return $userSalonOnwer->load([
             'salonPermissions.permission',
             'salon',
         ]);
+    }
+
+
+    public function registerMessage(
+        $userSalonOnwer,
+        $salon,
+        $requestData,
+        $lang // 'ar','en'
+    ) {
+
+        $reportMessage = '';
+
+
+        if ($lang === 'ar') {
+            $reportMessage .= "🎉 تم تسجيل صالون جديد على منصة GlintUp! 🎉\n\n";
+            $reportMessage .= "🕒 تاريخ ووقت التسجيل: " . Carbon::now()->format('Y-m-d H:i:s') . "\n\n";
+            $reportMessage .= "مرحباً " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . "،\n\n";
+            $reportMessage .= "لقد تم تسجيل صالون جديد باستخدام بياناتك على منصة GlintUp.\n";
+            $reportMessage .= "إذا كنت أنت من قام بالتسجيل، فهذا تأكيد على نجاح العملية.\n";
+            $reportMessage .= "أما إذا لم تقم بذلك، يرجى التواصل مع فريق الدعم فوراً لاتخاذ الإجراءات اللازمة.\n\n";
+
+            $reportMessage .= "🔹 بيانات المالك:\n";
+            $reportMessage .= "الاسم: " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . "\n";
+            $reportMessage .= "رقم الجوال: +" . $userSalonOnwer->phone_code . $userSalonOnwer->phone . "\n";
+            $reportMessage .= "البريد الإلكتروني: " . ($userSalonOnwer->email ?? '---') . "\n";
+
+            $reportMessage .= "🔹 بيانات الصالون:\n";
+            $reportMessage .= "الاسم القانوني: " . ($salon->merchant_legal_name ?? '') . "\n";
+            $reportMessage .= "الاسم التجاري: " . ($salon->merchant_commercial_name ?? '') . "\n";
+            $reportMessage .= "العنوان: " . ($salon->address ?? '') . "\n";
+            $reportMessage .= "الشارع/المدينة: " . ($salon->city_street_name ?? '') . "\n";
+            $reportMessage .= "الوصف: " . ($salon->description ?? '') . "\n";
+            $reportMessage .= "نوع المزود: " . ($salon->type ?? '') . "\n";
+            $reportMessage .= "نبذة: " . ($salon->bio ?? '') . "\n";
+            if ($salon->latitude && $salon->longitude) {
+                $googleMapsUrl = "https://maps.google.com/?q={$salon->latitude},{$salon->longitude}";
+                $reportMessage .= "📍 الموقع على الخريطة: $googleMapsUrl\n\n";
+            }
+
+            $reportMessage .= "🔹 بيانات التواصل:\n";
+            $reportMessage .= "اسم جهة الاتصال: " . ($salon->contact_name ?? '') . "\n";
+            $reportMessage .= "رقم جهة الاتصال: " . ($salon->contact_number ?? '') . "\n";
+            $reportMessage .= "بريد جهة الاتصال: " . ($salon->contact_email ?? '') . "\n";
+            $reportMessage .= "اسم مسؤول الأعمال: " . ($salon->business_contact_name ?? '') . "\n";
+            $reportMessage .= "بريد مسؤول الأعمال: " . ($salon->business_contact_email ?? '') . "\n";
+            $reportMessage .= "رقم مسؤول الأعمال: " . ($salon->business_contact_number ?? '') . "\n\n";
+
+            $reportMessage .= "🔗 رابط المنصة: https://glintup.ae\n";
+            $reportMessage .= "ℹ️ منصة GlintUp: منصة متخصصة لإدارة وحجز مواعيد الصالونات بسهولة واحترافية.\n";
+            $reportMessage .= "-----------------------------\n";
+        } else {
+            $reportMessage .= "🎉 A new salon has been registered on GlintUp! 🎉\n\n";
+            $reportMessage .= "🕒 Registration Date & Time: " . Carbon::now()->format('Y-m-d H:i:s') . "\n\n";
+            $reportMessage .= "Hello " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . ",\n\n";
+            $reportMessage .= "A new salon has been registered using your information on GlintUp.\n";
+            $reportMessage .= "If you initiated this registration, this is a confirmation of success.\n";
+            $reportMessage .= "If you did not, please contact support immediately to take necessary action.\n\n";
+
+            $reportMessage .= "🔹 Owner Details:\n";
+            $reportMessage .= "Name: " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . "\n";
+            $reportMessage .= "Mobile: +" . $userSalonOnwer->phone_code . $userSalonOnwer->phone . "\n";
+            $reportMessage .= "Email: " . ($userSalonOnwer->email ?? '---') . "\n";
+
+            $reportMessage .= "🔹 Salon Details:\n";
+            $reportMessage .= "Legal Name: " . ($salon->merchant_legal_name ?? '') . "\n";
+            $reportMessage .= "Commercial Name: " . ($salon->merchant_commercial_name ?? '') . "\n";
+            $reportMessage .= "Address: " . ($salon->address ?? '') . "\n";
+            $reportMessage .= "City/Street: " . ($salon->city_street_name ?? '') . "\n";
+            $reportMessage .= "Description: " . ($salon->description ?? '') . "\n";
+            $reportMessage .= "Provider Type: " . ($salon->type ?? '') . "\n";
+            $reportMessage .= "Bio: " . ($salon->bio ?? '') . "\n";
+            if ($salon->latitude && $salon->longitude) {
+                $googleMapsUrl = "https://maps.google.com/?q={$salon->latitude},{$salon->longitude}";
+                $reportMessage .= "📍 Location on map: $googleMapsUrl\n\n";
+            }
+
+            $reportMessage .= "🔹 Contact Details:\n";
+            $reportMessage .= "Contact Name: " . ($salon->contact_name ?? '') . "\n";
+            $reportMessage .= "Contact Number: " . ($salon->contact_number ?? '') . "\n";
+            $reportMessage .= "Contact Email: " . ($salon->contact_email ?? '') . "\n";
+            $reportMessage .= "Business Manager Name: " . ($salon->business_contact_name ?? '') . "\n";
+            $reportMessage .= "Business Manager Email: " . ($salon->business_contact_email ?? '') . "\n";
+            $reportMessage .= "Business Manager Number: " . ($salon->business_contact_number ?? '') . "\n\n";
+
+            $reportMessage .= "🔗 Platform Link: https://glintup.ae\n";
+            $reportMessage .= "ℹ️ GlintUp: A specialized platform for managing and booking salon appointments easily and professionally.\n";
+            $reportMessage .= "-----------------------------\n";
+        }
+
+        return $reportMessage;
     }
 
 

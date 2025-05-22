@@ -15,6 +15,7 @@ class CreateRequest extends BaseFormRequest
             'password'    => 'required|string|min:6',
             'is_active'   => 'nullable|boolean',
             'email'       => 'nullable:users,email',
+            "avatar"      => 'nullable|string|max:110',
 
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:admin_permissions,id,deleted_at,NULL',

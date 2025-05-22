@@ -53,6 +53,7 @@ class AdminUserService
                 'birth_date' => '2000-01-01',
                 'phone_code' => $data['phone_code'],
                 'phone' => $data['phone'],
+                'avatar' => $data['avatar'] ?? null,
             ]);
 
             if (isset($data['permissions'])) {
@@ -76,6 +77,7 @@ class AdminUserService
             'email' => $data['email'] ?? $user->email,
             'is_active' => $data['is_active'] ?? $user->is_active,
             'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
+            'avatar' => $data['avatar'] ?? $user->avatar,
         ]);
 
         return $user->refresh()->load(['adminPermissions']);
