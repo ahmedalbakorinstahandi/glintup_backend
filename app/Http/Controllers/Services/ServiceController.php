@@ -97,9 +97,10 @@ class ServiceController extends Controller
         $service = Service::where('id', $id)
             ->first();
 
+        $data = $request->validated();
 
         if ($service) {
-            $availableSlots = $bookingAvailabilityService->getAvailableSlots($request->date, $service);
+            $availableSlots = $bookingAvailabilityService->getAvailableSlots($data['date'], $service);
 
             return response()->json([
                 'success' => true,
