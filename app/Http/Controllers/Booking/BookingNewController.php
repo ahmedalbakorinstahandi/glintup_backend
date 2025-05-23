@@ -43,7 +43,7 @@ class BookingNewController
             $date = Carbon::parse($data['date']);
 
             if ($service) {
-                $bookingAvailabilityService->isSlotOptionValid($date, $item['start_time'], $service);
+                $bookingAvailabilityService->isSlotOptionValid($date, $item['start_time'],$item['end_time'], $service);
             } else {
                 MessageService::abort(404, 'messages.service.item_not_found');
             }

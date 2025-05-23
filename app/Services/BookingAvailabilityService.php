@@ -124,12 +124,12 @@ class BookingAvailabilityService
     }
 
 
-    public function isSlotOptionValid(Carbon $date, string $startTime, Service $service): bool
+    public function isSlotOptionValid(Carbon $date, string $startTime, string $endTime, Service $service): bool
     {
         $slots = $this->getAvailableSlots($date, $service);
 
         foreach ($slots as $slot) {
-            if ($slot['start'] === $startTime && $slot['available']) {
+            if ($slot['start'] === $startTime && $slot['end'] == $endTime && $slot['available']) {
                 return true;
             }
         }
