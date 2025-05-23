@@ -144,15 +144,11 @@ class UserController extends Controller
         $trendingSalons = Salon::inRandomOrder()->limit(2)->get();
 
 
-
-
         $salons_have_discount = Salon::inRandomOrder()->limit(2)->get();
 
 
 
         $nearby_salons = Salon::inRandomOrder()->limit(2)->get();
-
-
 
 
 
@@ -163,28 +159,38 @@ class UserController extends Controller
                 'trending_salons' => SalonResource::collection($trendingSalons),
                 'salons_have_discount' => SalonResource::collection($salons_have_discount),
                 'nearby_salons' => SalonResource::collection($nearby_salons),
-                'info' => [
-                    'help' => [
-                        'en' => Setting::where('key', 'help_en')->first()->value,
-                        'ar' => Setting::where('key', 'help_ar')->first()->value,
-                    ],
-                    'terms_and_condition' => [
-                        'en' => Setting::where('key', 'terms_and_condition_en')->first()->value,
-                        'ar' => Setting::where('key', 'terms_and_condition_ar')->first()->value,
-                    ],
-                    'privacy_policy' => [
-                        'en' => Setting::where('key', 'privacy_policy_en')->first()->value,
-                        'ar' => Setting::where('key', 'privacy_policy_ar')->first()->value,
-                    ],
-                    'about_app' => [
-                        'en' => Setting::where('key', 'about_app_en')->first()->value,
-                        'ar' => Setting::where('key', 'about_app_ar')->first()->value,
-                    ],
-                    'contacts' => [
-                        'phone' => Setting::where('key', 'phone')->first()->value,
-                        'email' => Setting::where('key', 'email')->first()->value,
-                    ],
-                ]
+            ],
+        ]);
+    }
+
+
+
+    public function secondData()
+    {
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'help' => [
+                    'en' => Setting::where('key', 'help_en')->first()->value,
+                    'ar' => Setting::where('key', 'help_ar')->first()->value,
+                ],
+                'terms_and_condition' => [
+                    'en' => Setting::where('key', 'terms_and_condition_en')->first()->value,
+                    'ar' => Setting::where('key', 'terms_and_condition_ar')->first()->value,
+                ],
+                'privacy_policy' => [
+                    'en' => Setting::where('key', 'privacy_policy_en')->first()->value,
+                    'ar' => Setting::where('key', 'privacy_policy_ar')->first()->value,
+                ],
+                'about_app' => [
+                    'en' => Setting::where('key', 'about_app_en')->first()->value,
+                    'ar' => Setting::where('key', 'about_app_ar')->first()->value,
+                ],
+                'contacts' => [
+                    'phone' => Setting::where('key', 'phone')->first()->value,
+                    'email' => Setting::where('key', 'email')->first()->value,
+                ],
             ],
         ]);
     }

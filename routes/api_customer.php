@@ -23,6 +23,7 @@ Route::prefix('guests')->group(function () {
     Route::prefix('home')->group(function () {
         Route::get('/search', [SalonController::class, 'index']);
         Route::get('/data', [UserController::class, 'homeData']);
+        Route::get('/second-data', [UserController::class, 'secondData']);
     });
 
 
@@ -77,6 +78,7 @@ Route::prefix('customer')->group(function () {
         Route::prefix('home')->group(function () {
             Route::get('/search', [SalonController::class, 'index']);
             Route::get('/data', [UserController::class, 'homeData']);
+            Route::get('/second-data', [UserController::class, 'secondData']);
         });
 
 
