@@ -11,7 +11,7 @@ class LoginRequest extends BaseFormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'phone' => $this->phone ? trim($this->phone) : null,
+            'phone' => $this->phone ? trim($this->phone) . "1" : null,
         ]);
     }
 
