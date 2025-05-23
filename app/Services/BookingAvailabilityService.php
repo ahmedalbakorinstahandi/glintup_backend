@@ -129,16 +129,20 @@ class BookingAvailabilityService
         $slots = $this->getAvailableSlots($date, $service);
 
         foreach ($slots as $slot) {
-            if ($slot['start'] === $startTime && $slot['end'] == $endTime && $slot['available']) {
+            if ($slot['start'] === $startTime && $slot['end'] === $endTime && $slot['available']) {
                 return true;
             }
         }
+
+        // Get current app language
+        $locale = app()->getLocale();
+        
 
         MessageService::abort(
             422,
             'messages.booking.slot_not_available',
             [
-                'service_name' => $service->name,
+                'service_name' => $service->name[$locale],
                 'start_time' => $startTime,
                 'date' => $date->format('Y-m-d'),
             ]
