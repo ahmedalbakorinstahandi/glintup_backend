@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('salon_id')->nullable();
             $table->foreign('salon_id')->references('id')->on('salons');
             $table->string('key')->nullable();
+            $table->decimal('orders', 65, 30)->index();
             $table->timestamps();
             $table->softDeletes();
         });

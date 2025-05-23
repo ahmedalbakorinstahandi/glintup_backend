@@ -60,6 +60,12 @@ return new class extends Migration
             // $table->double('longitude')->nullable();
             // $table->timestamp('created_at')->nullable();
             // $table->timestamp('updated_at')->nullable();
+            // الرقم الضريبي
+            // $table->string('tax_number')->nullable();
+            // تفاصيل البنك
+            // $table->string('bank_name')->nullable();
+            // // كاتالوج
+            // $table->string('catalogue')->nullable();
         });
 
 

@@ -71,22 +71,18 @@ class PromotionAd extends Model
     }
 
 
-    // id valid  date and is_active = true and status approved
-    protected function isValid(): Attribute
+    // Check if the ad is valid: date is within range, is_active is true, and status is approved
+    public function isValid()
     {
-        return Attribute::make(
-            get: function () {
-                $currentDate = new \DateTime();
-                $validFrom = new \DateTime($this->valid_from);
-                $validTo = new \DateTime($this->valid_to);
+        $currentDate = new \DateTime();
+        $validFrom = new \DateTime($this->valid_from);
+        $validTo = new \DateTime($this->valid_to);
 
-                return (
-                    $currentDate >= $validFrom &&
-                    $currentDate <= $validTo &&
-                    $this->is_active === true &&
-                    $this->status === 'approved'
-                );
-            }
+        return (
+            $currentDate >= $validFrom &&
+            $currentDate <= $validTo &&
+            $this->is_active === true &&
+            $this->status === 'approved'
         );
     }
 
