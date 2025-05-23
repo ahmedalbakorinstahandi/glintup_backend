@@ -18,6 +18,7 @@ use App\Models\Users\WalletTransaction;
 use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Services\PhoneService;
+use Carbon\Carbon;
 
 class BookingService
 {
@@ -252,8 +253,8 @@ class BookingService
                     'price' => $service['price'] ?? 0,
                     'currency' => $service['currency'] ?? 'AED',
                     'discount_percentage' => $service['discount_percentage'] ?? 0,
-                    'start_date_time' => $data['date'] . ' ' . $data['start_time'],
-                    'end_date_time' => $data['date'] . ' ' . $data['end_time'],
+                    'start_date_time' => Carbon::parse($data['date'] . ' ' . $data['start_time']),
+                    'end_date_time' => Carbon::parse($data['date'] . ' ' . $data['end_time']),
                     'duration_minutes' => $service['duration_minutes'] ?? 0,
                     'status' => 'confirmed',
                     'notes' => $service['notes'] ?? null,
@@ -265,7 +266,6 @@ class BookingService
             'user',
             'salon',
             'bookingServices.service',
-            'bookingDates',
             'transactions',
             'couponUsage',
             'payments'
