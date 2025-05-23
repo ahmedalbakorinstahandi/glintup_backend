@@ -252,7 +252,7 @@ class BookingService
         if (isset($data['services'])) {
             foreach ($data['services'] as $service) {
 
-                $serviceObject = Service::where('id', $service['id']);
+                $serviceObject = Service::where('id', $service['id'])->first();
 
                 $booking->bookingServices()->create([
                     'service_id' => $service['id'],
