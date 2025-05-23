@@ -13,12 +13,25 @@ class BookingService extends Model
     protected $fillable = [
         'booking_id',
         'service_id',
+        'price',
+        'currency',
+        'discount_percentage',
+        'start_date_time',
+        'end_date_time',
+        'duration_minutes',
+        'status',
+        'notes',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'price' => 'float',
+        'discount_percentage' => 'float',
+        'start_date_time' => 'datetime',
+        'end_date_time' => 'datetime',
+        'duration_minutes' => 'integer',
     ];
 
     public function booking()

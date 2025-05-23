@@ -19,8 +19,18 @@ return new class extends Migration
             $table->foreign('booking_id')->references('id')->on('bookings');
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services');
+
+            $table->float('price');
+            $table->string('currency', 3);
+            $table->float('discount_percentage');
+            $table->dateTime('start_date_time')->nullable();
+            $table->dateTime('end_date_time')->nullable();
+            $table->integer('duration_minutes');
+            $table->enum('status', ["pending", "confirmed", "completed", "cancelled", "rejected"]); // 'pending','confirmed','completed','cancelled','rejected'
+            $table->text('notes')->nullable();
+
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes(); 
         });
 
         Schema::enableForeignKeyConstraints();

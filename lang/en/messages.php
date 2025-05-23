@@ -83,6 +83,7 @@ return [
         'cannot_cancel_completed_booking' => 'Cannot cancel a completed booking',
         'cannot_update_cancelled_booking' => 'Cannot update a cancelled booking',
         'cannot_update_completed_booking' => 'Cannot update a completed booking',
+        'slot_not_available' => 'No available slot for service :service_name on :date at :start_time',
     ],
 
 

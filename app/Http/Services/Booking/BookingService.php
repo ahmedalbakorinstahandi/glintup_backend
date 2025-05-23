@@ -115,9 +115,6 @@ class BookingService
 
     public function create($data)
     {
-
-        // $fullPhone = str_replace(' ', '', $data['phone_code']) . str_replace(' ', '', $data['phone']);
-
         $phoneParts = PhoneService::parsePhoneParts($data['phone']);
         $countryCode = $phoneParts['country_code'];
         $phoneNumber = $phoneParts['national_number'];
@@ -184,7 +181,95 @@ class BookingService
             }
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        $booking->load([
+            'user',
+            'salon',
+            'bookingServices.service',
+            'bookingDates',
+            'transactions',
+            'couponUsage',
+            'payments'
+        ]);
+
+        return $booking;
+    }
+
+
+    public function createNew($data)
+    {
+        $phoneParts = PhoneService::parsePhoneParts($data['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
+            ->where('role', 'customer')
+            ->first();
+
+
+        if (!$user) {
+            $user = User::create([
+                'phone_code' =>  $countryCode,
+                'phone'      =>  $phoneNumber,
+                'role'       => 'customer',
+                'first_name' => $data['first_name'],
+                'last_name'  => $data['last_name'],
+                'gender' => $data['gender'],
+                'birth_date' => '1990-01-01',
+                'password' => bcrypt('password'),
+                'added_by' => 'salon',
+                'is_active' => 1,
+            ]);
+        } else {
+            // TODO :: send notification to user
+        }
+
+
+        // add user to salon customers if not exists : salon->customers()
+
+        SalonCustomer::firstOrCreate([
+            'salon_id' => $data['salon_id'],
+            'user_id' => $user->id,
+        ]);
+
+
+
+        $data['code'] = rand(100000, 999999);
+
+        $data['user_id'] = $user->id;
+
+        $booking = Booking::create($data);
+
+        $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
+
+        $booking->save();
+
+        // booking services
+        if (isset($data['services'])) {
+            foreach ($data['services'] as $service) {
+                $booking->bookingServices()->create([
+                    'service_id' => $service['id'],
+                    'price' => $service['price'] ?? 0,
+                    'currency' => $service['currency'] ?? 'AED',
+                    'discount_percentage' => $service['discount_percentage'] ?? 0,
+                    'start_date_time' => $data['date'] . ' ' . $data['start_time'],
+                    'end_date_time' => $data['date'] . ' ' . $data['end_time'],
+                    'duration_minutes' => $service['duration_minutes'] ?? 0,
+                    'status' => 'confirmed',
+                    'notes' => $service['notes'] ?? null,
+                ]);
+            }
+        }
+
+        $booking->load([
+            'user',
+            'salon',
+            'bookingServices.service',
+            'bookingDates',
+            'transactions',
+            'couponUsage',
+            'payments'
+        ]);
 
         return $booking;
     }
@@ -679,9 +764,6 @@ class BookingService
 
 
 
-
-
-
     public function updateFromUser($booking, $data)
     {
         if ($booking->status === 'completed') {
@@ -835,8 +917,6 @@ class BookingService
 
         return $booking;
     }
-
-
 
 
 

@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Services;
+
+use Carbon\Carbon;
+use App\Models\Services\Service;
+use App\Models\Booking\BookingService;
+
+class BookingAvailabilityService
+{
+    public function getAvailableSlots(Carbon $date, Service $service): array
+    {
+        $dayOfWeek = strtolower($date->format('l')); // مثل: monday
+        $salon = $service->salon;
+
+        $workingHours = $salon->workingHours()->where('day_of_week', $dayOfWeek)->first();
+        if (!$workingHours || $workingHours->is_closed) return [];
+
+        $open = Carbon::parse($workingHours->opening_time);
+        $close = Carbon::parse($workingHours->closing_time);
+        $breakStart = Carbon::parse($workingHours->break_start);
+        $breakEnd = Carbon::parse($workingHours->break_end);
+
+        $slotSize = $this->getSlotSize($service->duration_minutes);
+        $slots = [];
+
+        for ($start = $open->copy(); $start->addMinutes($slotSize)->lte($close); $start->subMinutes($slotSize)) {
+            $end = $start->copy()->addMinutes($slotSize);
+
+            // تجاهل الفترات التي تقاطع الاستراحة
+            if (!($end->lte($breakStart) || $start->gte($breakEnd))) {
+                $start->addMinutes($slotSize);
+                continue;
+            }
+
+            // فحص الحجوزات الحالية
+            $overlapCount = BookingService::where('service_id', $service->id)
+                ->whereDate('start_date_time', $date)
+                ->where(function ($q) use ($start, $end) {
+                    $q->where('start_date_time', '<', $end)
+                        ->where('end_date_time', '>', $start);
+                })
+                ->count();
+
+            $slots[] = [
+                'start' => $start->format('H:i'),
+                'end' => $end->format('H:i'),
+                'available' => $overlapCount < $service->capacity
+            ];
+
+            $start->addMinutes($slotSize);
+        }
+
+        return $slots;
+    }
+
+
+
+    private function getSlotSize(int $duration): int
+    {
+        if ($duration <= 60) return 60;
+        if ($duration <= 120) return 120;
+        return ceil($duration / 60) * 60;
+    }
+
+
+    public function isSlotOptionValid(Carbon $date, string $startTime, Service $service): bool
+    {
+        $slots = $this->getAvailableSlots($date, $service);
+
+        foreach ($slots as $slot) {
+            if ($slot['start'] === $startTime && $slot['available']) {
+                return true;
+            }
+        }
+
+        MessageService::abort(
+            422,
+            'messages.booking.slot_not_available',
+            [
+                'service_name' => $service->name,
+                'start_time' => $startTime,
+                'date' => $date->format('Y-m-d'),
+            ]
+        );
+    }
+}
