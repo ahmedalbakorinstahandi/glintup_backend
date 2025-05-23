@@ -13,6 +13,7 @@ use App\Http\Services\Services\ServiceService;
 use App\Models\Services\Service;
 use App\Services\BookingAvailabilityService;
 use App\Services\MessageService;
+use Carbon\Carbon;
 
 class ServiceController extends Controller
 {
@@ -100,7 +101,8 @@ class ServiceController extends Controller
         $data = $request->validated();
 
         if ($service) {
-            $availableSlots = $bookingAvailabilityService->getAvailableSlots($data['date'], $service);
+            $date = Carbon::parse($data['date']);
+            $availableSlots = $bookingAvailabilityService->getAvailableSlots($date, $service);
 
             return response()->json([
                 'success' => true,
