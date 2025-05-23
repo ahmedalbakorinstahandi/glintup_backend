@@ -95,7 +95,6 @@ class ServiceController extends Controller
         $bookingAvailabilityService = new BookingAvailabilityService();
 
         $service = Service::where('id', $id)
-            ->where('salon_id', $request->salon_id)
             ->first();
 
 
