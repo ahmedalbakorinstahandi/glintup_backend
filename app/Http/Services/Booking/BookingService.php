@@ -239,6 +239,9 @@ class BookingService
 
         $data['user_id'] = $user->id;
 
+        // test value
+        $data['time']  = '00:00:00';
+
         $booking = Booking::create($data);
 
         $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
