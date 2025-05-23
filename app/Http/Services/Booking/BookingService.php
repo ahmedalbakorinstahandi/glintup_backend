@@ -251,16 +251,18 @@ class BookingService
         // booking services
         if (isset($data['services'])) {
             foreach ($data['services'] as $service) {
+
+                $serviceObject = Service::where('id', $service['id']);
+
                 $booking->bookingServices()->create([
                     'service_id' => $service['id'],
-                    'price' => $service['price'] ?? 0,
-                    'currency' => $service['currency'] ?? 'AED',
-                    'discount_percentage' => $service['discount_percentage'] ?? 0,
+                    'price' => $serviceObject->price,
+                    'currency' => $serviceObject->currency,
+                    'discount_percentage' => $serviceObject->discount_percentage,
                     'start_date_time' => Carbon::parse($data['date'] . ' ' . $service['start_time']),
                     'end_date_time' => Carbon::parse($data['date'] . ' ' . $service['end_time']),
-                    'duration_minutes' => $service['duration_minutes'] ?? 0,
+                    'duration_minutes' => $serviceObject->duration_minutes,
                     'status' => 'confirmed',
-                    'notes' => $service['notes'] ?? null,
                 ]);
             }
         }
