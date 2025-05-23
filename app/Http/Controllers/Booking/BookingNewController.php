@@ -11,6 +11,7 @@ use App\Http\Services\Booking\BookingService;
 use App\Models\Services\Service;
 use App\Services\BookingAvailabilityService;
 use App\Services\MessageService;
+use Carbon\Carbon;
 
 class BookingNewController
 {
@@ -38,8 +39,11 @@ class BookingNewController
 
             $bookingAvailabilityService = new BookingAvailabilityService();
 
+            // Convert date string to Carbon instance
+            $date = Carbon::parse($data['date']);
+
             if ($service) {
-                $bookingAvailabilityService->isSlotOptionValid($data['date'], $item['start_time'], $service);
+                $bookingAvailabilityService->isSlotOptionValid($date, $item['start_time'], $service);
             } else {
                 MessageService::abort(404, 'messages.service.item_not_found');
             }
