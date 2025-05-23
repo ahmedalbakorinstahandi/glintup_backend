@@ -53,6 +53,8 @@ Route::prefix('salon')->group(function () {
             Route::post('/', 'create');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
+
+            Route::get('{id}/available-times', 'getAvailableTimes');
         });
 
 
