@@ -80,7 +80,7 @@ Route::prefix('salon')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'create');
-            Route::put('/', 'create-new');
+            Route::post('/new', 'create-new');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
         });
