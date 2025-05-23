@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Services;
 
 use App\Http\Controllers\Controller;
 use App\Http\Permissions\Services\ServicePermission;
+use App\Http\Requests\Booking\BookingService\GetAvailableSlotsRequest;
 use App\Http\Requests\Services\Service\CreateRequest;
 use App\Http\Requests\Services\Service\UpdateRequest;
 use App\Http\Resources\Services\ServiceResource;
 use App\Services\ResponseService;
 use App\Http\Services\Services\ServiceService;
+use App\Models\Services\Service;
+use App\Services\BookingAvailabilityService;
+use App\Services\MessageService;
 
 class ServiceController extends Controller
 {
@@ -84,5 +88,26 @@ class ServiceController extends Controller
                 ? trans('messages.service.item_deleted_successfully')
                 : trans('messages.service.failed_delete_item'),
         ]);
+    }
+
+    public function getAvailableTimes(GetAvailableSlotsRequest $request, $id)
+    {
+        $bookingAvailabilityService = new BookingAvailabilityService();
+
+        $service = Service::where('id', $id)
+            ->where('salon_id', $request->salon_id)
+            ->first();
+
+
+        if ($service) {
+            $availableSlots = $bookingAvailabilityService->getAvailableSlots($request->date, $service);
+
+            return response()->json([
+                'success' => true,
+                'data' => $availableSlots,
+            ]);
+        } else {
+            MessageService::abort(404, 'messages.service.item_not_found');
+        }
     }
 }

@@ -57,24 +57,5 @@ class BookingNewController
 
 
 
-    public function getAvailableTimes(GetAvailableSlotsRequest $request, $id)
-    {
-        $bookingAvailabilityService = new BookingAvailabilityService();
-
-        $service = Service::where('id', $id)
-            ->where('salon_id', $request->salon_id)
-            ->first();
-
-
-        if ($service) {
-            $availableSlots = $bookingAvailabilityService->getAvailableSlots($request->date, $service);
-
-            return response()->json([
-                'success' => true,
-                'data' => $availableSlots,
-            ]);
-        } else {
-            MessageService::abort(404, 'messages.service.item_not_found');
-        }
-    }
+    
 }
