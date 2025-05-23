@@ -32,7 +32,7 @@ class BookingNewController
         $services = $data['services'] ?? [];
 
         foreach ($services as $item) {
-            $service = Service::where('id', $item['service_id'])
+            $service = Service::where('id', $item['id'])
                 ->where('salon_id', $data['salon_id'])
                 ->first();
 
