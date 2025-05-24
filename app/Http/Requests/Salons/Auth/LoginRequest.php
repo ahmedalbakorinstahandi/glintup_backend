@@ -8,12 +8,12 @@ use Illuminate\Foundation\Http\FormRequest;
 class LoginRequest extends BaseFormRequest
 {
 
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'phone' => $this->phone ? trim($this->phone) . "1" : null,
-        ]);
-    }
+    // protected function prepareForValidation()
+    // {
+    //     $this->merge([
+    //         'phone' => $this->phone ? trim($this->phone) . "1" : null,
+    //     ]);
+    // }
 
     public function rules(): array
     {

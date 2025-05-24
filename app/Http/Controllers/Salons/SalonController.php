@@ -142,7 +142,7 @@ class SalonController extends Controller
 
         $bookingAvailabilityService = new BookingAvailabilityService();
 
-        $dates = $bookingAvailabilityService->getAvailableDates($salon);
+        $dates = $bookingAvailabilityService->getAvailableDates($salon, 12);
 
         return response()->json(
             [
