@@ -744,6 +744,8 @@ class BookingService
         return $booking;
     }
 
+    
+
 
 
     public function cancelBooking($booking, $cancelBySalon)
