@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Booking;
 
 use App\Http\Permissions\Booking\BookingPermission;
+use App\Http\Requests\Booking\Booking\CreateFromUserNewRequest;
 use App\Http\Requests\Booking\Booking\CreateFromUserRequest;
 use App\Http\Requests\Booking\Booking\CreateNewRequest;
 use App\Http\Requests\Booking\Booking\CreateRequest;
@@ -62,7 +63,7 @@ class BookingNewController
 
 
 
-    public function createFromUser(CreateFromUserRequest $request)
+    public function createFromUser(CreateFromUserNewRequest $request)
     {
         $data = BookingPermission::create($request->validated());
 
