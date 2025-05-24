@@ -98,6 +98,10 @@ class UserController extends Controller
     {
         $user = $this->userService->getProfile();
 
+        if ($user->isAdmin()) {
+            $user->load(['adminPermissions']);
+        }
+
         return response()->json([
             'success' => true,
             'data' => new UserResource($user),
