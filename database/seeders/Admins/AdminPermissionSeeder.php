@@ -13,16 +13,19 @@ class AdminPermissionSeeder extends Seeder
             ['ar' => 'لوحة المعلومات', 'en' => 'Dashboard', 'key' => 'dashboard'],
             ['ar' => 'الصالونات', 'en' => 'Salons', 'key' => 'salons'],
             ['ar' => 'المستخدمين', 'en' => 'Users', 'key' => 'users'],
-            ['ar' => 'المجموعات', 'en' => 'Groups', 'key' => 'groups'],
-            ['ar' => 'بطاقات الهدايا', 'en' => 'Gift Cards', 'key' => 'gift_cards'],
+            ['ar' => 'المجموعات', 'en' => 'Groups', 'key' => 'services'],
+            ['ar' => 'بطاقات الهدايا', 'en' => 'Gift Cards', 'key' => 'gift-cards'],
             ['ar' => 'الحجوزات', 'en' => 'Appointments', 'key' => 'appointments'],
             ['ar' => 'المعاملات المالية', 'en' => 'Payments', 'key' => 'payments'],
-            ['ar' => 'الإعلانات', 'en' => 'Ads', 'key' => 'ads'],
+            ['ar' => 'الإعلانات', 'en' => 'Ads', 'key' => 'advertisements'],
             ['ar' => 'التنبيهات', 'en' => 'Notifications', 'key' => 'notifications'],
-            ['ar' => 'الشكاوى والدعم', 'en' => 'Support & Complaints', 'key' => 'support'],
+            ['ar' => 'الشكاوى والدعم', 'en' => 'Support & Complaints', 'key' => 'complaints'],
             ['ar' => 'الإشعارات', 'en' => 'Alerts', 'key' => 'alerts'],
             ['ar' => 'الإعدادات', 'en' => 'Settings', 'key' => 'settings'],
+            ['ar' => 'إدارة الطاقم', 'en' => 'Admin Users', 'key' => 'admin-users'],
+            ['ar' => 'المراجعات', 'en' => 'Reviews', 'key' => 'reviews'],
         ];
+
 
         foreach ($permissions as $index => $item) {
             AdminPermission::updateOrCreate(
