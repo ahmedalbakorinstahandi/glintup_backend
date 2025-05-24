@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Booking\BookingController;
+use App\Http\Controllers\Booking\BookingNewController;
 use App\Http\Controllers\Booking\CouponController;
 use App\Http\Controllers\General\ComplaintController;
 use App\Http\Controllers\Rewards\GiftCardController;
@@ -71,6 +72,7 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'createFromUser');
+             Route::post('/new',  [BookingNewController::class, 'createFromUser']);
             Route::post('{id}/reschedule', 'rescheduleBooking');
             Route::post('{id}/cancel', 'cancelBooking');
         });
