@@ -627,7 +627,10 @@ class BookingService
         $data['user_id'] = $user->id;
 
         $data['created_by'] = 'customer'; // "salon","customer"
-        $data['status'] = 'pending'; // "pending", "confirmed", "completed", "cancelled"
+        $data['status'] = 'confirmed'; // "pending", "confirmed", "completed", "cancelled"
+
+        // test value
+        $data['time']  = '00:00:00';
 
         $booking = Booking::create($data);
         $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
