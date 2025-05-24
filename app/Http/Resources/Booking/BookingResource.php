@@ -28,6 +28,7 @@ class BookingResource extends JsonResource
             // 'status_label'     => $this->status_label,
             'notes'            => $this->notes,
             'salon_notes'      => $this->salon_notes,
+            'created_by'      => $this->created_by,
 
             'total_price' => $this->getTotalPriceAttribute(),
 

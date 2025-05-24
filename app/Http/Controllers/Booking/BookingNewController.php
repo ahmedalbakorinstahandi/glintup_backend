@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Booking;
 
 use App\Http\Permissions\Booking\BookingPermission;
+use App\Http\Requests\Booking\Booking\CreateFromUserRequest;
 use App\Http\Requests\Booking\Booking\CreateNewRequest;
 use App\Http\Requests\Booking\Booking\CreateRequest;
 use App\Http\Requests\Booking\BookingService\GetAvailableSlotsRequest;
@@ -59,6 +60,39 @@ class BookingNewController
         ]);
     }
 
+
+
+    public function createFromUser(CreateFromUserRequest $request)
+    {
+        $data = BookingPermission::create($request->validated());
+
+        $services = $data['services'] ?? [];
+
+        foreach ($services as $item) {
+            $service = Service::where('id', $item['id'])
+                ->where('salon_id', $data['salon_id'])
+                ->first();
+
+            $bookingAvailabilityService = new BookingAvailabilityService();
+
+            // Convert date string to Carbon instance
+            $date = Carbon::parse($data['date']);
+
+            if ($service) {
+                $bookingAvailabilityService->isSlotOptionValid($date, $item['start_time'], $item['end_time'], $service);
+            } else {
+                MessageService::abort(404, 'messages.service.item_not_found');
+            }
+        }
+
+        $booking = $this->bookingService->createFromUserNew($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.booking.item_created_successfully'),
+            'data' => new BookingResource($booking),
+        ]);
+    }
 
 
     

@@ -10,6 +10,7 @@ use App\Http\Resources\Salons\SalonPermissionResource;
 use App\Http\Resources\Salons\SalonResource;
 use App\Http\Services\Salons\SalonService;
 use App\Models\Users\User;
+use App\Services\BookingAvailabilityService;
 use App\Services\MessageService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -80,7 +81,7 @@ class SalonController extends Controller
     //     ]);
     // }
 
-  
+
     public function update($id, UpdateRequest $request)
     {
         $salon = $this->salonService->show($id);
@@ -101,7 +102,7 @@ class SalonController extends Controller
     {
 
         $user = User::auth();
- 
+
         $id = $user->salon->id;
 
         $salon = $this->salonService->show($id);
@@ -111,7 +112,7 @@ class SalonController extends Controller
 
         $salon = $this->salonService->update($salon, $request->validated());
 
-        
+
 
         return response()->json([
             'success' => true,
@@ -132,5 +133,22 @@ class SalonController extends Controller
                 ? trans('messages.salon.item_deleted_successfully')
                 : trans('messages.salon.failed_delete_item'),
         ]);
+    }
+
+    //getAvailableDates
+    public function getAvailableDates($id)
+    {
+        $salon = $this->salonService->show($id);
+
+        $bookingAvailabilityService = new BookingAvailabilityService();
+
+        $dates = $bookingAvailabilityService->getAvailableDates($salon);
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $dates,
+            ]
+        );
     }
 }

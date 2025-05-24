@@ -99,7 +99,7 @@ class SalonService
 
     public function show($id)
     {
-        $salon = Salon::find($id);
+        $salon = Salon::where('id', $id)->first();
 
         if (!$salon) {
             MessageService::abort(404, 'messages.salon.item_not_found');

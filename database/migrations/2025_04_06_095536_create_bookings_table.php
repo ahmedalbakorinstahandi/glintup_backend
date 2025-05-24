@@ -22,10 +22,11 @@ return new class extends Migration
             $table->foreign('salon_id')->references('id')->on('salons');
             $table->text('notes')->nullable();
             $table->text('salon_notes')->nullable();
+            $table->enum('created_by', ['customer', 'provider']);
             $table->timestamps();
             $table->softDeletes();
-            
-            
+
+
             $table->enum('status', ["pending", "confirmed", "completed", "cancelled", "Rejected"]);
             $table->date('date');
             $table->time('time');

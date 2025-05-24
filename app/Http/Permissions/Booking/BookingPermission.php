@@ -41,8 +41,10 @@ class BookingPermission
 
         if ($user->isCustomer()) {
             $data['user_id'] = $user->id;
+            $data['created_by'] = 'customer';
         } elseif ($user->isUserSalon()) {
             $data['salon_id'] = $user->salon->id;
+            $data['created_by'] = 'provider';
         }
 
         // check if the booking services in the salon already
@@ -53,7 +55,7 @@ class BookingPermission
                 MessageService::abort(422, 'messages.service_not_in_salon');
             }
         });
-        
+
 
 
         return $data;

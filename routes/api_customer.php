@@ -86,6 +86,7 @@ Route::prefix('customer')->group(function () {
         Route::prefix('salons')->controller(SalonController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
+            Route::get('{id}/available-dates', 'getAvailableDates');
         });
 
 

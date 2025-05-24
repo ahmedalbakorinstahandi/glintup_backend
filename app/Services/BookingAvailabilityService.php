@@ -5,6 +5,7 @@ namespace App\Services;
 use Carbon\Carbon;
 use App\Models\Services\Service;
 use App\Models\Booking\BookingService;
+use App\Models\Salons\Salon;
 
 class BookingAvailabilityService
 {
@@ -24,7 +25,6 @@ class BookingAvailabilityService
         $slotSize = $this->getSlotSize($service->duration_minutes);
         $slots = [];
 
-        // جلب العطلة الجزئية أو الكاملة إن وجدت
         $holiday = $salon->holidays()
             ->whereDate('holiday_date', $date)
             ->first();
@@ -36,16 +36,13 @@ class BookingAvailabilityService
         while ($start->copy()->addMinutes($slotSize)->lte($close)) {
             $end = $start->copy()->addMinutes($slotSize);
 
-            // فحص التعارض مع الاستراحة
             $inBreak = $breakStart && $breakEnd &&
                 ($start->between($breakStart, $breakEnd) || $end->between($breakStart, $breakEnd));
 
-            // فحص التعارض مع العطلة
             $inHoliday = $isFullDayHoliday ||
                 ($holidayStart && $holidayEnd &&
                     ($start->between($holidayStart, $holidayEnd) || $end->between($holidayStart, $holidayEnd)));
 
-            // فحص الحجوزات الحالية
             $overlapCount = BookingService::where('service_id', $service->id)
                 ->whereDate('start_date_time', $date)
                 ->where(function ($q) use ($start, $end) {
@@ -70,7 +67,7 @@ class BookingAvailabilityService
 
     public function getAvailableSlots2(Carbon $date, Service $service): array
     {
-        $dayOfWeek = strtolower($date->format('l')); // مثل: monday
+        $dayOfWeek = strtolower($date->format('l'));
         $salon = $service->salon;
 
         $workingHours = $salon->workingHours()->where('day_of_week', $dayOfWeek)->first();
@@ -87,13 +84,11 @@ class BookingAvailabilityService
         for ($start = $open->copy(); $start->addMinutes($slotSize)->lte($close); $start->subMinutes($slotSize)) {
             $end = $start->copy()->addMinutes($slotSize);
 
-            // تجاهل الفترات التي تقاطع الاستراحة
             if (!($end->lte($breakStart) || $start->gte($breakEnd))) {
                 $start->addMinutes($slotSize);
                 continue;
             }
 
-            // فحص الحجوزات الحالية
             $overlapCount = BookingService::where('service_id', $service->id)
                 ->whereDate('start_date_time', $date)
                 ->where(function ($q) use ($start, $end) {
@@ -136,7 +131,7 @@ class BookingAvailabilityService
 
         // Get current app language
         $locale = app()->getLocale();
-        
+
 
         MessageService::abort(
             422,
@@ -147,5 +142,35 @@ class BookingAvailabilityService
                 'date' => $date->format('Y-m-d'),
             ]
         );
+    }
+
+    public function getAvailableDates(Salon $salon, int $months = 3): array
+    {
+        $today = now()->startOfDay();
+        $endDate = $today->copy()->addMonths($months);
+
+        $dates = [];
+
+        for ($date = $today->copy(); $date->lte($endDate); $date->addDay()) {
+            $dayOfWeek = strtolower($date->format('l'));
+
+            $workingHours = $salon->workingHours()
+                ->where('day_of_week', $dayOfWeek)
+                ->first();
+
+            $hasWorkHours = $workingHours && !$workingHours->is_closed;
+
+            $isHoliday = $salon->holidays()
+                ->whereDate('holiday_date', $date)
+                ->where('is_full_day', true)
+                ->exists();
+
+            $dates[] = [
+                'date' => $date->format('Y-m-d'),
+                'available' => $hasWorkHours && !$isHoliday,
+            ];
+        }
+
+        return $dates;
     }
 }

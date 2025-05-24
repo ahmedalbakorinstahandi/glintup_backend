@@ -24,6 +24,7 @@ class Booking extends Model
         'status',
         'notes',
         'salon_notes',
+        'created_by',
     ];
 
     protected $casts = [
