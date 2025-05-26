@@ -30,6 +30,7 @@ return new class extends Migration
             $table->json('services')->nullable();
             $table->double('tax')->nullable();
             $table->string('message');
+            $table->integer('theme_id')->default(1);
             $table->boolean('is_used')->default(false);
             $table->timestamp('received_at')->nullable();
             $table->timestamps();

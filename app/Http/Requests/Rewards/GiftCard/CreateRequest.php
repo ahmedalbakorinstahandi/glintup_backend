@@ -19,6 +19,7 @@ class CreateRequest extends BaseFormRequest
             'services' => 'nullable|array',
             'tax' => 'nullable|numeric',
             'message' => 'required|string',
+            'theme_id' => 'nullable|integer',
         ];
     }
 }

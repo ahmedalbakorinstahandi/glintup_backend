@@ -263,6 +263,7 @@ class GiftCardService
             'message' => $data['message'],
             'tax' => null,
             'salon_id' => $data['salon_id'] ?? null,
+            'theme_id' => $data['theme_id'] ?? 1,
         ]);
 
 

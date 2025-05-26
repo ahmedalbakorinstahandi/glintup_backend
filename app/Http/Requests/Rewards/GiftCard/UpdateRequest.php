@@ -20,6 +20,7 @@ class UpdateRequest extends BaseFormRequest
             'services' => 'nullable|array',
             'tax' => 'nullable|numeric',
             'message' => 'sometimes|string',
+            'theme_id' => 'nullable|integer',
         ];
     }
 }

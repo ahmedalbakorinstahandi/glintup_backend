@@ -26,6 +26,7 @@ class GiftCardResource extends JsonResource
             'services_data' => ServiceResource::collection($this->getServicesData()),
             'tax'            => $this->tax,
             'message'        => $this->message,
+            'theme_id' => $this->theme_id,
             'is_used'        => $this->is_used,
             'received_at'   => $this->received_at?->format('Y-m-d H:i:s'),
 

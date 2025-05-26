@@ -26,6 +26,7 @@ class GiftCard extends Model
         'services',
         'tax',
         'message',
+        'theme_id',
         'is_used',
         'received_at',
     ];
@@ -43,6 +44,7 @@ class GiftCard extends Model
         'amount'        => 'decimal:2',
         'tax'           => 'double',
         'services'      => 'array',
+        'theme_id'      => 'integer',
         'is_used'       => 'boolean',
         'created_at'    => 'datetime',
         'updated_at'    => 'datetime',
