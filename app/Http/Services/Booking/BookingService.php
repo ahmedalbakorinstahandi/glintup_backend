@@ -242,6 +242,8 @@ class BookingService
         // test value
         $data['time']  = '00:00:00';
 
+        $data['status'] = 'confirmed';
+
         $booking = Booking::create($data);
 
         $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
@@ -744,7 +746,7 @@ class BookingService
         return $booking;
     }
 
-    
+
 
 
 
@@ -1235,5 +1237,147 @@ class BookingService
         ]);
 
         return $booking;
+    }
+
+
+
+
+
+
+
+    public function cancelBookingService(Booking $booking, int $serviceId)
+    {
+        if ($booking->status === 'cancelled' || $booking->status === 'completed' || $booking->status === 'Rejected') {
+            MessageService::abort(422, 'messages.booking.cannot_cancel_service');
+        }
+
+        $user = $booking->user;
+
+        $service = $booking->bookingServices()->where('service_id', $serviceId)->first();
+
+        if ($service->status === 'cancelled' || $service->status === 'completed' || $service->status === 'rejected') {
+            MessageService::abort(422, 'messages.booking.service_not_found_or_cancelled');
+        }
+
+
+        $refundAllowed = $booking->created_by === 'customer';
+
+
+        $amount = $service->getFinalPriceAttribute();
+        
+        if ($refundAllowed && $amount > 0) {
+            $user->balance += $amount;
+            $user->save();
+
+            // حركة مالية
+            WalletTransaction::create([
+                'user_id' => $user->id,
+                'amount' => $amount,
+                'currency' => 'AED',
+                'description' => [
+                    'en' => __('messages.booking.service_cancelled', ['code' => $booking->code], 'en'),
+                    'ar' => __('messages.booking.service_cancelled', ['code' => $booking->code], 'ar'),
+                ],
+                'status' => 'completed',
+                'type' => 'booking',
+                'is_refund' => true,
+                'transactionable_id' => $booking->id,
+                'transactionable_type' => Booking::class,
+                'direction' => 'in',
+                'metadata' => ['service_id' => $serviceId],
+            ]);
+        }
+
+        // تحديث حالة الخدمة
+        $service->is_cancelled = true;
+        $service->cancelled_at = now();
+        $service->cancelled_by = $booking->created_by;
+        $service->save();
+
+        return $booking->fresh(['bookingServices']);
+    }
+
+
+    public function cancelBookingFully(Booking $booking)
+    {
+        if ($booking->status === 'cancelled') {
+            MessageService::abort(422, 'messages.booking.already_cancelled_booking');
+        }
+
+        if ($booking->status === 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_cancel_completed_booking');
+        }
+
+        $booking->status = 'cancelled';
+        $booking->save();
+
+        $user = $booking->user;
+        $refundAllowed = $booking->created_by === 'customer';
+
+        // حساب المبلغ المستحق استرداده مع تجاهل الخدمات الملغاة سابقًا
+        $amountRefund = $booking->bookingServices()
+            ->where('is_cancelled', false)
+            ->sum('price');
+
+        if ($refundAllowed && $amountRefund > 0) {
+            $user->balance += $amountRefund;
+            $user->save();
+
+            WalletTransaction::create([
+                'user_id' => $user->id,
+                'amount' => $amountRefund,
+                'currency' => 'AED',
+                'description' => [
+                    'en' => __('messages.booking.booking_cancelled', ['code' => $booking->code], 'en'),
+                    'ar' => __('messages.booking.booking_cancelled', ['code' => $booking->code], 'ar'),
+                ],
+                'status' => 'completed',
+                'type' => 'booking',
+                'is_refund' => true,
+                'transactionable_id' => $booking->id,
+                'transactionable_type' => Booking::class,
+                'direction' => 'in',
+                'metadata' => [],
+            ]);
+        }
+
+        // تحديث الخدمات
+        foreach ($booking->bookingServices as $service) {
+            if (!$service->is_cancelled) {
+                $service->is_cancelled = true;
+                $service->cancelled_at = now();
+                $service->cancelled_by = $booking->created_by;
+                $service->save();
+            }
+        }
+
+        // إلغاء الخدمات المجانية
+        foreach ($booking->freeServices ?? [] as $freeService) {
+            $freeService->is_used = 0;
+            $freeService->booking_id = null;
+            $freeService->save();
+        }
+
+        // إلغاء كوبون الحجز إن وُجد
+        if ($booking->couponUsage) {
+            $booking->couponUsage->delete();
+        }
+
+        // تسجيل الدفع كاسترجاع
+        SalonPayment::create([
+            'paymentable_id' => $booking->id,
+            'paymentable_type' => Booking::class,
+            'user_id' => $user->id,
+            'salon_id' => $booking->salon_id,
+            'amount' => $amountRefund,
+            'currency' => 'AED',
+            'method' => 'wallet',
+            'status' => 'confirm',
+            'is_refund' => true,
+            'system_percentage' => 0,
+            'code' => 'SP' . str_pad(SalonPayment::max('id') + 1, 6, '0', STR_PAD_LEFT),
+        ]);
+
+        return $booking->fresh(['bookingServices']);
     }
 }

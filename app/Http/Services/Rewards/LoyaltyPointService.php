@@ -107,7 +107,7 @@ class LoyaltyPointService
 
         // TODO: send notification to salon
 
-        $item->load(['user', 'salon', 'freeService']);
+        $item->load(['user', 'salon', 'freeService.service']);
 
 
         return $item;

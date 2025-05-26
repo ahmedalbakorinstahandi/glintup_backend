@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('salon_id');
             $table->foreign('salon_id')->references('id')->on('salons');
+            $table->date('date');
             $table->text('notes')->nullable();
             $table->text('salon_notes')->nullable();
             $table->enum('created_by', ['customer', 'provider']);
@@ -28,7 +29,6 @@ return new class extends Migration
 
 
             $table->enum('status', ["pending", "confirmed", "completed", "cancelled", "Rejected"]);
-            $table->date('date');
             $table->time('time');
         });
 
