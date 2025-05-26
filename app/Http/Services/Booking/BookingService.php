@@ -60,11 +60,10 @@ class BookingService
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
 
+        $query->orWhereHas('user', function ($q) use ($data) {
+            $q->whereRaw("CONCAT(REPLACE(phone_code, '+', ''), phone) LIKE ?", ['%' . $data['search'] . '%']);
+        });
 
-        if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] =  str_replace(' ', '', $data['search']);
-            $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
-        }
 
 
         $query = BookingPermission::filterIndex($query);
@@ -1264,7 +1263,7 @@ class BookingService
 
 
         $amount = $service->getFinalPriceAttribute();
-        
+
         if ($refundAllowed && $amount > 0) {
             $user->balance += $amount;
             $user->save();
