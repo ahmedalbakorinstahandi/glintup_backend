@@ -62,12 +62,10 @@ class BookingService
 
 
         if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // نحتفظ فقط بالأرقام
+            $search = preg_replace('/[^0-9]/', '', $data['search']);
 
-            $query->where(function ($query) use ($search) {
-                $query->whereHas('user', function ($q) use ($search) {
-                    $q->whereRaw("REPLACE(CONCAT(phone_code, phone), '+', '') LIKE ?", ["%{$search}%"]);
-                });
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->whereRaw("REPLACE(CONCAT(phone_code, phone), '+', '') LIKE ?", ["%{$search}%"]);
             });
         }
 
