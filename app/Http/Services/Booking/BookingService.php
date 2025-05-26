@@ -61,13 +61,14 @@ class BookingService
         $inFields = ['id', 'bookingServices.service_id'];
 
 
-        if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] =  str_replace(' ', '', $data['search']);
-            $data['search'] = str_replace('+', '', $data['search']);
-            $query->orWhereHas('user', function ($q) use ($data) {
-                $q->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
+        if (!empty($data['search'])) {
+            $sanitizedSearch = str_replace([' ', '+'], '', $data['search']);
+
+            $query->orWhereHas('user', function ($q) use ($sanitizedSearch) {
+                $q->whereRaw("REPLACE(CONCAT(phone_code, phone), '+', '') LIKE ?", ['%' . $sanitizedSearch . '%']);
             });
         }
+
 
 
         $query = BookingPermission::filterIndex($query);
