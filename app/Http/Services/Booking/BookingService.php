@@ -34,8 +34,6 @@ class BookingService
             'payments'
         ]);
 
-
-
         $searchFields = [
             'code',
             'notes',
@@ -55,27 +53,16 @@ class BookingService
             'salon.country',
             'salon.description',
         ];
+
         $numericFields = [];
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
 
-
-        if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']);
-
-            $query->whereHas('user', function ($q) use ($search) {
-                $q->whereRaw("REPLACE(CONCAT(phone_code, phone), '+', '') LIKE ?", ["%{$search}%"]);
-            });
-        }
-
-
-
-
+        // 👇 فلاتر الصلاحيات
         $query = BookingPermission::filterIndex($query);
 
-
-
+        // 👇 فلاتر البحث العامة
         $query = FilterService::applyFilters(
             $query,
             $data,
@@ -87,10 +74,16 @@ class BookingService
             false
         );
 
+        // 👇 بحث خاص برقم الهاتف من جدول users
+        if (!empty($data['search'])) {
+            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
+
+            $query->orWhereHas('user', function ($q) use ($search) {
+                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            });
+        }
 
         $bookings = $query->get();
-
-        // status "pending", "confirmed", "completed", "cancelled"
 
         $bookings_status_count = [
             'all_count' => $bookings->count(),
@@ -105,6 +98,7 @@ class BookingService
             'info' => $bookings_status_count,
         ];
     }
+
 
     public function show($id)
     {
