@@ -60,10 +60,13 @@ class BookingService
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
 
-        $query->orWhereHas('user', function ($q) use ($data) {
-            $q->whereRaw("CONCAT(REPLACE(phone_code, '+', ''), phone) LIKE ?", ['%' . $data['search'] . '%']);
-        });
 
+        if (isset($data['search']) && $data['search'] != '') {
+            $data['search'] =  str_replace(' ', '', $data['search']);
+            $query->orWhereHas('user', function ($q) use ($data) {
+                $q->whereRaw("CONCAT(REPLACE(phone_code, '+', ''), phone) LIKE ?", ['%' . $data['search'] . '%']);
+            });
+        }
 
 
         $query = BookingPermission::filterIndex($query);
