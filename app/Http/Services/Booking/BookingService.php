@@ -63,8 +63,9 @@ class BookingService
 
         if (isset($data['search']) && $data['search'] != '') {
             $data['search'] =  str_replace(' ', '', $data['search']);
+            $data['search'] = str_replace('+', '', $data['search']);
             $query->orWhereHas('user', function ($q) use ($data) {
-                $q->whereRaw("CONCAT(REPLACE(phone_code, '+', ''), phone) LIKE ?", ['%' . $data['search'] . '%']);
+                $q->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
             });
         }
 
