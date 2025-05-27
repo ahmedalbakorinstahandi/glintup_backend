@@ -4,7 +4,7 @@
 namespace App\Http\Services\Users;
 
 use App\Http\Permissions\Users\ContactPermission;
-use App\Models\General\Contact;
+use App\Models\Users\Contact;
 use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Services\PhoneService;
