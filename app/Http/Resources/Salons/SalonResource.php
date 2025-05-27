@@ -95,7 +95,7 @@ class SalonResource extends JsonResource
         if ($is_customer) {
             $user_data = [
                 'distance' =>  $this->when($is_customer,  $this->getDistance($user)),
-                'my_loyalty_service' => $this->when($is_customer, new LoyaltyPointResource($this->MyLoyaltyService())),
+                'my_loyalty_points' => $this->when($is_customer, new LoyaltyPointResource($this->whenLoaded('myLoyaltyPoints'))),
                 'my_gift_cards' => $this->when($is_customer, GiftCardResource::collection($this->MyGiftCards())),
             ];
 

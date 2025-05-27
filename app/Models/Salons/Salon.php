@@ -89,17 +89,10 @@ class Salon extends Model
 
 
     // get if have current user has a loyalty service in this salon is done points = 5 and not taken
-    public function MyLoyaltyService()
+    public function myLoyaltyPoints()
     {
-
-        $user = User::auth();
-
-        return $this->loyaltyPoints()
-            ->where('user_id', $user->id)
-            // ->where('points', 5) 
-            // ->whereNull('taken_at')
-            ->with('salon')
-            ->first();
+        return $this->hasMany(LoyaltyPoint::class, 'salon_id')
+            ->where('user_id', User::auth()->id);
     }
 
     // get my gift cards in this salon not token and not used
