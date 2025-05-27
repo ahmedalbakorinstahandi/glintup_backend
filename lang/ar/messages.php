@@ -288,5 +288,14 @@ return [
     ],
 
 
+    'contact' => [
+        'item_created_successfully' => 'تم إنشاء جهة الاتصال بنجاح',
+        'item_updated_successfully' => 'تم تحديث جهة الاتصال بنجاح',
+        'item_deleted_successfully' => 'تم حذف جهة الاتصال بنجاح',
+        'failed_delete_item'        => 'فشل في حذف جهة الاتصال',
+        'item_not_found'            => 'جهة الاتصال غير موجودة',
+    ],
+
+
 
 ];

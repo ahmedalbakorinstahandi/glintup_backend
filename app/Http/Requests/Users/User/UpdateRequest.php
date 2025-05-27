@@ -25,6 +25,7 @@ class UpdateRequest extends BaseFormRequest
             'longitude'   => 'nullable|numeric',
             'language'    => 'nullable|string|max:10',
             'notes'      => 'nullable|string|max:1000',
+            'email'       => 'nullable|email|max:255',
         ];
     }
 }

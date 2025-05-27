@@ -293,4 +293,13 @@ return [
         'permissions_updated_successfully' => 'Admin user permissions updated successfully.',
         'item_not_found' => 'Admin user not found.',
     ],
+
+
+    'contact' => [
+        'item_created_successfully' => 'Contact created successfully',
+        'item_updated_successfully' => 'Contact updated successfully',
+        'item_deleted_successfully' => 'Contact deleted successfully',
+        'failed_delete_item'        => 'Failed to delete contact',
+        'item_not_found'            => 'Contact not found',
+    ],
 ];

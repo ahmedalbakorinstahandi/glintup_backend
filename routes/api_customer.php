@@ -12,6 +12,7 @@ use App\Http\Controllers\Services\GroupController;
 use App\Http\Controllers\Services\ReviewController;
 use App\Http\Controllers\Services\ServiceController;
 use App\Http\Controllers\Statistics\AdStatisticController;
+use App\Http\Controllers\Users\ContactController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\WalletTransactionController;
@@ -72,7 +73,7 @@ Route::prefix('customer')->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
             Route::post('/', 'createFromUser');
-             Route::post('/new',  [BookingNewController::class, 'createFromUser']);
+            Route::post('/new',  [BookingNewController::class, 'createFromUser']);
             Route::post('{id}/reschedule', 'rescheduleBooking');
             Route::post('{id}/cancel', 'cancelBooking');
         });
@@ -131,6 +132,15 @@ Route::prefix('customer')->group(function () {
             Route::get('{id}', [GiftCardController::class, 'show']);
             Route::post('{id}/receive', [GiftCardController::class, 'receive']);
         });
+
+        Route::prefix('contacts')->controller(ContactController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'store');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
 
 
 

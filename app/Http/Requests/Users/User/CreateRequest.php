@@ -14,6 +14,7 @@ class CreateRequest extends BaseFormRequest
             'last_name'   => 'required|string|max:255',
             'gender'      => 'required|in:male,female',
             'birth_date'  => 'required|date',
+            'email'       => 'nullable|email|max:255',
             'avatar'      => 'nullable|string|max:110',
             'phone_code'  => 'required|string|max:7',
             'phone'       => 'required|string|max:12|unique:users,phone',

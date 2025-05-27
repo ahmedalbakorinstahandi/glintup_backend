@@ -59,10 +59,8 @@ class BookingService
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
 
-        // 👇 فلاتر الصلاحيات
         $query = BookingPermission::filterIndex($query);
 
-        // 👇 فلاتر البحث العامة
         $query = FilterService::applyFilters(
             $query,
             $data,
@@ -74,7 +72,6 @@ class BookingService
             false
         );
 
-        // 👇 بحث خاص برقم الهاتف من جدول users
         if (!empty($data['search'])) {
             $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
 
