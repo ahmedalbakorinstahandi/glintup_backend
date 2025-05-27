@@ -91,7 +91,7 @@ class Salon extends Model
     // get if have current user has a loyalty service in this salon is done points = 5 and not taken
     public function myLoyaltyPoints()
     {
-        return $this->hasMany(LoyaltyPoint::class, 'salon_id')
+        return $this->hasOne(LoyaltyPoint::class, 'salon_id')
             ->where('user_id', User::auth()->id);
     }
 
