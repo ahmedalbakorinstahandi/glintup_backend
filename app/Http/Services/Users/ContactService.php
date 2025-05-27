@@ -50,6 +50,12 @@ class ContactService
         $data['phone_code'] = $countryCode;
         $data['phone'] = $phoneNumber;
 
+
+        // if avatar is null  , make image as first letter of name
+        // if (empty($data['avatar'])) {
+        //     $data['avatar'] = 'https://ui-avatars.com/api/?name=' . urlencode($data['name']) . '&size=256&background=random';
+        // }
+
         $contact = Contact::create($data);
 
         return $contact;
@@ -68,7 +74,7 @@ class ContactService
             $data['phone'] = $phoneNumber;
         }
 
-        
+
         $item->update($data);
 
 

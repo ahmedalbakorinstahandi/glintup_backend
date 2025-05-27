@@ -35,7 +35,15 @@ class Contact extends Model
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        if ($this->name) {
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=256&background=random';
+        }
+
+        return null;
     }
 
     public function user()
