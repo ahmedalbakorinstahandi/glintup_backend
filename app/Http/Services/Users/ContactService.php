@@ -18,6 +18,16 @@ class ContactService
 
         $query = ContactPermission::filterIndex($query);
 
+        if (!empty($data['search'])) {
+            $search = preg_replace('/[^0-9]/', '', $data['search']);
+
+            $query->orWhereRaw(
+                "REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?",
+                ["%{$search}%"]
+            );
+        }
+
+
         return FilterService::applyFilters(
             $query,
             $data,

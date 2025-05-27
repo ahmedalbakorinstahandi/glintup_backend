@@ -2,7 +2,7 @@
 
 namespace App\Http\Permissions\Users;
 
-use App\Models\General\Contact;
+use App\Models\Users\Contact;
 use App\Models\Users\User;
 use App\Services\MessageService;
 
