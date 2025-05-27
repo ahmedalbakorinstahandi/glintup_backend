@@ -10,7 +10,7 @@ class CreateRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name'       => 'sometimes|string|max:50',
+            'name'       => 'required|string|max:50',
             'phone' => ['required', 'phone:AUTO'],
             'avatar'     => 'nullable|string|max:100',
         ];
