@@ -97,7 +97,7 @@ class Salon extends Model
         return $this->loyaltyPoints()
             ->where('user_id', $user->id)
             // ->where('points', 5)
-            ->whereNull('taken_at')
+            // ->whereNull('taken_at')
             ->first();
     }
 

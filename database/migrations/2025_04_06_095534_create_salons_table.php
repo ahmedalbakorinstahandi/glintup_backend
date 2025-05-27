@@ -27,7 +27,6 @@ return new class extends Migration
             $table->boolean('is_approved')->default(false);
             $table->boolean('is_active')->default(true);
             $table->enum('type', ["salon", "home_service", "beautician", "clinic"]);
-            // menu documebt
             $table->string('menu_document',110)->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
