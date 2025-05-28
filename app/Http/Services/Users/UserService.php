@@ -27,7 +27,7 @@ class UserService
         $query = FilterService::applyFilters(
             $query,
             $data,
-            [],
+            [['first_name', 'last_name']],
             [],
             ['created_at'],
             ['role', 'is_active'],
