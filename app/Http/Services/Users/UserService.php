@@ -19,10 +19,10 @@ class UserService
         $query = UserPermission::filterIndex($query);
 
 
-        if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] =  str_replace(' ', '', $data['search']);
-            $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", [$data['search']]);
-        }
+        // if (isset($data['search']) && $data['search'] != '') {
+        //     $data['search'] =  str_replace(' ', '', $data['search']);
+        //     $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", [$data['search']]);
+        // }
 
         $query = FilterService::applyFilters(
             $query,
