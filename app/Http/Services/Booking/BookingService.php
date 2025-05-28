@@ -73,15 +73,21 @@ class BookingService
         );
 
         if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
+            $search = $data['search'];
+            $numericSearch = preg_replace('/[^0-9]/', '', $search); // Get only numbers for phone search
 
-            $query->orWhereHas('user', function ($q) use ($search) {
-                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"])
-                // or where full name
-                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
+            $query->orWhereHas('user', function ($q) use ($search, $numericSearch) {
+                // Search by phone number
+                if (!empty($numericSearch)) {
+                    $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$numericSearch}%"]);
+                }
+                
+                // Search by name - trim extra spaces and make case insensitive
+                $nameSearch = trim($search);
+                if (!empty($nameSearch)) {
+                    $q->orWhereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%".strtolower($nameSearch)."%"]);
+                }
             });
-
-        
         }
 
         $bookings = $query->get();
