@@ -40,7 +40,7 @@ class Contact extends Model
         }
 
         if ($this->name) {
-            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=256&background=random';
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=256&background=random&length=1';
         }
 
         return null;

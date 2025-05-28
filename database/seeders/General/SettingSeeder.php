@@ -135,6 +135,7 @@ class SettingSeeder extends Seeder
                 'allow_null' => false,
                 'is_settings' => true,
             ],
+            // 
             [
                 'key' => 'help_ar',
                 'value' => '<!DOCTYPE html>
