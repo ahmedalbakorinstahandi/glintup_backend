@@ -34,7 +34,8 @@ class UserService
 
         if (isset($data['search']) && $data['search'] != '') {
             $data['search'] =  str_replace(' ', '', $data['search']);
-            $query->orWhereRaw("CONCAT(phone_code, phone) LIKE ?", [$data['search']]);
+            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
+            $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
         }
 
         $users = $query->get();
