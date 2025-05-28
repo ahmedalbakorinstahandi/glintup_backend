@@ -68,23 +68,23 @@ class BookingService
             });
 
             // or search by user name
-            $query->orWhereHas('user', function ($q) use ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
                 $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
         }
 
         $query = BookingPermission::filterIndex($query);
 
-        // $query = FilterService::applyFilters(
-        //     $query,
-        //     $data,
-        //     $searchFields,
-        //     $numericFields,
-        //     $dateFields,
-        //     $exactMatchFields,
-        //     $inFields,
-        //     false
-        // );
+        $query = FilterService::applyFilters(
+            $query,
+            $data,
+            $searchFields,
+            $numericFields,
+            $dateFields,
+            $exactMatchFields,
+            $inFields,
+            false
+        );
 
 
         $bookings = $query->get();
