@@ -77,16 +77,16 @@ class BookingService
             $numericSearch = preg_replace('/[^0-9]/', '', $search); // Get only numbers for phone search
 
             $query->orWhereHas('user', function ($q) use ($search, $numericSearch) {
-                // Search by phone number
-                if (!empty($numericSearch)) {
-                    $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$numericSearch}%"]);
-                }
-                
                 // Search by name - trim extra spaces and make case insensitive
                 $nameSearch = trim($search);
                 if (!empty($nameSearch)) {
                     $q->orWhereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%".strtolower($nameSearch)."%"]);
                 }
+                // Search by phone number
+                if (!empty($numericSearch)) {
+                    $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$numericSearch}%"]);
+                }
+                
             });
         }
 
