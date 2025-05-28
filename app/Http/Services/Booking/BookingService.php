@@ -35,22 +35,22 @@ class BookingService
         ]);
 
         $searchFields = [
-            'code',
-            'notes',
-            'salon.merchant_commercial_name',
-            'salon.merchant_legal_name',
-            'salon.address',
-            'salon.city_street_name',
-            'salon.contact_name',
-            'salon.contact_number',
-            'salon.contact_email',
-            'salon.business_contact_name',
-            'salon.business_contact_email',
-            'salon.business_contact_number',
-            'salon.tags',
-            'salon.city',
-            'salon.country',
-            'salon.description',
+            // 'code',
+            // 'notes',
+            // 'salon.merchant_commercial_name',
+            // 'salon.merchant_legal_name',
+            // 'salon.address',
+            // 'salon.city_street_name',
+            // 'salon.contact_name',
+            // 'salon.contact_number',
+            // 'salon.contact_email',
+            // 'salon.business_contact_name',
+            // 'salon.business_contact_email',
+            // 'salon.business_contact_number',
+            // 'salon.tags',
+            // 'salon.city',
+            // 'salon.country',
+            // 'salon.description',
         ];
 
         $numericFields = [];
