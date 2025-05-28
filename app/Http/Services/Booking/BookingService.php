@@ -62,16 +62,21 @@ class BookingService
         $query = BookingPermission::filterIndex($query);
 
         if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']);
+            $rawSearch = $data['search'];
+            $searchNumbersOnly = preg_replace('/[^0-9]/', '', $rawSearch);
 
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('user', function ($q2) use ($search) {
-                    $q2->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
-                })->orWhereHas('user', function ($q2) use ($search) {
-                    $q2->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
+            $query->where(function ($q) use ($rawSearch, $searchNumbersOnly) {
+                 $q->whereHas('user', function ($q2) use ($searchNumbersOnly) {
+                    $q2->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchNumbersOnly}%"]);
+                });
+
+                 $q->orWhereHas('user', function ($q2) use ($rawSearch) {
+                    $q2->where('first_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('last_name', 'like', "%{$rawSearch}%");
                 });
             });
         }
+
 
 
         $query = FilterService::applyFilters(
