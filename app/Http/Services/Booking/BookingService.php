@@ -57,6 +57,21 @@ class BookingService
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
+        
+
+
+        if (!empty($data['search'])) {
+            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
+
+            $query->orWhereHas('user', function ($q) use ($search) {
+                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            });
+
+            // or search by user name
+            $query->orWhereHas('user', function ($q) use ($search) {
+                $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
+            });
+        }
 
         $query = BookingPermission::filterIndex($query);
 
@@ -71,18 +86,6 @@ class BookingService
             false
         );
 
-        if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
-
-            $query->orWhereHas('user', function ($q) use ($search) {
-                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
-            });
-
-            // or search by user name
-            $query->orWhereHas('user', function ($q) use ($search) {
-                $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
-            });
-        }
 
         $bookings = $query->get();
 
