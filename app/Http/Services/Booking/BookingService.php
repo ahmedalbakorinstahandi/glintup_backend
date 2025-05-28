@@ -37,7 +37,6 @@ class BookingService
         $searchFields = [
             'code',
             'notes',
-            ['user.first_name', 'user.last_name'],
             'salon.merchant_commercial_name',
             'salon.merchant_legal_name',
             'salon.address',
@@ -77,6 +76,11 @@ class BookingService
 
             $query->orWhereHas('user', function ($q) use ($search) {
                 $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            });
+
+            // or search by user name
+            $query->orWhereHas('user', function ($q) use ($search) {
+                $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
         }
 
