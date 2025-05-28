@@ -34,34 +34,49 @@ class BookingService
             'payments'
         ]);
 
-        $searchFields = [
-            // 'code',
-            // 'notes',
-            // 'salon.merchant_commercial_name',
-            // 'salon.merchant_legal_name',
-            // 'salon.address',
-            // 'salon.city_street_name',
-            // 'salon.contact_name',
-            // 'salon.contact_number',
-            // 'salon.contact_email',
-            // 'salon.business_contact_name',
-            // 'salon.business_contact_email',
-            // 'salon.business_contact_number',
-            // 'salon.tags',
-            // 'salon.city',
-            // 'salon.country',
-            // 'salon.description',
-        ];
-
+        $searchFields = [];
         $numericFields = [];
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
         $inFields = ['id', 'bookingServices.service_id'];
 
-
         $query = BookingPermission::filterIndex($query);
 
+        if (!empty($data['search'])) {
+            $rawSearch = trim($data['search']);
+            $searchNumbersOnly = preg_replace('/[^0-9]/', '', $rawSearch);
 
+            $query->where(function ($q) use ($rawSearch, $searchNumbersOnly) {
+                // بحث ضمن جدول Booking
+                $q->where('code', 'like', "%{$rawSearch}%")
+                    ->orWhere('notes', 'like', "%{$rawSearch}%");
+
+                // بحث ضمن user
+                $q->orWhereHas('user', function ($q2) use ($rawSearch, $searchNumbersOnly) {
+                    $q2->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchNumbersOnly}%"])
+                        ->orWhere('first_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('last_name', 'like', "%{$rawSearch}%");
+                });
+
+                // بحث ضمن salon
+                $q->orWhereHas('salon', function ($q3) use ($rawSearch) {
+                    $q3->where('merchant_commercial_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('merchant_legal_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('address', 'like', "%{$rawSearch}%")
+                        ->orWhere('city_street_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('contact_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('contact_number', 'like', "%{$rawSearch}%")
+                        ->orWhere('contact_email', 'like', "%{$rawSearch}%")
+                        ->orWhere('business_contact_name', 'like', "%{$rawSearch}%")
+                        ->orWhere('business_contact_email', 'like', "%{$rawSearch}%")
+                        ->orWhere('business_contact_number', 'like', "%{$rawSearch}%")
+                        ->orWhere('tags', 'like', "%{$rawSearch}%")
+                        ->orWhere('city', 'like', "%{$rawSearch}%")
+                        ->orWhere('country', 'like', "%{$rawSearch}%")
+                        ->orWhere('description', 'like', "%{$rawSearch}%");
+                });
+            });
+        }
 
         $query = FilterService::applyFilters(
             $query,
@@ -73,23 +88,6 @@ class BookingService
             $inFields,
             false
         );
-
-        if (!empty($data['search'])) {
-            $rawSearch = $data['search'];
-            $searchNumbersOnly = preg_replace('/[^0-9]/', '', $rawSearch);
-
-            $query->where(function ($q) use ($rawSearch, $searchNumbersOnly) {
-                $q->whereHas('user', function ($q2) use ($searchNumbersOnly) {
-                    $q2->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchNumbersOnly}%"]);
-                });
-
-                $q->orWhereHas('user', function ($q2) use ($rawSearch) {
-                    $q2->where('first_name', 'like', "%{$rawSearch}%")
-                        ->orWhere('last_name', 'like', "%{$rawSearch}%");
-                });
-            });
-        }
-
 
         $bookings = $query->get();
 
@@ -106,6 +104,7 @@ class BookingService
             'info' => $bookings_status_count,
         ];
     }
+
 
 
     public function show($id)
