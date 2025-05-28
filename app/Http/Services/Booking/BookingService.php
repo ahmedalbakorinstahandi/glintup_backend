@@ -80,7 +80,7 @@ class BookingService
                 // Search by name - trim extra spaces and make case insensitive
                 $nameSearch = trim($search);
                 if (!empty($nameSearch)) {
-                    $q->orWhereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%".strtolower($nameSearch)."%"]);
+                    $q->whereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%".strtolower($nameSearch)."%"]);
                 }
                 // Search by phone number
                 if (!empty($numericSearch)) {
