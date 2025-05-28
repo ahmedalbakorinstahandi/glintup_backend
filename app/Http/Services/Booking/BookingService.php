@@ -75,16 +75,16 @@ class BookingService
 
         $query = BookingPermission::filterIndex($query);
 
-        $query = FilterService::applyFilters(
-            $query,
-            $data,
-            $searchFields,
-            $numericFields,
-            $dateFields,
-            $exactMatchFields,
-            $inFields,
-            false
-        );
+        // $query = FilterService::applyFilters(
+        //     $query,
+        //     $data,
+        //     $searchFields,
+        //     $numericFields,
+        //     $dateFields,
+        //     $exactMatchFields,
+        //     $inFields,
+        //     false
+        // );
 
 
         $bookings = $query->get();
