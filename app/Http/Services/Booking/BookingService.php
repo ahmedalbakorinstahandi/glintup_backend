@@ -76,7 +76,7 @@ class BookingService
             $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
 
             $query->orWhereHas('user', function ($q) use ($search) {
-                $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
             });
         }
 
