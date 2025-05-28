@@ -59,6 +59,7 @@ class BookingService
         $inFields = ['id', 'bookingServices.service_id'];
         
 
+        $query = BookingPermission::filterIndex($query);
 
         if (!empty($data['search'])) {
             $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
@@ -68,12 +69,11 @@ class BookingService
             });
 
             // or search by user name
-            $query->whereHas('user', function ($q) use ($search) {
+            $query->orWhereHas('user', function ($q) use ($search) {
                 $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
         }
 
-        $query = BookingPermission::filterIndex($query);
 
         $query = FilterService::applyFilters(
             $query,
