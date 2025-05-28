@@ -135,7 +135,48 @@ class SettingSeeder extends Seeder
                 'allow_null' => false,
                 'is_settings' => true,
             ],
-            // 
+            [
+                'key' => 'makeup_artist_home_service_text_ar',
+                'value' => 'نصلك اينما كنت',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'makeup_artist_center_service_text_ar', 
+                'value' => 'خدمتنا في مقرنا',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'makeup_artist_center_and_home_service_text_ar',
+                'value' => 'نقدم الخدمة في منزلك او في مقرنا',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'makeup_artist_home_service_text_en',
+                'value' => 'We will reach you wherever you are',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'makeup_artist_center_service_text_en',
+                'value' => 'Our service at our center',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
+            [
+                'key' => 'makeup_artist_center_and_home_service_text_en',
+                'value' => 'We provide service at your home or at our center',
+                'type' => 'text',
+                'allow_null' => false,
+                'is_settings' => true,
+            ],
             [
                 'key' => 'help_ar',
                 'value' => '<!DOCTYPE html>
