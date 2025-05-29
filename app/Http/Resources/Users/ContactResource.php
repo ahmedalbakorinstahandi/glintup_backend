@@ -19,7 +19,7 @@ class ContactResource extends JsonResource
             'name'        => $this->name,
             'phone_code'  => $this->phone_code,
             'phone'       => $this->phone,
-            'full_phone'  => $this->full_phone,
+            'full_phone'  => "+" . $this->phone_code . " " . $this->phone,
             'avatar'      => $this->avatar,
             'avatar_url'  => $this->avatar_url,
             'user_id'     => $this->user_id,

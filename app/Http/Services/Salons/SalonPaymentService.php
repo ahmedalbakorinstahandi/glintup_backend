@@ -12,7 +12,9 @@ class SalonPaymentService
     public function index($data)
     {
         $query = SalonPayment::with(['paymentable', 'user']);
+
         $query = SalonPaymentPermission::filterIndex($query);
+        
         return FilterService::applyFilters(
             $query,
             $data,
