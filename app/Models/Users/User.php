@@ -69,19 +69,12 @@ class User extends Model
 
     public static function auth()
     {
-        if (Auth::check()) {
-            return User::find(Auth::user()->id);
+        if (Auth::guard('sanctum')->check()) {
+            $user =  Auth::guard('sanctum')->user();
+            return User::where('id', $user->id)->first();
         }
 
-        // MessageService::abort(503, 'messages.unauthorized');
-
-        abort(
-            401,
-            response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-            ]),
-        );
+        return null;
     }
 
 
