@@ -85,6 +85,7 @@ return [
         'slot_not_available' => 'لا يوجد وقت متاح للخدمة :service_name في التاريخ :date والوقت :start_time',
         'service_not_found_or_cancelled' => 'الخدمة غير موجودة أو ملغية',
         'cannot_cancel_service' => 'لا يمكن إلغاء الخدمة',
+        'service_cancelled_successfully' => 'تم إلغاء الخدمة بنجاح',
     ],
 
     'user' => [

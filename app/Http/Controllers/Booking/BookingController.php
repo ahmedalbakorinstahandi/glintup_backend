@@ -184,7 +184,7 @@ use App\Services\ResponseService;
 
         return response()->json([
             'success' => true,
-            'message' => trans('messages.booking.cancel_successfully'),
+            'message' => trans('messages.booking.service_cancelled_successfully'),
             'data' => new BookingResource($booking),
         ]);
     }
