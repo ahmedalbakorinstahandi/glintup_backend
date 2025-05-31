@@ -1203,7 +1203,7 @@ class BookingService
 
 
 
-    public function cancelBookingService(Booking $booking, int $serviceId)
+    public function cancelBookingService(Booking $booking, int $bookingServiceId)
     {
         if ($booking->status === 'cancelled' || $booking->status === 'completed' || $booking->status === 'Rejected') {
             MessageService::abort(422, 'messages.booking.cannot_cancel_service');
@@ -1211,7 +1211,7 @@ class BookingService
 
         $user = $booking->user;
 
-        $service = $booking->bookingServices()->where('service_id', $serviceId)->first();
+        $service = $booking->bookingServices()->where('id', $bookingServiceId)->first();
 
         if (!$service || $service->status === 'cancelled' || $service->status === 'rejected') {
             MessageService::abort(422, 'messages.booking.service_not_found_or_cancelled');
@@ -1246,11 +1246,11 @@ class BookingService
                 'transactionable_id' => $booking->id,
                 'transactionable_type' => Booking::class,
                 'direction' => 'in',
-                'metadata' => ['service_id' => $serviceId],
+                'metadata' => ['booking_service_id' => $bookingServiceId],
             ]);
         }
 
-
+        $service->status = 'cancelled';
         $service->save();
 
         Status::create([
