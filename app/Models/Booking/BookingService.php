@@ -22,6 +22,7 @@ class BookingService extends Model
         'status',
         'notes',
         'cancelled_by',
+        
     ];
 
     protected $casts = [

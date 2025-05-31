@@ -1213,8 +1213,12 @@ class BookingService
 
         $service = $booking->bookingServices()->where('service_id', $serviceId)->first();
 
-        if ($service->status === 'cancelled' || $service->status === 'completed' || $service->status === 'rejected') {
+        if (!$service || $service->status === 'cancelled' || $service->status === 'rejected') {
             MessageService::abort(422, 'messages.booking.service_not_found_or_cancelled');
+        }
+
+        if ($service->status === 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_cancel_service');
         }
 
 
