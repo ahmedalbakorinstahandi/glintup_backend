@@ -76,6 +76,8 @@ Route::prefix('customer')->group(function () {
             Route::post('/new',  [BookingNewController::class, 'createFromUser']);
             Route::post('{id}/reschedule', 'rescheduleBooking');
             Route::post('{id}/cancel', 'cancelBooking');
+            Route::post('{id}/cancel-service/{serviceId}', 'cancelBookingService');
+            Route::post('{id}/cancel-fully', 'cancelBookingFully');
         });
 
         Route::prefix('home')->group(function () {

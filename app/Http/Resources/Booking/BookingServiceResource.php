@@ -15,6 +15,7 @@ class BookingServiceResource extends JsonResource
             'service_id' => $this->service_id,
 
             'price'               => $this->price,
+            'final_price'         => $this->final_price,
             'currency'            => $this->currency,
             'discount_percentage' => $this->discount_percentage,
             'start_date_time'     => $this->start_date_time ? $this->start_date_time->format('Y-m-d H:i:s') : null,

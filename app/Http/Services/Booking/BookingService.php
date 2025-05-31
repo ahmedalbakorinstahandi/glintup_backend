@@ -8,6 +8,7 @@ use App\Models\Booking\Booking;
 use App\Models\Booking\Coupon;
 use App\Models\Booking\CouponUsage;
 use App\Models\General\Setting;
+use App\Models\General\Status;
 use App\Models\Rewards\FreeService;
 use App\Models\Rewards\LoyaltyPoint;
 use App\Models\Salons\SalonCustomer;
@@ -19,6 +20,7 @@ use App\Services\FilterService;
 use App\Services\MessageService;
 use App\Services\PhoneService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
@@ -80,13 +82,12 @@ class BookingService
                 // Search by name - trim extra spaces and make case insensitive
                 $nameSearch = trim($search);
                 if (!empty($nameSearch)) {
-                    $q->whereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%".strtolower($nameSearch)."%"]);
+                    $q->whereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%" . strtolower($nameSearch) . "%"]);
                 }
                 // Search by phone number
                 if (!empty($numericSearch)) {
                     $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$numericSearch}%"]);
                 }
-                
             });
         }
 
@@ -109,7 +110,7 @@ class BookingService
 
     public function show($id)
     {
-        $booking = Booking::find($id);
+        $booking = Booking::where('id', $id)->first();
 
         if (!$booking) {
             MessageService::abort(404, 'messages.booking.item_not_found');
@@ -885,55 +886,6 @@ class BookingService
     }
 
 
-    // // update booking services from user
-    // public function updateFromUser($booking, $data)
-    // {
-
-
-    //     if ($booking->status == 'completed') {
-    //         MessageService::abort(422, 'messages.booking.cannot_update_completed_booking');
-    //     }
-
-    //     if ($booking->status == 'cancelled') {
-    //         MessageService::abort(422, 'messages.booking.cannot_update_cancelled_booking');
-    //     }
-
-
-    //     $current_booking_services = $booking->bookingServices()->pluck('service_id')->toArray();
-
-    //     $new_booking_services = array_column($data['services'], 'id');
-
-    //     $services_to_add = array_diff($new_booking_services, $current_booking_services);
-
-    //     $services_to_remove = array_diff($current_booking_services, $new_booking_services);
-
-    //     // remove services from booking
-    //     if (count($services_to_remove) > 0) {
-    //         $booking->bookingServices()->whereIn('service_id', $services_to_remove)->delete();
-    //     }
-
-    //     // add services to booking
-    //     if (count($services_to_add) > 0) {
-    //         foreach ($services_to_add as $service_id) {
-    //             $booking->bookingServices()->create([
-    //                 'service_id' => $service_id,
-    //             ]);
-    //         }
-    //     }
-
-    //     // check if user have free services and use them
-    //     if ($booking->freeServices) {
-    //         foreach ($booking->freeServices as $freeService) {
-    //             if ($freeService) {
-    //                 $freeService->is_used = 0;
-    //                 $freeService->booking_id = null;
-    //                 $freeService->save();
-    //             }
-    //         }
-    //     }
-
-
-
     public function updateFromUser($booking, $data)
     {
         if ($booking->status === 'completed') {
@@ -1294,11 +1246,18 @@ class BookingService
             ]);
         }
 
-        // تحديث حالة الخدمة
-        $service->is_cancelled = true;
-        $service->cancelled_at = now();
-        $service->cancelled_by = $booking->created_by;
+
         $service->save();
+
+        Status::create([
+            'name' => 'cancelled',
+            'statusable_id' => $service->id,
+            'statusable_type' => BookingService::class,
+            'created_by' => $user->id,
+        ]);
+
+
+        // TODO send notification to salon
 
         return $booking->fresh(['bookingServices']);
     }
@@ -1317,13 +1276,20 @@ class BookingService
         $booking->status = 'cancelled';
         $booking->save();
 
+        $user = User::auth();
+        Status::create([
+            'name' => 'cancelled',
+            'statusable_id' => $booking->id,
+            'statusable_type' => Booking::class,
+            'created_by' => $user->id,
+        ]);
+
         $user = $booking->user;
         $refundAllowed = $booking->created_by === 'customer';
 
-        // حساب المبلغ المستحق استرداده مع تجاهل الخدمات الملغاة سابقًا
         $amountRefund = $booking->bookingServices()
-            ->where('is_cancelled', false)
-            ->sum('price');
+            ->where('status', '!=', 'cancelled')
+            ->sum(DB::raw('price - (price * discount_percentage / 100)'));
 
         if ($refundAllowed && $amountRefund > 0) {
             $user->balance += $amountRefund;
@@ -1347,12 +1313,16 @@ class BookingService
             ]);
         }
 
-        // تحديث الخدمات
         foreach ($booking->bookingServices as $service) {
-            if (!$service->is_cancelled) {
-                $service->is_cancelled = true;
-                $service->cancelled_at = now();
-                $service->cancelled_by = $booking->created_by;
+            if ($service->status !== 'cancelled') {
+                $service->status = 'cancelled';
+
+                Status::create([
+                    'name' => 'cancelled',
+                    'statusable_id' => $service->id,
+                    'statusable_type' => BookingService::class,
+                    'created_by' => $user->id,
+                ]);
                 $service->save();
             }
         }

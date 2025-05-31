@@ -157,4 +157,35 @@ use App\Services\ResponseService;
             'data' => new BookingResource($booking),
         ]);
     }
+
+    // cancelBookingFully
+    public function cancelBookingFully($id)
+    {
+        $booking = $this->bookingService->show($id);
+
+        BookingPermission::canUpdate($booking);
+
+        $booking = $this->bookingService->cancelBookingFully($booking);
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.booking.cancel_successfully'),
+            'data' => new BookingResource($booking),
+        ]);
+    }
+
+     public function cancelBookingService($bookingId, $serviceId)
+    {
+        $booking = $this->bookingService->show($bookingId);
+
+        BookingPermission::canUpdate($booking);
+
+        $booking = $this->bookingService->cancelBookingService($booking, $serviceId);
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.booking.cancel_successfully'),
+            'data' => new BookingResource($booking),
+        ]);
+    }
 }

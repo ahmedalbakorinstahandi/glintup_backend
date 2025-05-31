@@ -83,7 +83,7 @@ class Booking extends Model
         $totalPrice = 0;
 
         foreach ($this->bookingServices as $service) {
-            $finalPrice = $service->service->getFinalPriceAttribute();
+            $finalPrice = $service->getFinalPriceAttribute();
 
             // Check if the service is free for the user
             $freeService = FreeService::where([
@@ -138,7 +138,8 @@ class Booking extends Model
     // }
 
 
-    // free service
+
+
     public function freeService()
     {
         return $this->hasMany(FreeService::class);

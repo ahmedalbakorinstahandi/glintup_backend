@@ -28,9 +28,10 @@ return new class extends Migration
             $table->integer('duration_minutes');
             $table->enum('status', ["pending", "confirmed", "completed", "cancelled", "rejected"]); // 'pending','confirmed','completed','cancelled','rejected'
             $table->text('notes')->nullable();
+            $table->enum('cancelled_by', ['customer', 'salon', 'admin'])->nullable();
 
             $table->timestamps();
-            $table->softDeletes(); 
+            $table->softDeletes();
         });
 
         Schema::enableForeignKeyConstraints();

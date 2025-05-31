@@ -21,6 +21,7 @@ class BookingService extends Model
         'duration_minutes',
         'status',
         'notes',
+        'cancelled_by',
     ];
 
     protected $casts = [
@@ -42,5 +43,11 @@ class BookingService extends Model
     public function service()
     {
         return $this->belongsTo(Service::class)->withTrashed();
+    }
+
+
+    public function getFinalPriceAttribute(): float
+    {
+        return $this->price - ($this->price * $this->discount_percentage / 100);
     }
 }
