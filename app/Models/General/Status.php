@@ -4,9 +4,17 @@ namespace App\Models\General;
 
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Status extends Model
 {
+    use SoftDeletes;
+
+    protected $table = 'statuses';
+
+    // timestamps
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'statusable_id',
