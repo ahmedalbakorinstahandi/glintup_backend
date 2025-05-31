@@ -83,6 +83,8 @@ return [
         'cannot_update_cancelled_booking' => 'لا يمكن تحديث حجز ملغي',
         'cannot_update_completed_booking' => 'لا يمكن تحديث حجز مكتمل',
         'slot_not_available' => 'لا يوجد وقت متاح للخدمة :service_name في التاريخ :date والوقت :start_time',
+        'service_not_found_or_cancelled' => 'الخدمة غير موجودة أو ملغية',
+        'cannot_cancel_service' => 'لا يمكن إلغاء الخدمة',
     ],
 
     'user' => [
