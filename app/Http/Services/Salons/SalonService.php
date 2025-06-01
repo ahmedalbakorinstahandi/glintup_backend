@@ -106,7 +106,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService', 'myLoyaltyPoints.freeService']);
+        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService', 'myLoyaltyPoints.freeService', 'myLoyaltyPoints.user']);
 
         return $salon;
     }
