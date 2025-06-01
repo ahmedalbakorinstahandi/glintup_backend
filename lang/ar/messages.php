@@ -212,6 +212,7 @@ return [
         'item_already_received' => 'تم استلام بطاقة الهدية بالفعل',
         'received_transaction_details' => 'تم استلام بطاقة الهدية رقم #:code بقيمة :amount :currency.',
         'item_received_successfully' => 'تم استلام بطاقة الهدية بنجاح',
+        'sent_successfully' => 'تم إرسال بطاقة الهدية بنجاح',
     ],
 
     'gift_card_message' => "مرحبًا،\n\nلقد استلمت بطاقة هدية من :sender.\n\nالتفاصيل:\n:details\n\nرسالة المرسل:\n:note\n\nيرجى تحميل التطبيق من الرابط أدناه والتسجيل للحصول على البطاقة.\n\n:link",

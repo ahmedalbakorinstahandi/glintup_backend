@@ -81,7 +81,7 @@ class SalonService
         ];
         $numericFields = [];
         $dateFields = ['created_at'];
-        $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country'];
+        $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country', 'id'];
         $inFields = ['id', 'type'];
 
         $query = SalonPermission::filterIndex($query);

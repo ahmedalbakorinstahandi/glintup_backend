@@ -92,6 +92,7 @@ class GiftCardController extends Controller
         return response()->json(
             [
                 'success' => true,
+                'message' => trans('messages.gift_card.sent_successfully'),
                 'data' => new GiftCardResource($gift),
             ]
         );

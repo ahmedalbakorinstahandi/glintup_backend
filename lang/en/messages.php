@@ -216,6 +216,7 @@ return [
         'item_already_received'     => 'The gift card has already been received',
         'received_transaction_details' => 'Gift card #:code received with a value of :amount :currency.',
         'item_received_successfully' => 'Gift card received successfully',
+        'sent_successfully' => 'Gift card sent successfully',
     ],
 
     'gift_card_message' => "Hi,\n\nYou have received a gift card from :sender.\n\nDetails:\n:details\n\nMessage from sender:\n:note\n\nPlease download the app from the link below and register to claim your gift card.\n\n:link",
