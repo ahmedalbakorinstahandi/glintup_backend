@@ -1263,7 +1263,7 @@ class BookingService
 
         // TODO send notification to salon
 
-        return $booking->fresh(['bookingServices']);
+        return  $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
     }
 
 
@@ -1358,6 +1358,6 @@ class BookingService
             'code' => 'SP' . str_pad(SalonPayment::max('id') + 1, 6, '0', STR_PAD_LEFT),
         ]);
 
-        return $booking->fresh(['bookingServices']);
+        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
     }
 }
