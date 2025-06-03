@@ -549,13 +549,11 @@ class Salon extends Model
         $text_key = '';
         if ($this->type == 'beautician') {
             if ($this->service_location == 'in_house') {
-                $text_key = 'makeup_artist_home_service';
-            }
-            if ($this->service_location == 'in_center') {
-                $text_key = 'makeup_artist_center_service';
-            }
-            if ($this->service_location == 'in_house_and_center') {
-                $text_key = 'makeup_artist_center_and_home_service';
+                $text_key = 'makeup_artist_home_service_text';
+            } else if ($this->service_location == 'in_center') {
+                $text_key = 'makeup_artist_center_service_text';
+            } else if ($this->service_location == 'in_house_and_center') {
+                $text_key = 'makeup_artist_center_and_home_service_text';
             }
 
             $locales = config('translatable.locales');
