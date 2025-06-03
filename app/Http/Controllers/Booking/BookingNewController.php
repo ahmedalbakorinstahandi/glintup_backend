@@ -115,7 +115,7 @@ class BookingNewController
 
         foreach ($bookingServices as $item) {
             $bookingService = $booking->bookingServices()
-                ->where('service_id', $item['id'])
+                ->where('id', $item['id'])
                 ->where('status', '!=', 'cancelled')
                 ->where('status', '!=', 'completed')
                 ->first();
@@ -124,7 +124,7 @@ class BookingNewController
                 MessageService::abort(422, 'messages.booking.service_not_found_or_invalid');
             }
 
-            $service = Service::where('id', $item['id'])
+            $service = Service::where('id', $item['service_id'])
                 ->where('salon_id', $booking->salon_id)
                 ->first();
 
