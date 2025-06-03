@@ -91,6 +91,7 @@ return [
         'rescheduled_booking' => 'Booking #:code - :salon has been rescheduled',
         'cannot_reschedule_rejected_booking' => 'Cannot reschedule a rejected booking',
         'service_not_found_or_invalid' => 'Service not found or invalid',
+        'services_rescheduled_successfully' => 'Services rescheduled successfully',
     ],
 
 

@@ -91,6 +91,7 @@ return [
         'rescheduled_booking' => 'تم إعادة جدولة الحجز #:code - :salon',
         'cannot_reschedule_rejected_booking' => 'لا يمكن إعادة جدولة حجز مرفوض',
         'service_not_found_or_invalid' => 'الخدمة غير موجودة أو غير صالحة',
+        'services_rescheduled_successfully' => 'تم إعادة جدولة الخدمات بنجاح',
 
     ],
 
