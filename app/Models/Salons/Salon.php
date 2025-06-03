@@ -72,7 +72,7 @@ class Salon extends Model
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
         'deleted_at'  => 'datetime',
-        'service_location' => 'enum:in_house,in_center,in_house_and_center',
+        // 'service_location' => 'enum:in_house,in_center,in_house_and_center',
         'bank_name' => 'string',
         'bank_account_number' => 'string',
         'bank_account_holder_name' => 'string',
