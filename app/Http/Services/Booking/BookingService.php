@@ -1387,8 +1387,8 @@ class BookingService
             //     "message": "Could not parse '2025-06-25 00:00:00 13:00': Failed to parse time string (2025-06-25 00:00:00 13:00) at position 20 (1): Double time specification",
 
             $bookingService->update([
-                'start_date_time' => Carbon::createFromFormat('Y-m-d H:i', $booking->date . ' ' . $service['start_time']),
-                'end_date_time' => Carbon::createFromFormat('Y-m-d H:i', $booking->date . ' ' . $service['end_time']),
+                'start_date_time' => Carbon::parse($booking->date->format('Y-m-d') . ' ' . $service['start_time']),
+                'end_date_time' => Carbon::parse($booking->date->format('Y-m-d') . ' ' . $service['end_time']), 
             ]);
 
             // إضافة سجل الحالة
