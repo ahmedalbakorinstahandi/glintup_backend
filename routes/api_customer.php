@@ -78,7 +78,7 @@ Route::prefix('customer')->group(function () {
             Route::post('{id}/cancel', 'cancelBooking');
             Route::post('{id}/cancel-service/{serviceId}', 'cancelBookingService');
             Route::post('{id}/cancel-fully', 'cancelBookingFully');
-            Route::post('{id}/reschedule-services', 'rescheduleBookingServices');
+            Route::post('{id}/reschedule-services', [BookingNewController::class, 'rescheduleBookingServices']);
         });
 
         Route::prefix('home')->group(function () {
