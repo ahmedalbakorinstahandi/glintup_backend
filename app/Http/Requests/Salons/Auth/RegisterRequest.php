@@ -28,28 +28,21 @@ class RegisterRequest extends BaseFormRequest
             'business_contact_number' => 'required|string|max:25',
             'icon' => 'required|string',
             'type' => 'required|string|in:salon,home_service,beautician,clinic',
-            // 'types' => [
-            //     'required',
-            //     'array',
-            //     'distinct',
-            //     function ($attribute, $value, $fail) {
-            //         $type = request()->input('type');
-            //         $allowedTypes = match ($type) {
-            //             'salon' => ['home_service', 'beautician'],
-            //             'clinic' => ['home_service'],
-            //             default => [],
-            //         };
-
-            //         if (!empty($value) && array_diff($value, $allowedTypes)) {
-            //             $fail("The selected {$attribute} is invalid for the type {$type}.");
-            //         }
-            //     },
-            // ],
-            // 'types.*' => 'required|string|in:salon,home_service,beautician,clinic',
             'description' => 'nullable|string',
             'bio' => 'nullable|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'service_location' => 'required|string|in:in_house,in_center,in_house_and_center|required_if:type,beautician',
+            'bank_name' => 'required|string|max:255',
+            'bank_account_number' => 'required|string|max:255',
+            'bank_account_holder_name' => 'required|string|max:255',
+            'bank_account_iban' => 'required|string|max:255',
+            'services_list' => 'required|string',
+            'trade_license' => 'required|string',
+            'vat_certificate' => 'required|string',
+            'bank_account_certificate' => 'required|string',
+            'vat_number' => 'required|string|max:255',
+
         ];
     }
 }

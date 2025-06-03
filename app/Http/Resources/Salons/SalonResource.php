@@ -68,6 +68,24 @@ class SalonResource extends JsonResource
             'type'            => $this->type,
             'country'         => $this->country,
             'city'            => $this->city,
+            'service_location' => $this->service_location,
+            'service_location_text' => $this->getServiceLocationTextAttribute(),
+            'bank_name' => $this->bank_name,
+            'bank_account_number' => $this->bank_account_number,
+            'bank_account_holder_name' => $this->bank_account_holder_name,
+            'bank_account_iban' => $this->bank_account_iban,
+            'services_list' => $this->services_list,
+
+            'trade_license' => $this->trade_license,
+            'vat_certificate' => $this->vat_certificate,
+            'bank_account_certificate' => $this->bank_account_certificate,
+            'vat_number' => $this->vat_number,
+
+            'trade_license_url' => $this->trade_license_url,
+            'vat_certificate_url' => $this->vat_certificate_url,
+            'bank_account_certificate_url' => $this->bank_account_certificate_url,
+            'services_list_url' => $this->services_list_url,
+
 
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),

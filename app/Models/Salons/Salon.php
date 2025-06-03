@@ -5,6 +5,7 @@ namespace App\Models\Salons;
 use App\Http\Services\Services\GroupService;
 use App\Models\Booking\Booking;
 use App\Models\General\Image;
+use App\Models\General\Setting;
 use App\Models\Rewards\GiftCard;
 use App\Models\Rewards\LoyaltyPoint;
 use App\Models\Services\Group;
@@ -51,6 +52,16 @@ class Salon extends Model
         'bio',
         'tags',
         'loyalty_service_id',
+        'vat_number',
+        'service_location',
+        'bank_name',
+        'bank_account_number',
+        'bank_account_holder_name',
+        'bank_account_iban',
+        'services_list',
+        'trade_license',
+        'vat_certificate',
+        'bank_account_certificate',
     ];
 
     protected $casts = [
@@ -61,6 +72,16 @@ class Salon extends Model
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
         'deleted_at'  => 'datetime',
+        'service_location' => 'enum:in_house,in_center,in_house_and_center',
+        'bank_name' => 'string',
+        'bank_account_number' => 'string',
+        'bank_account_holder_name' => 'string',
+        'bank_account_iban' => 'string',
+        'services_list' => 'string',
+        'trade_license' => 'string',
+        'vat_certificate' => 'string',
+        'bank_account_certificate' => 'string',
+        'vat_number' => 'string',
     ];
 
     public function owner()
@@ -85,10 +106,8 @@ class Salon extends Model
         return $this->belongsTo(Service::class, 'loyalty_service_id')->withTrashed();
     }
 
-    // loyalties
 
 
-    // get if have current user has a loyalty service in this salon is done points = 5 and not taken
     public function myLoyaltyPoints()
     {
         return $this->hasOne(LoyaltyPoint::class, 'salon_id')
@@ -511,5 +530,67 @@ class Salon extends Model
         // return round($distance, 2);
 
         return rand(1, 100) + 0.0;
+    }
+
+
+    // service_location display text
+
+    //     makeup_artist_home_service_text_ar
+    // makeup_artist_center_service_text_ar
+
+    // makeup_artist_center_and_home_service_text_ar
+
+    // makeup_artist_home_service_text_en
+    // makeup_artist_center_service_text_en
+
+    // makeup_artist_center_and_home_service_text_en
+    public function getServiceLocationTextAttribute()
+    {
+        $text_key = '';
+        if ($this->type == 'beautician') {
+            if ($this->service_location == 'in_house') {
+                $text_key = 'makeup_artist_home_service';
+            }
+            if ($this->service_location == 'in_center') {
+                $text_key = 'makeup_artist_center_service';
+            }
+            if ($this->service_location == 'in_house_and_center') {
+                $text_key = 'makeup_artist_center_and_home_service';
+            }
+
+            $locales = config('translatable.locales');
+
+
+            $texts = [];
+            foreach ($locales as $locale) {
+                $texts[$locale] = Setting::where('key', $text_key . '_' . $locale)->first()->value;
+            }
+
+            return $texts;
+        }
+
+        return null;
+    }
+
+
+    public function getTradeLicenseUrlAttribute(): string
+    {
+        return asset('storage/' . $this->trade_license);
+    }
+
+    public function getVatCertificateUrlAttribute(): string
+    {
+        return asset('storage/' . $this->vat_certificate);
+    }
+
+    public function getBankAccountCertificateUrlAttribute(): string
+    {
+        return asset('storage/' . $this->bank_account_certificate);
+    }
+
+
+    public function getServicesListUrlAttribute(): string
+    {
+        return asset('storage/' . $this->services_list);
     }
 }
