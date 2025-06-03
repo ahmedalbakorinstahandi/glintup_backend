@@ -87,6 +87,10 @@ return [
         'service_not_found_or_cancelled' => 'Service not found or cancelled',
         'cannot_cancel_service' => 'Cannot cancel a service',
         'service_cancelled_successfully' => 'Service cancelled successfully',
+        'rescheduled_successfully' => 'Booking rescheduled successfully',
+        'rescheduled_booking' => 'Booking #:code - :salon has been rescheduled',
+        'cannot_reschedule_rejected_booking' => 'Cannot reschedule a rejected booking',
+        'service_not_found_or_invalid' => 'Service not found or invalid',
     ],
 
 

@@ -86,6 +86,12 @@ return [
         'service_not_found_or_cancelled' => 'الخدمة غير موجودة أو ملغية',
         'cannot_cancel_service' => 'لا يمكن إلغاء الخدمة',
         'service_cancelled_successfully' => 'تم إلغاء الخدمة بنجاح',
+
+        'rescheduled_successfully' => 'تم إعادة جدولة الحجز بنجاح',
+        'rescheduled_booking' => 'تم إعادة جدولة الحجز #:code - :salon',
+        'cannot_reschedule_rejected_booking' => 'لا يمكن إعادة جدولة حجز مرفوض',
+        'service_not_found_or_invalid' => 'الخدمة غير موجودة أو غير صالحة',
+
     ],
 
     'user' => [

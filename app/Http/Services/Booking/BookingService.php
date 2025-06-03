@@ -1360,4 +1360,48 @@ class BookingService
 
         return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
     }
+
+
+
+
+
+
+    // rescheduleBookingServices
+    public function rescheduleBookingServices(Booking $booking, array $services)
+    {
+        if ($booking->status === 'completed') {
+            MessageService::abort(422, 'messages.booking.cannot_reschedule_completed_booking');
+        }
+
+        if ($booking->status === 'cancelled') {
+            MessageService::abort(422, 'messages.booking.cannot_reschedule_cancelled_booking');
+        }
+
+        if ($booking->status === 'Rejected') {
+            MessageService::abort(422, 'messages.booking.cannot_reschedule_rejected_booking');
+        }
+
+        foreach ($services as $service) {
+            $bookingService = $service['booking_service'];
+            
+            $bookingService->update([
+                'start_date_time' => Carbon::parse($booking->date . ' ' . $service['start_time']),
+                'end_date_time' => Carbon::parse($booking->date . ' ' . $service['end_time']),
+            ]);
+
+            // إضافة سجل الحالة
+            Status::create([
+                'name' => 'rescheduled',
+                'statusable_id' => $bookingService->id,
+                'statusable_type' => BookingService::class,
+                'created_by' => User::auth()->id,
+            ]);
+        }
+
+        // TODO: إرسال إشعار للصالون
+
+        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+    }
+
+
 }
