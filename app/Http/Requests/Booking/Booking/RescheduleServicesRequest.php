@@ -16,7 +16,7 @@ class RescheduleServicesRequest extends BaseFormRequest
         $rules = [
 
             'services' => 'required|array|min:1',
-            'services.*.id' => 'required|exists:services,id,deleted_at,NULL',
+            'services.*.id' => 'required|exists:booking_services,id,deleted_at,NULL',
             'services.*.start_time' => 'required|date_format:H:i',
             'services.*.end_time' => 'required|date_format:H:i',
 
