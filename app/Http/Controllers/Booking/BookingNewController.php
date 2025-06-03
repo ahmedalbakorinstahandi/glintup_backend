@@ -124,7 +124,7 @@ class BookingNewController
                 MessageService::abort(422, 'messages.booking.service_not_found_or_invalid');
             }
 
-            $service = Service::where('id', $item['service_id'])
+            $service = Service::where('id', $bookingService->service_id)
                 ->where('salon_id', $booking->salon_id)
                 ->first();
 
