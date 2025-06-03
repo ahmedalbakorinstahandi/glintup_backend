@@ -1385,8 +1385,8 @@ class BookingService
             $bookingService = $service['booking_service'];
             
             $bookingService->update([
-                'start_date_time' => Carbon::parse($booking->date . ' ' . $service['start_time']),
-                'end_date_time' => Carbon::parse($booking->date . ' ' . $service['end_time']),
+                'start_date_time' => Carbon::createFromFormat('Y-m-d H:i', $booking->date . ' ' . $service['start_time']),
+                'end_date_time' => Carbon::createFromFormat('Y-m-d H:i', $booking->date . ' ' . $service['end_time']),
             ]);
 
             // إضافة سجل الحالة
