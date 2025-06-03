@@ -105,6 +105,15 @@ class SalonAuthService
             'type' => $data['type'] ?? 'salon',
             'bio' => $requestData['bio'],
 
+            'service_location' => $requestData['service_location'],
+            'bank_name' => $requestData['bank_name'],
+            'bank_account_number' => $requestData['bank_account_number'],
+            'bank_account_holder_name' => $requestData['bank_account_holder_name'],
+            'bank_account_iban' => $requestData['bank_account_iban'],
+            'services_list' => $requestData['services_list'],
+            'trade_license' => $requestData['trade_license'],
+            'vat_certificate' => $requestData['vat_certificate'],
+            'bank_account_certificate' => $requestData['bank_account_certificate'],
 
 
             // old data
