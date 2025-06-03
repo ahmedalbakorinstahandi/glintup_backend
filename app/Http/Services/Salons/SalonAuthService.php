@@ -102,7 +102,7 @@ class SalonAuthService
             'description' => $requestData['description'],
             'latitude' => $requestData['latitude'],
             'longitude' => $requestData['longitude'],
-            'type' => $data['type'] ?? 'salon',
+            'type' => $requestData['type'],
             'bio' => $requestData['bio'],
 
             'service_location' => $requestData['service_location'],
