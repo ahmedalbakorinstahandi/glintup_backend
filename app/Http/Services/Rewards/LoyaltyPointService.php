@@ -14,7 +14,7 @@ class LoyaltyPointService
 {
     public function index($data)
     {
-        $query = LoyaltyPoint::with(['user', 'salon', 'freeService']);
+        $query = LoyaltyPoint::with(['user', 'salon', 'freeService.service']);
         $query = LoyaltyPointPermission::filterIndex($query);
         return FilterService::applyFilters(
             $query,
@@ -29,7 +29,7 @@ class LoyaltyPointService
 
     public function show($id)
     {
-        $item = LoyaltyPoint::with(['user', 'salon', 'freeService'])->find($id);
+        $item = LoyaltyPoint::with(['user', 'salon', 'freeService.service'])->find($id);
         if (!$item) {
             MessageService::abort(404, 'messages.loyalty_point.item_not_found');
         }
@@ -38,13 +38,18 @@ class LoyaltyPointService
 
     public function create($data)
     {
-        return LoyaltyPoint::create($data);
+        $loyalty_point = LoyaltyPoint::create($data);
+
+        $loyalty_point->load(['user', 'salon', 'freeService.service']);
+
+        return $loyalty_point;
     }
 
     public function update($item, $data)
     {
         $item->update($data);
 
+        $item->load(['user', 'salon', 'freeService.service']);
         
         return $item;
     }
