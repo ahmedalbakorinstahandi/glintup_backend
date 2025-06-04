@@ -43,6 +43,7 @@ class SalonStaffController extends Controller
         $data = SalonStaffPermission::create($request->validated());
 
         $item = $this->service->create($data);
+        
         return response()->json([
             'success' => true,
             'message' => trans('messages.salon_staff.item_created_successfully'),

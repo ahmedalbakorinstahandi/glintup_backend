@@ -8,6 +8,7 @@ use App\Models\Users\User;
 use App\Models\Salons\UserSalonPermission;
 use App\Services\FilterService;
 use App\Services\MessageService;
+use App\Services\PhoneService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
@@ -42,12 +43,23 @@ class SalonStaffService
 
     public function create(array $data)
     {
+
+
+
+
         return DB::transaction(function () use ($data) {
+
+            
+            $phoneParts = PhoneService::parsePhoneParts($data['phone']);
+            $countryCode = $phoneParts['country_code'];
+            $phoneNumber = $phoneParts['national_number'];
+
+
             $user = User::create([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-                'phone_code' => $data['phone_code'],
-                'phone' => $data['phone'],
+                'phone_code' => $countryCode,
+                'phone' => $phoneNumber,
                 'gender' => $data['gender'],
                 'birth_date' => $data['birth_date'],
                 'password' => Hash::make($data['password']),

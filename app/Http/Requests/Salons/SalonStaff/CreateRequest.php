@@ -12,8 +12,7 @@ class CreateRequest extends BaseFormRequest
         $rules = [
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
-            'phone_code' => 'required|string|max:7',
-            'phone'      => 'required|string|max:12|unique:users,phone',
+            'phone' => ['required', 'phone:AUTO'],
             'gender'     => 'required|in:male,female',
             'birth_date' => 'required|date',
             'password'   => 'required|string|min:6',
