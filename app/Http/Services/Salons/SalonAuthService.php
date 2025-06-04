@@ -4,6 +4,7 @@ namespace App\Http\Services\Salons;
 
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPermission;
+use App\Models\Salons\SalonStaff;
 use App\Models\Salons\UserSalonPermission;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
@@ -125,6 +126,13 @@ class SalonAuthService
             'country' => '',
             'city' => '',
             'types' => '',
+        ]);
+
+        SalonStaff::create([
+            'user_id' => $userSalonOnwer->id,
+            'salon_id' => $salon->id,
+            'position' => 'owner',
+            'is_active' => 1,
         ]);
 
         $salonPermissions = SalonPermission::get();
