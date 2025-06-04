@@ -22,6 +22,7 @@ class UpdateRequest extends BaseFormRequest
             'is_home_service' => 'nullable|boolean',
             'is_beautician' => 'nullable|boolean',
             'order' => 'nullable|integer',
+            'capacity' => 'nullable|integer|min:1',
         ];
     }
 }
