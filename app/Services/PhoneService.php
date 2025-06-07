@@ -7,7 +7,7 @@ use libphonenumber\PhoneNumberUtil;
 
 class PhoneService
 {
-    public static function passes($attribute, $value)
+    public static function passes($attribute, $value, $returnMessage = true)
     {
         $phoneUtil = PhoneNumberUtil::getInstance();
 
@@ -15,25 +15,31 @@ class PhoneService
             $numberProto = $phoneUtil->parse($attribute, null);
             $res = $phoneUtil->isValidNumber($numberProto);
             if (!$res) {
+                if ($returnMessage) {
+                    MessageService::abort(
+                        422,
+                        'messages.phone.invalid',
+                    );
+                }
+                return false;
+            }
+            return true;
+        } catch (\Exception $e) {
+            if ($returnMessage) {
                 MessageService::abort(
                     422,
                     'messages.phone.invalid',
                 );
             }
-            return true;
-        } catch (\Exception $e) {
-            MessageService::abort(
-                422,
-                'messages.phone.invalid',
-            );
+            return false;
         }
     }
 
-    public static function parsePhoneParts($rawPhone)
+    public static function parsePhoneParts($rawPhone, $returnMessage = true)
     {
         $rawPhone = str_replace(' ', '', $rawPhone);
 
-        PhoneService::passes($rawPhone, null);
+        PhoneService::passes($rawPhone, null, $returnMessage);
 
         $phoneUtil = PhoneNumberUtil::getInstance();
         $number = $phoneUtil->parse($rawPhone, null);

@@ -40,16 +40,16 @@ class UserAuthService
     // check phone number valid or not
     public function checkPhoneNumber($phoneNumber)
     {
-        $phoneParts = PhoneService::parsePhoneParts($phoneNumber);
+        $phoneParts = PhoneService::parsePhoneParts($phoneNumber, false);
         $countryCode = $phoneParts['country_code'];
         $phoneNumber = $phoneParts['national_number'];
 
 
         return [
+            'valid' => true,
             'phone_code' => $countryCode,
             'phone' => $phoneNumber,
         ];
-
     }
 
     public function register($requestData)
