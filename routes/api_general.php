@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\General;
 
 use App\Http\Controllers\Salons\SalonPermissionController;
+use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('general/upload-image', [ImageController::class, 'uploadImage']);
 Route::post('general/upload-file', [ImageController::class, 'uploadFile']);
+
 
 
 Route::prefix('guests')->group(function () {
@@ -20,6 +22,7 @@ Route::prefix('guests')->group(function () {
 Route::prefix('general')->group(function () {
 
 
+    Route::post('check-phone-number', [UserAuthController::class, 'checkPhoneNumber']);
 
 
 

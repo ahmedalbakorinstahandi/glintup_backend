@@ -53,6 +53,17 @@ class UserAuthController extends Controller
         ]);
     }
 
+    public function checkPhoneNumber(Request $request)
+    {
+        $phoneNumber = $request->phone;
+
+        $res = $this->userAuthService->checkPhoneNumber($phoneNumber);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $res,
+        ]);
+    }
 
     public function register(RegisterRequest $request)
     {

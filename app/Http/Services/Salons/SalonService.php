@@ -188,7 +188,13 @@ class SalonService
                 'tags' => $data['tags'] ?? $salon->tags,
                 'loyalty_service_id' => $data['loyalty_service_id'] ?? $salon->loyalty_service_id,
 
-
+                'vat_number' => $data['vat_number'] ?? $salon->vat_number,
+                'service_location' => $data['service_location'] ?? $salon->service_location,
+                'bank_name' => $data['bank_name'] ?? $salon->bank_name,
+                'bank_account_number' => $data['bank_account_number'] ?? $salon->bank_account_number,
+                'bank_account_holder_name' => $data['bank_account_holder_name'] ?? $salon->bank_account_holder_name,
+                'bank_account_iban' => $data['bank_account_iban'] ?? $salon->bank_account_iban,
+                'services_list' => $data['services_list'] ?? $salon->services_list,
 
                 // old data
                 'name' => '',

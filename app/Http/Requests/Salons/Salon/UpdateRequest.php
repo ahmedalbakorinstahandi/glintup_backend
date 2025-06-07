@@ -69,6 +69,14 @@ class UpdateRequest extends BaseFormRequest
             'images.*' => 'nullable|string|max:255',
             'images_remove' => 'nullable|array',
             'images_remove.*' => 'nullable|integer|exists:images,id,deleted_at,NULL',
+
+            'vat_number' => 'nullable|string|max:255',
+            'service_location' => 'nullable|string|max:255',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_account_number' => 'nullable|string|max:255',
+            'bank_account_holder_name' => 'nullable|string|max:255',
+            'bank_account_iban' => 'nullable|string|max:255',
+            'services_list' => 'nullable|string|max:255',
         ];
 
         $user = User::auth();
