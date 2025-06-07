@@ -167,10 +167,27 @@ class SalonAuthService
         $lang // 'ar','en'
     ) {
         $reportMessage = '';
+        
+        // Get provider type text based on type
+        $providerTypeAr = match($salon->type) {
+            'salon' => 'صالون',
+            'home_service' => 'خدمة منزلية',
+            'beautician' => 'خبيرة تجميل',
+            'clinic' => 'عيادة',
+            default => 'صالون'
+        };
+        
+        $providerTypeEn = match($salon->type) {
+            'salon' => 'salon',
+            'home_service' => 'home service',
+            'beautician' => 'makeup artist',
+            'clinic' => 'clinic',
+            default => 'salon'
+        };
 
         if ($lang === 'ar') {
             $reportMessage .= "عزيزي المتعامل " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . "،\n";
-            $reportMessage .= "تم تسجيل (صالون) جديد باسم (" . ($salon->merchant_commercial_name ?? '') . ") على منصة GlintUp بتاريخ (" . Carbon::now()->format('Y-m-d') . ") بنجاح.\n";
+            $reportMessage .= "تم تسجيل (" . $providerTypeAr . ") جديد باسم (" . ($salon->merchant_commercial_name ?? '') . ") على منصة GlintUp بتاريخ (" . Carbon::now()->format('Y-m-d') . ") بنجاح.\n";
             $reportMessage .= "يُعتبر هذا إشعاراً رسمياً بتأكيد العملية، يمكنك الان الدخول إلى حسابك باستخدام بيانات التسجيل.\n";
             $reportMessage .= "للاطلاع على تفاصيل التسجيل يرجى الدخول على https://glintup.ae\n";
             $reportMessage .= "للاستفسار والتواصل: 0557380080\n";
@@ -178,7 +195,7 @@ class SalonAuthService
             $reportMessage .= "حمل تطبيق GlintUp للاستمتاع بخدماتنا\n\n";
         } else {
             $reportMessage .= "Dear Customer, " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . ",\n\n";
-            $reportMessage .= "A new salon named " . ($salon->merchant_commercial_name ?? '') . " has been successfully registered on the GlintUp platform on " . Carbon::now()->format('Y-m-d') . ".\n";
+            $reportMessage .= "A new " . $providerTypeEn . " named " . ($salon->merchant_commercial_name ?? '') . " has been successfully registered on the GlintUp platform on " . Carbon::now()->format('Y-m-d') . ".\n";
             $reportMessage .= "This is an official confirmation of the registration. You can now log in to your account using your registration details.\n\n";
             $reportMessage .= "To view the registration details, please visit: https://glintup.ae\n";
             $reportMessage .= "For inquiries and support: 0557380080\n";
