@@ -32,6 +32,12 @@ return [
 
     'activation_code_message' => 'رمز التفعيل الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لتفعيل حسابك. سينتهي صلاحية هذا الرمز خلال 10 دقائق.',
     'password_reset_code_message' => 'رمز إعادة تعيين كلمة المرور الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لإعادة تعيين كلمة مرورك. سينتهي صلاحية هذا الرمز خلال 10 دقائق.',
+    
+    'phone' => [
+        'invalid' => 'رقم الهاتف غير صالح.',
+    ],
+    
+    
     'service' => [
         'item_created_successfully' => 'تم إنشاء الخدمة بنجاح',
         'item_updated_successfully' => 'تم تحديث الخدمة بنجاح',

@@ -33,6 +33,11 @@ return [
     'password_reset_code_message' => 'Your password reset code in GlintUp is: :verifyCode. Please use this code to reset your password. This code will expire in 10 minutes.',
 
     'user_logged_in_successfully' => 'User logged in successfully.',
+
+    'phone' => [
+        'invalid' => 'Phone number is invalid.',
+    ],
+
     'service' => [
         'item_created_successfully' => 'Service created successfully',
         'item_updated_successfully' => 'Service updated successfully',
