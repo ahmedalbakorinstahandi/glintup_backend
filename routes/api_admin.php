@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admins\AdminUserController;
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\CouponController;
+use App\Http\Controllers\General\ActivityLogController;
 use App\Http\Controllers\General\ComplaintController;
 use App\Http\Controllers\General\NotificationController;
 use App\Http\Controllers\General\SettingController;
@@ -254,6 +255,10 @@ Route::prefix('admin')->group(function () {
             Route::get('{id}', 'show');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
+        });
+
+        Route::prefix('activity-logs')->controller(ActivityLogController::class)->group(function () {
+            Route::get('/', 'index');
         });
     });
 });
