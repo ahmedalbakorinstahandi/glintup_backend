@@ -29,6 +29,7 @@ class GiftCardResource extends JsonResource
             'theme_id' => $this->theme_id,
             'is_used'        => $this->is_used,
             'received_at'   => $this->received_at?->format('Y-m-d H:i:s'),
+            'is_received'   => $this->received_at != null,
 
             'sender'         => new UserResource($this->whenLoaded('sender')),
             'recipient'      => new UserResource($this->whenLoaded('recipient')),

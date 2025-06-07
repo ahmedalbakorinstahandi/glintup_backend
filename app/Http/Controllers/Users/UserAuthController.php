@@ -64,6 +64,10 @@ class UserAuthController extends Controller
                 'success' => false,
             ], 422);
         }
+
+
+        unset($res['valid']);
+
         return response()->json([
             'success' => true,
             'data' => $res,

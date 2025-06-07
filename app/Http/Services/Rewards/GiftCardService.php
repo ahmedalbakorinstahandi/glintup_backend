@@ -29,6 +29,10 @@ class GiftCardService
             $query->whereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . $data['search'] . '%']);
         }
 
+        if (isset($data['is_received']) && $data['is_received'] == 1) {
+            $query->whereNotNull('received_at');
+        }
+
 
         $query = FilterService::applyFilters(
             $query,
