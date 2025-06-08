@@ -31,8 +31,8 @@ class LocationService
                 }
             }
 
-            if(!$emiratePlaceId) {
-                MessageService::abort(400, 'messages.location.invalid');
+            if (!$emiratePlaceId) {
+                MessageService::abort(400, 'messages.location.invalid_location');
             }
 
             return [
