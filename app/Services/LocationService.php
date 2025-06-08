@@ -32,7 +32,7 @@ class LocationService
             }
 
             if(!$emiratePlaceId) {
-                MessageService::abort(400, 'messages.invalid_location');
+                MessageService::abort(400, 'messages.location.invalid');
             }
 
             return [
@@ -43,7 +43,7 @@ class LocationService
                 'address_secondary' => $googleMapData['address_components']['sublocality'] ?? '',
                 'latitude' => $latitude,
                 'longitude' => $longitude,
-                'emirate_place_id' => $emiratePlaceId,
+                'city_place_id' => $emiratePlaceId,
             ];
         }
 

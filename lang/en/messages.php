@@ -61,6 +61,10 @@ return [
         'item_not_found'            => 'Address not found',
     ],
 
+    'location' => [
+        'invalid_location' => 'Invalid location',
+    ],
+
     'group_service' => [
         'item_created_successfully' => 'Group service created successfully',
         'item_updated_successfully' => 'Group service updated successfully',

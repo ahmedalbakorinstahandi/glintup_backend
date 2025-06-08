@@ -62,6 +62,10 @@ return [
         'item_not_found'            => 'العنوان غير موجود',
     ],
 
+    'location' => [
+        'invalid_location' => 'الموقع غير صالح',
+    ],
+
     'group_service' => [
         'item_created_successfully' => 'تم ربط الخدمة بالمجموعة بنجاح',
         'item_updated_successfully' => 'تم تحديث الربط بنجاح',
