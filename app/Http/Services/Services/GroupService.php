@@ -65,6 +65,8 @@ class GroupService
 
         $group = Group::create($validatedData);
 
+        OrderHelper::assign($group, 'orders');
+
         $group->load(['salon', 'groupServices.service']);
 
         return $group;
