@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Services\Group\CreateRequest;
 use App\Http\Requests\Services\Group\UpdateRequest;
 use App\Http\Resources\Services\GroupResource;
- use App\Http\Services\Services\GroupService;
+use App\Http\Services\Services\GroupService;
 use App\Http\Permissions\Services\GroupPermission;
+use App\Http\Requests\Services\Group\ReOrderRequest;
 use App\Services\ResponseService;
 
 class GroupController extends Controller
@@ -56,7 +57,7 @@ class GroupController extends Controller
         $group = $this->groupService->show($id);
 
         GroupPermission::canUpdate($group, $request->validated());
-        
+
         $group = $this->groupService->update($group, $request->validated());
         return response()->json([
             'success' => true,
@@ -75,6 +76,20 @@ class GroupController extends Controller
             'message' => $deleted
                 ? trans('messages.group.item_deleted_successfully')
                 : trans('messages.group.failed_delete_item'),
+        ]);
+    }
+
+    public function reorder($id, ReOrderRequest $request)
+    {
+        $group = $this->groupService->show($id);
+
+        $group = $this->groupService->reorder($group, $request->validated());
+
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.group.item_reordered_successfully'),
+            'data' => new GroupResource($group),
         ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Permissions\Services\GroupPermission;
 use App\Services\FilterService;
 use App\Services\LanguageService;
 use App\Services\MessageService;
+use App\Services\OrderHelper;
 
 class GroupService
 {
@@ -28,6 +29,9 @@ class GroupService
             $query->orWhereNull('salon_id');
         }
 
+        $data['sort_field'] = 'orders';
+        $data['sort_order'] = 'asc';
+
         return FilterService::applyFilters(
             $query,
             $data,
@@ -41,7 +45,8 @@ class GroupService
 
     public function show($id)
     {
-        $group = Group::find($id);
+        $group = Group::where('id', $id)->first();
+
         if (!$group) {
             MessageService::abort(404, 'messages.group.item_not_found');
         }
@@ -78,5 +83,12 @@ class GroupService
     public function destroy($group)
     {
         return $group->delete();
+    }
+
+    public function reorder($group, $validatedData)
+    {
+        OrderHelper::reorder($group, $validatedData['order'], 'orders');
+
+        return $group;
     }
 }

@@ -78,4 +78,20 @@ class Group extends Model
             get: fn(string $value) => $multi ? $this->getAllTranslations('name') : $value,
         );
     }
+
+
+    // can salon edit
+    public function canSalonEdit()
+    {
+        $user = User::auth();
+        
+        if ($user->isUserSalon()) {
+            if ($user->salon->id == $this->salon_id) {
+                return true;
+            }
+        } elseif ($user->isAdmin()) {
+            return true;
+        }
+        return false;
+    }
 }
