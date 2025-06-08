@@ -28,11 +28,13 @@ class SalonResource extends JsonResource
 
             $is_admin = $user->isAdmin();
             $is_customer = $user->isCustomer();
+            $is_salon_or_admin = $is_admin || ($user->isUserSalon() && $user->salon->id == $this->id);
         }
 
         $local_lang = app()->getLocale();
 
         $this_function_is_show = $request->route()->getActionMethod() == 'show';
+
 
         $data = [
             'id'              => $this->id,
@@ -70,28 +72,28 @@ class SalonResource extends JsonResource
             'city'            => $this->city,
             'service_location' => $this->service_location,
             'service_location_text' => $this->getServiceLocationTextAttribute(),
-            'bank_name' => $this->bank_name,
-            'bank_account_number' => $this->bank_account_number,
-            'bank_account_holder_name' => $this->bank_account_holder_name,
-            'bank_account_iban' => $this->bank_account_iban,
-            'services_list' => $this->services_list,
+            'bank_name' => $this->when($is_salon_or_admin, $this->bank_name),
+            'bank_account_number' => $this->when($is_salon_or_admin, $this->bank_account_number),
+            'bank_account_holder_name' => $this->when($is_salon_or_admin, $this->bank_account_holder_name),
+            'bank_account_iban' => $this->when($is_salon_or_admin, $this->bank_account_iban),
+            'services_list' => $this->when($is_salon_or_admin, $this->services_list),
 
-            'trade_license' => $this->trade_license,
-            'vat_certificate' => $this->vat_certificate,
-            'bank_account_certificate' => $this->bank_account_certificate,
-            'vat_number' => $this->vat_number,
+            'trade_license' => $this->when($is_salon_or_admin, $this->trade_license),
+            'vat_certificate' => $this->when($is_salon_or_admin, $this->vat_certificate),
+            'bank_account_certificate' => $this->when($is_salon_or_admin, $this->bank_account_certificate),
+            'vat_number' => $this->when($is_salon_or_admin, $this->vat_number),
 
-            'trade_license_url' => $this->trade_license_url,
-            'vat_certificate_url' => $this->vat_certificate_url,
-            'bank_account_certificate_url' => $this->bank_account_certificate_url,
-            'services_list_url' => $this->services_list_url,
+            'trade_license_url' => $this->when($is_salon_or_admin, $this->trade_license_url),
+            'vat_certificate_url' => $this->when($is_salon_or_admin, $this->vat_certificate_url),
+            'bank_account_certificate_url' => $this->when($is_salon_or_admin, $this->bank_account_certificate_url),
+            'services_list_url' => $this->when($is_salon_or_admin, $this->services_list_url),
 
 
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),
-            'bookings_count' => $this->when($is_admin,  $this->bookings->where('status', 'completed')->count()),
+            'bookings_count' => $this->when($is_salon_or_admin,  $this->bookings->where('status', 'completed')->count()),
             //TODO اجمالي الايرادات 
-            'total_revenue' => $this->when($is_admin,  5000),
+            'total_revenue' => $this->when($is_salon_or_admin,  5000),
             'can_review' => $this->when($is_customer, $this->canUserReview()),
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),

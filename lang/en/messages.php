@@ -52,6 +52,7 @@ return [
         'item_deleted_successfully' => 'Group deleted successfully',
         'failed_delete_item'        => 'Failed to delete group',
         'item_not_found'            => 'Group not found',
+        'item_reordered_successfully' => 'Group reordered successfully',
     ],
 
     'group_service' => [

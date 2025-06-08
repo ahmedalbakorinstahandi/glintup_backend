@@ -53,6 +53,7 @@ return [
         'item_deleted_successfully' => 'تم حذف المجموعة بنجاح',
         'failed_delete_item'        => 'فشل في حذف المجموعة',
         'item_not_found'            => 'المجموعة غير موجودة',
+        'item_reordered_successfully' => 'تم إعادة ترتيب المجموعة بنجاح',
     ],
 
     'group_service' => [

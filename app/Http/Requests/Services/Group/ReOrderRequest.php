@@ -12,7 +12,7 @@ class ReOrderRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'order' => 'required|integer|min:1',
+            'take_position_from_group_id' => 'required|integer|exists:groups,id,deleted_at,NULL',
         ];
     }
 }

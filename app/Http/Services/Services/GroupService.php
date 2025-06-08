@@ -89,7 +89,13 @@ class GroupService
 
     public function reorder($group, $validatedData)
     {
-        OrderHelper::reorder($group, $validatedData['order'], 'orders');
+        $take_position_from_group = Group::where('id', $validatedData['take_position_from_group_id'])->first();
+
+        if (!$take_position_from_group) {
+            MessageService::abort(404, 'messages.group.item_not_found');
+        }
+
+        OrderHelper::reorder($group, $take_position_from_group->orders, 'orders');
 
         return $group;
     }
