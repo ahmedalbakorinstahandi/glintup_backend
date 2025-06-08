@@ -55,6 +55,12 @@ return [
         'item_reordered_successfully' => 'Group reordered successfully',
     ],
 
+    'address' => [
+        'item_created_successfully' => 'Address created successfully',
+        'item_deleted_successfully' => 'Address deleted successfully',
+        'item_not_found'            => 'Address not found',
+    ],
+
     'group_service' => [
         'item_created_successfully' => 'Group service created successfully',
         'item_updated_successfully' => 'Group service updated successfully',

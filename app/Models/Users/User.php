@@ -4,6 +4,7 @@ namespace App\Models\Users;
 
 use App\Models\Admins\AdminPermission;
 use App\Models\Booking\Booking;
+use App\Models\General\Address;
 use App\Models\General\Notification;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
@@ -230,5 +231,10 @@ class User extends Model
         } else {
             return  Notification::whereNull('user_id')->count();
         }
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 }

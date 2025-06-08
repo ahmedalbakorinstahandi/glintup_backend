@@ -56,6 +56,12 @@ return [
         'item_reordered_successfully' => 'تم إعادة ترتيب المجموعة بنجاح',
     ],
 
+    'address' => [
+        'item_created_successfully' => 'تم إنشاء العنوان بنجاح',
+        'item_deleted_successfully' => 'تم حذف العنوان بنجاح',
+        'item_not_found'            => 'العنوان غير موجود',
+    ],
+
     'group_service' => [
         'item_created_successfully' => 'تم ربط الخدمة بالمجموعة بنجاح',
         'item_updated_successfully' => 'تم تحديث الربط بنجاح',

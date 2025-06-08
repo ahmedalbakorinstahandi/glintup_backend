@@ -3,6 +3,7 @@
 use App\Http\Controllers\Booking\BookingController;
 use App\Http\Controllers\Booking\BookingNewController;
 use App\Http\Controllers\Booking\CouponController;
+use App\Http\Controllers\General\AddressController;
 use App\Http\Controllers\General\ComplaintController;
 use App\Http\Controllers\Rewards\GiftCardController;
 use App\Http\Controllers\Rewards\LoyaltyPointController;
@@ -167,6 +168,12 @@ Route::prefix('customer')->group(function () {
         Route::prefix('ads')->controller(AdStatisticController::class)->group(function () {
             Route::post('{id}/clicked', 'clicked');
             Route::post('{id}/viewed', 'viewed');
+        });
+
+        Route::prefix('addresses')->controller(AddressController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('/', 'create');
+            Route::delete('{id}', 'delete');
         });
     });
 });
