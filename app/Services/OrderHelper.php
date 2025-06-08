@@ -26,7 +26,7 @@ class OrderHelper
         if ($oldOrder === $newOrder) return;
 
         DB::transaction(function () use ($model, $oldOrder, $newOrder, $orderField) {
-            $query = $model->newQuery();
+            $query = $model->newQuery()->withTrashed();
 
             if ($oldOrder < $newOrder) {
                 // نقل من أعلى إلى أدنى → نقص العناصر بين القديم والجديد
