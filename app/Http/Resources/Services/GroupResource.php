@@ -16,7 +16,8 @@ class GroupResource extends JsonResource
             'name'        => $this->name,
             'key'         => $this->key,
             'can_edit'    => $this->canSalonEdit(),
-            
+            'orders'      => $this->orders,
+
             // العلاقات
             'salon'          => new SalonResource($this->whenLoaded('salon')),
             'group_services' => GroupServiceResource::collection($this->whenLoaded('groupServices')),
