@@ -12,7 +12,7 @@ class OrderHelper
      */
     public static function assign(Model $model, string $orderField = 'order'): void
     {
-        $max = $model->newQuery()->max($orderField) ?? 0;
+        $max = $model->newQuery()->withTrashed()->max($orderField) ?? 0;
         $model->{$orderField} = $max + 1;
     }
 
