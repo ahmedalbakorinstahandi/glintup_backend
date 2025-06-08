@@ -79,6 +79,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/', 'create');
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
+            Route::post('{id}/reorder', 'reorder');
         });
 
         Route::prefix('group-services')->controller(GroupServiceController::class)->group(function () {
