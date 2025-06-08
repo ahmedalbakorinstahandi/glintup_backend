@@ -35,6 +35,18 @@ class LocationService
                 MessageService::abort(400, 'messages.location.invalid_location');
             }
 
+
+            abort(response()->json([
+                'address' => $googleMapData['formatted_address'] ?? '',
+                'city' => $googleMapData['address_components']['locality'] ?? '',
+                'country' => $googleMapData['address_components']['country'] ?? '',
+                'postal_code' => $googleMapData['address_components']['postal_code'] ?? '',
+                'address_secondary' => $googleMapData['address_components']['sublocality'] ?? '',
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'city_place_id' => $emiratePlaceId,
+            ]));
+
             return [
                 'address' => $googleMapData['formatted_address'] ?? '',
                 'city' => $googleMapData['address_components']['locality'] ?? '',
