@@ -14,6 +14,7 @@ class OrderHelper
     {
         $max = $model->newQuery()->withTrashed()->max($orderField) ?? 0;
         $model->{$orderField} = $max + 1;
+        $model->save();
     }
 
     /**
