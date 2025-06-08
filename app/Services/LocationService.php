@@ -35,24 +35,33 @@ class LocationService
                 MessageService::abort(400, 'messages.location.invalid_location');
             }
 
+            $addressComponents = $googleMapData['address_components'];
+            $city = '';
+            $country = '';
+            $postalCode = '';
+            $addressSecondary = '';
 
-            abort(response()->json([
-                'address' => $googleMapData['formatted_address'] ?? '',
-                'city' => $googleMapData['address_components']['locality'] ?? '',
-                'country' => $googleMapData['address_components']['country'] ?? '',
-                'postal_code' => $googleMapData['address_components']['postal_code'] ?? '',
-                'address_secondary' => $googleMapData['address_components']['sublocality'] ?? '',
-                'latitude' => $latitude,
-                'longitude' => $longitude,
-                'city_place_id' => $emiratePlaceId,
-            ]));
+            foreach ($addressComponents as $component) {
+                if (in_array('locality', $component['types'])) {
+                    $city = $component['long_name'];
+                }
+                if (in_array('country', $component['types'])) {
+                    $country = $component['long_name'];
+                }
+                if (in_array('postal_code', $component['types'])) {
+                    $postalCode = $component['long_name'];
+                }
+                if (in_array('sublocality', $component['types'])) {
+                    $addressSecondary = $component['long_name'];
+                }
+            }
 
             return [
                 'address' => $googleMapData['formatted_address'] ?? '',
-                'city' => $googleMapData['address_components']['locality'] ?? '',
-                'country' => $googleMapData['address_components']['country'] ?? '',
-                'postal_code' => $googleMapData['address_components']['postal_code'] ?? '',
-                'address_secondary' => $googleMapData['address_components']['sublocality'] ?? '',
+                'city' => $city,
+                'country' => $country,
+                'postal_code' => $postalCode,
+                'address_secondary' => $addressSecondary,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
                 'city_place_id' => $emiratePlaceId,
