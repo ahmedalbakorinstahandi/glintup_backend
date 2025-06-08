@@ -56,9 +56,9 @@ return [
     ],
 
     'address' => [
-        'item_created_successfully' => 'Address created successfully',
-        'item_deleted_successfully' => 'Address deleted successfully',
-        'item_not_found'            => 'Address not found',
+        'created_successfully' => 'Address created successfully',
+        'deleted_successfully' => 'Address deleted successfully',
+        'not_found'            => 'Address not found',
     ],
 
     'location' => [

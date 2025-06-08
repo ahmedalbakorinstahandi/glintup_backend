@@ -63,7 +63,6 @@ class AddressController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'data' => new AddressResource($address),
                 'message' => 'messages.address.deleted_successfully'
             ]
         );

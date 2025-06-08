@@ -57,9 +57,9 @@ return [
     ],
 
     'address' => [
-        'item_created_successfully' => 'تم إنشاء العنوان بنجاح',
-        'item_deleted_successfully' => 'تم حذف العنوان بنجاح',
-        'item_not_found'            => 'العنوان غير موجود',
+        'created_successfully' => 'تم إنشاء العنوان بنجاح',
+        'deleted_successfully' => 'تم حذف العنوان بنجاح',
+        'not_found'            => 'العنوان غير موجود',
     ],
 
     'location' => [
