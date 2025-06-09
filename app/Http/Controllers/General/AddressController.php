@@ -48,7 +48,7 @@ class AddressController extends Controller
             [
                 'success' => true,
                 'data' => new AddressResource($address),
-                'message' => 'messages.address.created_successfully'
+                'message' => __('messages.address.created_successfully')
             ]
         );
     }
@@ -63,7 +63,7 @@ class AddressController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'message' => 'messages.address.deleted_successfully'
+                'message' => __('messages.address.deleted_successfully')
             ]
         );
     }

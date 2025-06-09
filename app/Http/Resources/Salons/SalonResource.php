@@ -23,6 +23,8 @@ class SalonResource extends JsonResource
         $is_admin = false;
         $is_customer = false;
 
+        $is_salon_or_admin = false;
+
         if (Auth::check()) {
             $user = User::auth();
 
