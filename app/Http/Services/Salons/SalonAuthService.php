@@ -168,7 +168,7 @@ class SalonAuthService
         $lang // 'ar','en'
     ) {
 
-        $ios_link_app = Setting::where('key', 'ios_link_app')->first()->value;
+        $ios_link_app = Setting::where('key', 'ios_app_url')->first()->value;
         $android_link_app = Setting::where('key', 'android_app_url')->first()->value;
 
         $reportMessage = '';
