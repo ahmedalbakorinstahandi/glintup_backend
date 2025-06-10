@@ -58,20 +58,12 @@ class UserAuthController extends Controller
         $phoneNumber = $request->phone;
 
         $res = $this->userAuthService->checkPhoneNumber($phoneNumber);
-
-        if (!$res['valid']) {
-            return response()->json([
-                'success' => false,
-                'error_message' => $res['error_message'],
-            ], 422);
-        }
-
-
-        unset($res['valid']);
+       
 
         return response()->json([
-            'success' => true,
+            'success' => $res['valid'],
             'data' => $res,
+            'error_message' => $res['error_message'] ?? null,
         ]);
     }
 
