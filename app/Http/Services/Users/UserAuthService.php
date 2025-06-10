@@ -41,6 +41,14 @@ class UserAuthService
     public function checkPhoneNumber($phoneNumber)
     {
         $phoneParts = PhoneService::parsePhoneParts($phoneNumber, false);
+
+        if (!$phoneParts) {
+            return [
+                'valid' => false,
+                'error_message' => trans('messages.phone.invalid'),
+            ];
+        }
+
         $countryCode = $phoneParts['country_code'];
         $phoneNumber = $phoneParts['national_number'];
 

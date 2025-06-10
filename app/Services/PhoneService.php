@@ -39,7 +39,12 @@ class PhoneService
     {
         $rawPhone = str_replace(' ', '', $rawPhone);
 
-        PhoneService::passes($rawPhone, null, $returnMessage);
+        $res = PhoneService::passes($rawPhone, null, $returnMessage);
+
+        if (!$res) {
+            return null;
+        }
+
 
         $phoneUtil = PhoneNumberUtil::getInstance();
         $number = $phoneUtil->parse($rawPhone, null);

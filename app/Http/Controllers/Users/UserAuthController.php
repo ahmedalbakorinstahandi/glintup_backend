@@ -62,6 +62,7 @@ class UserAuthController extends Controller
         if (!$res['valid']) {
             return response()->json([
                 'success' => false,
+                'error_message' => $res['error_message'],
             ], 422);
         }
 
