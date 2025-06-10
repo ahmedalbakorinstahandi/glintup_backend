@@ -3,6 +3,7 @@
 namespace App\Models\Booking;
 
 use App\Http\Resources\Services\ServiceResource;
+use App\Models\General\Address;
 use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPayment;
@@ -70,6 +71,11 @@ class Booking extends Model
         return $this->time?->addMinutes($this->getTotalServiceTimeInMinutes());
     }
 
+
+    public function address()
+    {
+        return $this->morphOne(Address::class, 'addressable');
+    }
 
     // transaction morph
     public function transactions()

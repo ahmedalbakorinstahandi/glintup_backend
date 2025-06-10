@@ -7,6 +7,7 @@ use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Models\Booking\Booking;
 use App\Models\Booking\Coupon;
 use App\Models\Booking\CouponUsage;
+use App\Models\General\Address;
 use App\Models\General\Setting;
 use App\Models\General\Status;
 use App\Models\Rewards\FreeService;
@@ -116,7 +117,7 @@ class BookingService
             MessageService::abort(404, 'messages.booking.item_not_found');
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'address']);
 
         return $booking;
     }
@@ -645,6 +646,27 @@ class BookingService
         $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
 
         $booking->save();
+
+
+        // booking service location
+        if ($data['address_id']) {
+
+            $address = Address::find($data['address_id']);
+
+            $booking->address()->create([
+                'addressable_id' => $booking->id,
+                'addressable_type' => Booking::class,
+                'name' => $address->name,
+                'address' => $address->address,
+                'address_secondary' => $address->address_secondary,
+                'city' => $address->city,
+                'country' => $address->country,
+                'postal_code' => $address->postal_code,
+                'latitude' => $address->latitude,
+                'longitude' => $address->longitude,
+                'city_place_id' => $address->city_place_id
+            ]);
+        }
 
         // create transaction for user balance
         $transaction = WalletTransaction::create(

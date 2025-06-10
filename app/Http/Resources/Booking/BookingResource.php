@@ -7,6 +7,7 @@ use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Salons\SalonResource;
 use App\Http\Resources\Booking\BookingServiceResource;
 use App\Http\Resources\Booking\InvoiceResource;
+use App\Http\Resources\General\AddressResource;
 use App\Http\Resources\Salons\SalonPaymentResource;
 use App\Http\Resources\Users\RefundResource;
 use App\Http\Resources\Users\WalletTransactionResource;
@@ -40,7 +41,7 @@ class BookingResource extends JsonResource
             'invoice'          => new InvoiceResource($this->whenLoaded('invoice')),
             'refund'           => new RefundResource($this->whenLoaded('refund')),
             'transactions'     => WalletTransactionResource::collection($this->whenLoaded('transactions')),
-
+            'address'          => new AddressResource($this->whenLoaded('address')),
             // التواريخ
             'created_at'       => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'       => $this->updated_at?->format('Y-m-d H:i:s'),
