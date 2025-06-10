@@ -103,7 +103,7 @@ class PromotionAdController extends Controller
     }
 
     public function sendToReview($id, PostAdRequest $request)
-    {
+    { 
         $ad = $this->promotionAdService->show($id);
         
         PromotionAdPermission::canUpdate($ad, $request->validated());

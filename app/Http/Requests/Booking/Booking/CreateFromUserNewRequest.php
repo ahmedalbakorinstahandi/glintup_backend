@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Booking\Booking;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Models\Salons\Salon;
 use App\Models\Users\User;
 use App\Services\MessageService;
 
@@ -12,6 +13,15 @@ class CreateFromUserNewRequest extends BaseFormRequest
     {
 
 
+        $salon_id = $this->salon_id;
+
+        if (!$salon_id) {
+            $salon = Salon::where('id', $this->salon_id)->first();
+        }
+
+        if (!$salon) {
+            MessageService::abort(404, 'messages.salon.not_found');
+        }
 
         $rules = [
             'date' => 'required|date_format:Y-m-d',
@@ -25,6 +35,22 @@ class CreateFromUserNewRequest extends BaseFormRequest
             'salon_id' => 'required|exists:salons,id,deleted_at,NULL',
             'use_free_services' => 'nullable|boolean',
         ];
+
+
+
+        if ($salon->type == 'beautician') {
+
+            if ($salon->service_location == 'in_house') {
+                $rules['address_id'] = 'required|exists:addresses,id,deleted_at,NULL';
+            } elseif ($salon->service_location == 'in_house_and_center') {
+                $rules['service_location'] = 'required|in:in_house,in_center';
+                $rules['address_id'] = 'required_if:service_location,in_house|exists:addresses,id,deleted_at,NULL';
+            }
+        }
+
+        if ($salon->type == 'home_service') {
+            $rules['address_id'] = 'required|exists:addresses,id,deleted_at,NULL';
+        }
 
 
         return $rules;

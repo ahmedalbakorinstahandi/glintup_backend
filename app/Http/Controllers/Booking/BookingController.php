@@ -12,10 +12,10 @@ use App\Http\Requests\Booking\Booking\UpdateRequest;
 use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Http\Resources\Services\ServiceResource;
-use App\Http\Services\Booking\BookingService; 
+use App\Http\Services\Booking\BookingService;
 use App\Services\ResponseService;
-  
-   class BookingController extends Controller
+
+class BookingController extends Controller
 {
     protected $bookingService;
 
@@ -65,7 +65,7 @@ use App\Services\ResponseService;
     {
         $booking = $this->bookingService->show($id);
 
-        BookingPermission::canUpdate($booking, $request->validated());
+        BookingPermission::canUpdate($booking);
 
         $booking = $this->bookingService->update($booking, $request->validated());
 
@@ -174,7 +174,7 @@ use App\Services\ResponseService;
         ]);
     }
 
-     public function cancelBookingService($bookingId, $serviceId)
+    public function cancelBookingService($bookingId, $serviceId)
     {
         $booking = $this->bookingService->show($bookingId);
 

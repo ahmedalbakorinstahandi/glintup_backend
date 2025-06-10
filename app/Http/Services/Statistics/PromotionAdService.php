@@ -36,7 +36,7 @@ class PromotionAdService
 
     public function show($id)
     {
-        $ad = PromotionAd::with('salon')->find($id);
+        $ad = PromotionAd::where('id', $id)->with('salon')->first();
 
         if (!$ad) {
             MessageService::abort(404, 'messages.promotion_ad.item_not_found');
