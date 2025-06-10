@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Models\General\Setting;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPermission;
 use App\Models\Salons\SalonStaff;
@@ -106,7 +107,7 @@ class SalonAuthService
             'type' => $requestData['type'],
             'bio' => $requestData['bio'],
 
-            'service_location' => $requestData['service_location'],
+            'service_location' => $requestData['service_location'] ?? null,
             'bank_name' => $requestData['bank_name'],
             'bank_account_number' => $requestData['bank_account_number'],
             'bank_account_holder_name' => $requestData['bank_account_holder_name'],
@@ -166,6 +167,10 @@ class SalonAuthService
         $salon,
         $lang // 'ar','en'
     ) {
+
+        $ios_link_app = Setting::where('key', 'ios_link_app')->first()->value;
+        $android_link_app = Setting::where('key', 'android_app_url')->first()->value;
+
         $reportMessage = '';
         
         // Get provider type text based on type
@@ -193,6 +198,8 @@ class SalonAuthService
             $reportMessage .= "للاستفسار والتواصل: 0557380080\n";
             $reportMessage .= "للدعم البريد الالكتروني: Contact@glintup.ae\n";
             $reportMessage .= "حمل تطبيق GlintUp للاستمتاع بخدماتنا\n\n";
+            $reportMessage .= "للتحميل على الايفون: " . $ios_link_app . "\n";
+            $reportMessage .= "للتحميل على الاندرويد: " . $android_link_app . "\n";
         } else {
             $reportMessage .= "Dear Customer, " . ($userSalonOnwer->first_name ?? '') . " " . ($userSalonOnwer->last_name ?? '') . ",\n\n";
             $reportMessage .= "A new " . $providerTypeEn . " named " . ($salon->merchant_commercial_name ?? '') . " has been successfully registered on the GlintUp platform on " . Carbon::now()->format('Y-m-d') . ".\n";
@@ -200,7 +207,9 @@ class SalonAuthService
             $reportMessage .= "To view the registration details, please visit: https://glintup.ae\n";
             $reportMessage .= "For inquiries and support: 0557380080\n";
             $reportMessage .= "Support Email: Contact@glintup.ae\n\n";
-            $reportMessage .= "Download the GlintUp app now to enjoy our services!";
+            $reportMessage .= "Download the GlintUp app now to enjoy our services!\n\n";
+            $reportMessage .= "iOS: " . $ios_link_app . "\n";
+            $reportMessage .= "Android: " . $android_link_app . "\n";
         }
 
         return $reportMessage;
