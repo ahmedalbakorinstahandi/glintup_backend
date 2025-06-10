@@ -11,12 +11,11 @@ class CreateFromUserNewRequest extends BaseFormRequest
 {
     public function rules(): array
     {
-
-
+        $salon = null;
         $salon_id = request()->salon_id;
 
-        if (!$salon_id) {
-            $salon = Salon::where('id', $this->salon_id)->first();
+        if ($salon_id) {
+            $salon = Salon::where('id', $salon_id)->first();
         }
 
         if (!$salon) {
