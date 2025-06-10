@@ -11,7 +11,7 @@ class ActivityLogService
 
     public function index($data)
     {
-        $query = ActivityLog::query();
+        $query = ActivityLog::query()->with('user');
 
         $user = User::auth();
 

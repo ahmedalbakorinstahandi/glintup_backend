@@ -208,8 +208,8 @@ class SalonAuthService
             $reportMessage .= "For inquiries and support: 0557380080\n";
             $reportMessage .= "Support Email: Contact@glintup.ae\n\n";
             $reportMessage .= "Download the GlintUp app now to enjoy our services!\n\n";
-            $reportMessage .= "iOS: " . $ios_link_app . "\n";
-            $reportMessage .= "Android: " . $android_link_app . "\n";
+            $reportMessage .= "iOS: " . $ios_link_app . "\n\n";
+            $reportMessage .= "Android: " . $android_link_app . "\n\n";
         }
 
         return $reportMessage;
