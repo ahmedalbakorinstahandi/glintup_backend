@@ -13,7 +13,7 @@ class CreateFromUserNewRequest extends BaseFormRequest
     {
 
 
-        $salon_id = $this->salon_id;
+        $salon_id = request()->salon_id;
 
         if (!$salon_id) {
             $salon = Salon::where('id', $this->salon_id)->first();

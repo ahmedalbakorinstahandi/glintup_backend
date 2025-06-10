@@ -547,7 +547,7 @@ class Salon extends Model
     public function getServiceLocationTextAttribute()
     {
         $text_key = '';
-        if ($this->type == 'beautician') {
+        if ($this->type == 'beautician' && $this->service_location != null) {
             if ($this->service_location == 'in_house') {
                 $text_key = 'makeup_artist_home_service_text';
             } else if ($this->service_location == 'in_center') {
