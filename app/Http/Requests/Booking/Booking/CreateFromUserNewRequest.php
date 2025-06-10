@@ -38,12 +38,11 @@ class CreateFromUserNewRequest extends BaseFormRequest
 
 
         if ($salon->type == 'beautician') {
-
             if ($salon->service_location == 'in_house') {
                 $rules['address_id'] = 'required|exists:addresses,id,deleted_at,NULL';
             } elseif ($salon->service_location == 'in_house_and_center') {
                 $rules['service_location'] = 'required|in:in_house,in_center';
-                $rules['address_id'] = 'required_if:service_location,in_house|exists:addresses,id,deleted_at,NULL';
+                $rules['address_id'] = 'required_if:service_location,in_house|nullable|exists:addresses,id,deleted_at,NULL';
             }
         }
 

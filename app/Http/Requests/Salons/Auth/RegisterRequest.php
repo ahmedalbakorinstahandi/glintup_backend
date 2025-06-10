@@ -32,7 +32,7 @@ class RegisterRequest extends BaseFormRequest
             'bio' => 'nullable|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'service_location' => 'required|string|in:in_house,in_center,in_house_and_center|required_if:type,beautician',
+            'service_location' => 'required_if:type,beautician|nullable|string|in:in_house,in_center,in_house_and_center',
             'bank_name' => 'required|string|max:255',
             'bank_account_number' => 'required|string|max:255',
             'bank_account_holder_name' => 'required|string|max:255',
