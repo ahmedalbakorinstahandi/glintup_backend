@@ -11,6 +11,7 @@ use App\Models\General\Setting;
 use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
 use App\Services\ImageService;
+use Stripe\Checkout\Session;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -182,7 +183,15 @@ class PromotionAdService
         // Create Stripe checkout session
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $checkoutSession = \Stripe\Checkout\Session::create([
+        // Ensure URLs are properly formatted
+        $successUrl = filter_var($data['success_url'], FILTER_VALIDATE_URL);
+        $cancelUrl = filter_var($data['cancel_url'], FILTER_VALIDATE_URL);
+
+        if (!$successUrl || !$cancelUrl) {
+            MessageService::abort(400, 'messages.invalid_url_format');
+        }
+
+        $checkoutSession = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
@@ -195,8 +204,8 @@ class PromotionAdService
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => $data['success_url'],
-            'cancel_url' => $data['cancel_url'],
+            'success_url' => $successUrl,
+            'cancel_url' => $cancelUrl,
             'metadata' => [
                 'transaction_id' => $walletTransaction->id,
                 'phone' => $user->phone_code . ' ' . $user->phone,

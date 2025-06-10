@@ -198,9 +198,11 @@ return [
         'create_review_error' => 'لا يمكنك إنشاء مراجعة بدون حجز واحد مكتمل على الأقل في هذا الصالون، أو لديك مراجعة بالفعل',
     ],
 
-    'ad_payment_description' => 'دفع للإعلان #:ad_id',
+    'ad_payment_description' => 'دفع للإعلان رقم :ad_id',
 
-    'wallet_deposit' => 'إيداع مبلغ للمحفظة :amount',
+    'wallet_deposit' => 'مبلغ إيداع المحفظة: :amount',
+
+    'invalid_url_format' => 'تنسيق الرابط غير صالح. يرجى تقديم روابط صالحة تبدأ بـ http:// أو https://',
 
     'coupon' => [
         'item_created_successfully' => 'تم إنشاء الكوبون بنجاح',

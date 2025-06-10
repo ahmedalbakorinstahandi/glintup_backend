@@ -203,6 +203,7 @@ return [
 
     'ad_payment_description' => 'Payment for ad #:ad_id',
     'wallet_deposit' => 'Wallet deposit amount: :amount',
+    'invalid_url_format' => 'Invalid URL format. Please provide valid URLs starting with http:// or https://',
 
 
     'coupon' => [
