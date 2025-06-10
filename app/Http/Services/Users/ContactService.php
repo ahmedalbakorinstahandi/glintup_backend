@@ -25,13 +25,15 @@ class ContactService
                 "REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?",
                 ["%{$search}%"]
             );
+
+            $query->orWhere('name', 'like', "%{$data['search']}%");
         }
 
 
         return FilterService::applyFilters(
             $query,
             $data,
-            ['name', 'phone'],
+            [],
             [],
             ['created_at'],
             [],
