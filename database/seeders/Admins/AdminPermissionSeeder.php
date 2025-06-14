@@ -23,6 +23,7 @@ class AdminPermissionSeeder extends Seeder
             ['ar' => 'الإعدادات', 'en' => 'Settings', 'key' => 'settings'],
             ['ar' => 'إدارة الطاقم', 'en' => 'Admin Users', 'key' => 'admin-users'],
             ['ar' => 'المراجعات', 'en' => 'Reviews', 'key' => 'reviews'],
+            ['ar' => 'طلبات القائمة', 'en' => 'Salon Menu Requests', 'key' => 'salon-menu-requests'],
         ];
 
 
