@@ -74,7 +74,9 @@ class AdminUserController extends Controller
     public function updatePermissions($id, UpdatePermissionsRequest $request)
     {
         $item = $this->service->show($id);
+
         $this->service->updatePermissions($item, $request->validated());
+        
         return response()->json([
             'success' => true,
             'message' => trans('messages.admin_users.permissions_updated_successfully'),
