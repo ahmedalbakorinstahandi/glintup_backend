@@ -74,7 +74,7 @@ class AdminUserService
         $user->update([
             'first_name' => $data['first_name'] ?? $user->first_name,
             'last_name' => $data['last_name'] ?? $user->last_name,
-            'email' => $data['email'] ?? $user->email,
+            // 'email' => $data['email'] ?? $user->email,
             'is_active' => $data['is_active'] ?? $user->is_active,
             'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
             'avatar' => $data['avatar'] ?? $user->avatar,

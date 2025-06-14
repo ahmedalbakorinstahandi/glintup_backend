@@ -11,7 +11,7 @@ class UpdateRequest extends BaseFormRequest
         return [
             'first_name' => 'nullable|string|max:255',
             'last_name'  => 'nullable|string|max:255',
-            'email'      => 'nullable|email|unique:users,email,' . $this->route('id'),
+            // 'email'      => 'nullable|email|unique:users,email,' . $this->route('id'),
             'password'   => 'nullable|string|min:6',
             'is_active'  => 'nullable|boolean',
         ];
