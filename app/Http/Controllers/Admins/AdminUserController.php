@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admins\User\{CreateRequest, UpdateRequest, UpdatePermissionsRequest};
+use App\Http\Resources\Admins\AdminPermissionResource;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Services\Admins\AdminUserService;
 use App\Models\Admins\AdminPermission;
@@ -76,7 +77,7 @@ class AdminUserController extends Controller
         $item = $this->service->show($id);
 
         $this->service->updatePermissions($item, $request->validated());
-        
+
         return response()->json([
             'success' => true,
             'message' => trans('messages.admin_users.permissions_updated_successfully'),
@@ -91,7 +92,7 @@ class AdminUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $permissions,
+            'data' => AdminPermissionResource::collection($permissions),
         ]);
     }
 }
