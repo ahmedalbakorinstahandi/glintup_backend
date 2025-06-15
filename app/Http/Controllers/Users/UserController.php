@@ -190,12 +190,11 @@ class UserController extends Controller
             'filter_provider' => 'discount',
             'limit' => 2,
         ]);
-        
-        $nearby_salons = Salon::where('is_approved', true)
-            ->where('is_active', true)
-            ->inRandomOrder()
-            ->limit(2)
-            ->get();
+
+        $nearby_salons = $salonService->index([
+            'filter_provider' => 'nearby',
+            'limit' => 2,
+        ]);
 
         return response()->json([
             'success' => true,

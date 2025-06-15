@@ -117,6 +117,17 @@ class SalonService
             }
         }
 
+        if (isset($data['filter_provider']) && $data['filter_provider'] == 'nearby' && isset($data['latitude']) && isset($data['longitude'])) {
+            $latitude = $data['latitude'];
+            $longitude = $data['longitude'];
+
+            $query->selectRaw(
+                "*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) as distance",
+                [$latitude, $longitude, $latitude]
+            )
+            ->orderBy('distance');
+        }
+
         return FilterService::applyFilters(
             $query,
             $data,

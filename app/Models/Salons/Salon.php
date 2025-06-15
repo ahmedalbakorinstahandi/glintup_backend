@@ -525,18 +525,30 @@ class Salon extends Model
         if (!$this->latitude || !$this->longitude) return null;
 
 
-        // ToDO :: fix this later
-        // $distance = haversineGreatCircleDistance(
-        //     $this->latitude,
-        //     $this->longitude,
-        //     $userLocation['lat'],
-        //     $userLocation['lng']
-        // );
+        $distance = $this->haversineGreatCircleDistance(
+            $this->latitude,
+            $this->longitude,
+            $user->latitude,
+            $user->longitude
+        );
 
-        // return round($distance, 2);
+        return round($distance, 2);
 
-        return rand(1, 100) + 0.0;
+        // return rand(1, 100) + 0.0;
     }
+
+    public function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo)
+    {
+        $earthRadius = 6371000; // Radius of the earth in meters
+        $dLat = deg2rad($latitudeTo - $latitudeFrom);
+        $dLon = deg2rad($longitudeTo - $longitudeFrom);
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($latitudeFrom)) * cos(deg2rad($latitudeTo)) *
+            sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return $earthRadius * $c;
+    }
+
 
 
     // service_location display text
