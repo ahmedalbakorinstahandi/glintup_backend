@@ -156,14 +156,11 @@ class UserController extends Controller
             ->limit(2)
             ->get();
 
-
-
         $salons_have_discount = Salon::where('is_approved', true)
             ->where('is_active', true)
             ->whereHas('services', function ($query) {
                 $query->where('discount_percentage', '>', 0);
             })
-            ->inRandomOrder()
             ->withMax('services', 'discount_percentage')
             ->orderByDesc('services_max_discount_percentage')
             ->limit(2)
@@ -171,11 +168,11 @@ class UserController extends Controller
 
         request()->merge(['filter_provider' => 'discount']);
 
-
-
-        $nearby_salons = Salon::where('is_approved', true)->where('is_active', true)->inRandomOrder()->limit(2)->get();
-
-
+        $nearby_salons = Salon::where('is_approved', true)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->limit(2)
+            ->get();
 
         return response()->json([
             'success' => true,
