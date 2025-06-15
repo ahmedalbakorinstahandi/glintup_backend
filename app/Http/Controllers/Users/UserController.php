@@ -145,14 +145,15 @@ class UserController extends Controller
 
         # TODO
 
-        $trendingSalons = Salon::inRandomOrder()->limit(2)->get();
-
-
-        $salons_have_discount = Salon::inRandomOrder()->limit(2)->get();
+        $trendingSalons = Salon::where('is_approved', true)->where('is_active', true)->inRandomOrder()->limit(2)->get();
 
 
 
-        $nearby_salons = Salon::inRandomOrder()->limit(2)->get();
+        $salons_have_discount = Salon::where('is_approved', true)->where('is_active', true)->inRandomOrder()->limit(2)->get();
+
+
+
+        $nearby_salons = Salon::where('is_approved', true)->where('is_active', true)->inRandomOrder()->limit(2)->get();
 
 
 
