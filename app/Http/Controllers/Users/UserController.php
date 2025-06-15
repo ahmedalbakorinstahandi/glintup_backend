@@ -181,6 +181,29 @@ class UserController extends Controller
 
 
         $salonService = new SalonService();
+        
+        // للتحقق من الصالونات التي لديها خصومات
+        $salonsWithDiscounts = Salon::where('is_approved', true)
+            ->where('is_active', true)
+            ->whereHas('services', function ($query) {
+                $query->where('discount_percentage', '>', 0)
+                      ->where('is_active', true);
+            })
+            ->get();
+            
+        Log::info('Salons with discounts count: ' . $salonsWithDiscounts->count());
+        
+        // للتحقق من الصالونات التي لديها حجوزات
+        $salonsWithBookings = Salon::where('is_approved', true)
+            ->where('is_active', true)
+            ->whereHas('bookings', function ($query) {
+                $query->where('created_at', '>=', now()->subDays(14))
+                      ->where('status', 'completed');
+            })
+            ->get();
+            
+        Log::info('Salons with bookings count: ' . $salonsWithBookings->count());
+
         $trendingSalons = $salonService->index([
             'filter_provider' => 'trending',
             'limit' => 2,
