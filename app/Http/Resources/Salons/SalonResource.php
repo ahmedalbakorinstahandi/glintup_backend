@@ -106,10 +106,10 @@ class SalonResource extends JsonResource
             'most_booked_services' => $this->when($this_function_is_show, ServiceResource::collection($this->mostBookedServices())),
             'latest_reviews' => $this->when($this_function_is_show, ReviewResource::collection($this->reviews()->latest()->take(5)->get())),
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),
+            'discount_percentage' =>  $this->when(request()->has('filter_provider') && request()->filter_provider === 'discount', $this->getServiceWithHighestDiscountPercentage()),
 
             // if not null
             'loyalty_service' => new ServiceResource($this->whenLoaded('loyaltyService')),
-            'discount' =>  $this->when(request()->has('filter_provider') && request()->filter_provider === 'discount', $this->getServiceWithHighestDiscountPercentage()),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
