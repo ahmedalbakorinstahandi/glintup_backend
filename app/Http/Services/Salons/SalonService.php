@@ -91,7 +91,16 @@ class SalonService
             $query->whereHas('services', function ($query) {
                 $query->where('discount_percentage', '>', 0);
             })->withMax('services', 'discount_percentage')
-              ->orderByDesc('services_max_discount_percentage');
+                ->orderByDesc('services_max_discount_percentage');
+        }
+        // trending
+        if (isset($data['filter_provider']) && $data['filter_provider'] == 'trending') {
+            $query->withCount(['bookings' => function ($query) {
+                $query->where('created_at', '>=', now()->subDays(14))
+                    ->where('status', 'completed');
+            }])
+                ->orderBy('bookings_count', 'desc')
+                ->having('bookings_count', '>', 0);
         }
 
         return FilterService::applyFilters(

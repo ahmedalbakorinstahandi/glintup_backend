@@ -145,11 +145,31 @@ class UserController extends Controller
 
         # TODO
 
-        $trendingSalons = Salon::where('is_approved', true)->where('is_active', true)->inRandomOrder()->limit(2)->get();
+        $trendingSalons = Salon::where('is_approved', true)
+            ->where('is_active', true)
+            ->withCount(['bookings' => function ($query) {
+                $query->where('created_at', '>=', now()->subDays(14))
+                    ->where('status', 'completed');
+            }])
+            ->orderBy('bookings_count', 'desc')
+            ->having('bookings_count', '>', 0)
+            ->limit(2)
+            ->get();
 
 
 
-        $salons_have_discount = Salon::where('is_approved', true)->where('is_active', true)->inRandomOrder()->limit(2)->get();
+        $salons_have_discount = Salon::where('is_approved', true)
+            ->where('is_active', true)
+            ->whereHas('services', function ($query) {
+                $query->where('discount_percentage', '>', 0);
+            })
+            ->inRandomOrder()
+            ->withMax('services', 'discount_percentage')
+            ->orderByDesc('services_max_discount_percentage')
+            ->limit(2)
+            ->get();
+
+        request()->merge(['filter_provider' => 'discount']);
 
 
 
