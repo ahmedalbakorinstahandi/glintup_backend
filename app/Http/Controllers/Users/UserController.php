@@ -16,6 +16,7 @@ use App\Models\General\Setting;
 use App\Models\Salons\Salon;
 use App\Models\Statistics\PromotionAd;
 use App\Services\ResponseService;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -159,14 +160,25 @@ class UserController extends Controller
         $salons_have_discount = Salon::where('is_approved', true)
             ->where('is_active', true)
             ->whereHas('services', function ($query) {
-                $query->where('discount_percentage', '>', 0);
+                $query->where('discount_percentage', '>', 0)
+                      ->where('is_active', true);
             })
+            ->with(['services' => function($query) {
+                $query->where('discount_percentage', '>', 0)
+                      ->where('is_active', true)
+                      ->orderBy('discount_percentage', 'desc');
+            }])
             ->withMax('services', 'discount_percentage')
             ->orderByDesc('services_max_discount_percentage')
             ->limit(2)
             ->get();
 
-        request()->merge(['filter_provider' => 'discount']);
+        // للتأكد من وجود صالونات
+        if ($salons_have_discount->isEmpty()) {
+            Log::info('No salons with discounts found');
+        }
+
+        // request()->merge(['filter_provider' => 'discount']);
 
         $nearby_salons = Salon::where('is_approved', true)
             ->where('is_active', true)
