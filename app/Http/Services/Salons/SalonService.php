@@ -90,7 +90,8 @@ class SalonService
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'discount') {
             $query->whereHas('services', function ($query) {
                 $query->where('discount_percentage', '>', 0);
-            });
+            })->withMax('services', 'discount_percentage')
+              ->orderByDesc('services_max_discount_percentage');
         }
 
         return FilterService::applyFilters(

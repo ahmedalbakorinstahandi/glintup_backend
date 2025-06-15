@@ -91,6 +91,7 @@ class SalonResource extends JsonResource
             'services_list_url' => $this->when($is_salon_or_admin, $this->services_list_url),
 
 
+            'discount_percentage' =>  $this->when(request()->has('filter_provider') && request()->filter_provider === 'discount', $this->getServiceWithHighestDiscountPercentage()),
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_salon_or_admin,  $this->bookings->where('status', 'completed')->count()),
@@ -106,7 +107,6 @@ class SalonResource extends JsonResource
             'most_booked_services' => $this->when($this_function_is_show, ServiceResource::collection($this->mostBookedServices())),
             'latest_reviews' => $this->when($this_function_is_show, ReviewResource::collection($this->reviews()->latest()->take(5)->get())),
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),
-            'discount_percentage' =>  $this->when(request()->has('filter_provider') && request()->filter_provider === 'discount', $this->getServiceWithHighestDiscountPercentage()),
 
             // if not null
             'loyalty_service' => new ServiceResource($this->whenLoaded('loyaltyService')),
