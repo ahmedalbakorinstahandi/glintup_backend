@@ -91,8 +91,6 @@ class SalonService
             $query->whereHas('services', function ($query) {
                 $query->where('discount_percentage', '>', 0);
             });
-
-            $query->with(['getServiceWithHighestDiscountPercentage']);
         }
 
         return FilterService::applyFilters(

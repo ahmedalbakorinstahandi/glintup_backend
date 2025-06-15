@@ -110,7 +110,7 @@ class Salon extends Model
     // get the service with the highest discount
     public function getServiceWithHighestDiscountPercentage()
     {
-        return $this->services()->where('discount_percentage', '>', 0)->orderBy('discount_percentage', 'desc')->first();
+        return $this->services()->where('discount_percentage', '>', 0)->orderBy('discount_percentage', 'desc')->first()->discount_percentage ?? null;
     }
 
 
