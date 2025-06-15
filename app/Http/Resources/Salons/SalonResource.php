@@ -109,6 +109,7 @@ class SalonResource extends JsonResource
 
             // if not null
             'loyalty_service' => new ServiceResource($this->whenLoaded('loyaltyService')),
+            'service_with_highest_discount' => new ServiceResource($this->whenLoaded('getServiceWithHighestDiscountPercentage')),
             'created_at'      => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i:s'),
         ];

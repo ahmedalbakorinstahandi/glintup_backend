@@ -86,6 +86,15 @@ class SalonService
 
         $query = SalonPermission::filterIndex($query);
 
+        // filter_provider 
+        if (isset($data['filter_provider']) && $data['filter_provider'] == 'discount') {
+            $query->whereHas('services', function ($query) {
+                $query->where('discount_percentage', '>', 0);
+            });
+
+            $query->with(['getServiceWithHighestDiscountPercentage']);
+        }
+
         return FilterService::applyFilters(
             $query,
             $data,
