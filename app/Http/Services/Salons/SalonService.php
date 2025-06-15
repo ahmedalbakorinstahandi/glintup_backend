@@ -46,7 +46,7 @@ class SalonService
         $salon = $user->salon;
 
         $salon->load([
-            'socialMediaSites',
+            'salonSocialMediaSites.socialMediaSite',
             'images',
             'workingHours',
             'owner',
