@@ -229,16 +229,22 @@ class Salon extends Model
     }
 
 
-    public function socialMediaSites()
+    // public function socialMediaSites()
+    // {
+    //     return $this->hasManyThrough(
+    //         SocialMediaSite::class,        // الجدول النهائي
+    //         SalonSocialMediaSite::class,   // الجدول الوسيط
+    //         'salon_id',         // المفتاح الأجنبي في الجدول الوسيط الذي يربطه بالصالون
+    //         'id',               // المفتاح الأساسي في جدول SocialMidiaSite
+    //         'id',               // المفتاح الأساسي في جدول Salon
+    //         'social_media_site_id' // المفتاح الأجنبي في الجدول الوسيط الذي يشير إلى SocialMidiaSite
+    //     );
+    // }
+
+
+    public function salonSocialMediaSites()
     {
-        return $this->hasManyThrough(
-            SocialMediaSite::class,        // الجدول النهائي
-            SalonSocialMediaSite::class,   // الجدول الوسيط
-            'salon_id',         // المفتاح الأجنبي في الجدول الوسيط الذي يربطه بالصالون
-            'id',               // المفتاح الأساسي في جدول SocialMidiaSite
-            'id',               // المفتاح الأساسي في جدول Salon
-            'social_media_site_id' // المفتاح الأجنبي في الجدول الوسيط الذي يشير إلى SocialMidiaSite
-        )->withTrashed();
+        return $this->hasMany(SalonSocialMediaSite::class);
     }
 
 

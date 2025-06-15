@@ -103,7 +103,7 @@ class SalonResource extends JsonResource
             'working_status' => $this->getWorkingStatus($local_lang),
             'rating_percentage' => $this->when($this_function_is_show, $this->getRatingPercentageAttribute()),
             'images' => ImageResource::collection($this->whenLoaded('images')),
-            'social_media_sites' => SocialMediaSiteResource::collection($this->whenLoaded('socialMediaSites')),
+            'salon_social_media_sites' => SalonSocialMediaSiteResource::collection($this->whenLoaded('salonSocialMediaSites')),
             'most_booked_services' => $this->when($this_function_is_show, ServiceResource::collection($this->mostBookedServices())),
             'latest_reviews' => $this->when($this_function_is_show, ReviewResource::collection($this->reviews()->latest()->take(5)->get())),
             "working_hours" => WorkingHourResource::collection($this->whenLoaded('workingHours')),

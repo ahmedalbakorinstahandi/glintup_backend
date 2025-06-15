@@ -193,6 +193,8 @@ class UserController extends Controller
 
         $nearby_salons = $salonService->index([
             'filter_provider' => 'nearby',
+            'latitude' => request()->get('latitude') ?? null,
+            'longitude' => request()->get('longitude') ?? null,
             'limit' => 2,
         ]);
 
