@@ -171,7 +171,7 @@ class SalonService
         }
 
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
+        $salon->load(['salonSocialMediaSites.socialMediaSite', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
 
         return $salon;
     }
@@ -255,7 +255,7 @@ class SalonService
             ]
         );
 
-        $salon->load(['socialMediaSites', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
+        $salon->load(['salonSocialMediaSites.socialMediaSite', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
 
         return $salon;
     }
