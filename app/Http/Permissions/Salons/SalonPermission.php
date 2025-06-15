@@ -10,13 +10,19 @@ class SalonPermission
 {
     public static function filterIndex($query)
     {
-
         $user = User::auth();
+        
+        // تسجيل معلومات المستخدم
+        \Illuminate\Support\Facades\Log::info('Filtering salons for user: ' . $user->id . ' - Role: ' . $user->role);
 
         if ($user->isCustomer()) {
-            $query->where('is_approved', true)->where('is_active', true);
+            $query->where('is_approved', true)
+                  ->where('is_active', true);
+            
+            // تسجيل الاستعلام بعد التصفية
+            \Illuminate\Support\Facades\Log::info('Filtered query: ' . $query->toSql());
+            \Illuminate\Support\Facades\Log::info('Filtered bindings: ' . json_encode($query->getBindings()));
         }
-
 
         return $query;
     }

@@ -114,6 +114,8 @@ class SalonService
 
         // للتأكد من أن الاستعلام يعمل
         if (isset($data['filter_provider'])) {
+            $user = User::auth();
+            Log::info('Current user: ' . $user->id . ' - Role: ' . $user->role);
             Log::info('Filter provider: ' . $data['filter_provider']);
             Log::info('SQL Query: ' . $query->toSql());
             Log::info('Query Bindings: ' . json_encode($query->getBindings()));
