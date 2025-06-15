@@ -92,11 +92,29 @@ class SalonService
                 $query->where('discount_percentage', '>', 0);
             });
 
-            // Load services with discount and order by highest discount
-            $query->with(['services' => function($query) {
-                $query->where('discount_percentage', '>', 0)
-                      ->orderBy('discount_percentage', 'desc');
-            }]);
+            $query->orderByDesc(function ($query) {
+                return $query->from('services')
+                    ->whereColumn('services.salon_id', 'salons.id')
+                    ->where('discount_percentage', '>', 0)
+                    ->select('discount_percentage')
+                    ->orderByDesc('discount_percentage')
+                    ->limit(1);
+            });
+        }
+
+        if (isset($data['filter_provider']) && $data['filter_provider'] == 'trending') {
+            // Get salons with completed bookings in last 14 days
+            $query->withCount(['bookings' => function ($query) {
+                $query->where('created_at', '>=', now()->subDays(14))
+                    ->where('status', 'completed');
+            }])
+                ->orderBy('bookings_count', 'desc');
+
+            // If no salons have bookings in last 14 days, show all salons
+            if (!$query->having('bookings_count', '>', 0)->exists()) {
+                $query = Salon::query()
+                    ->with(['loyaltyService', 'owner', 'images']);
+            }
         }
 
         return FilterService::applyFilters(
