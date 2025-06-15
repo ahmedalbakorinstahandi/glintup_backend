@@ -196,6 +196,11 @@ class SalonService
                 'bank_account_iban' => $data['bank_account_iban'] ?? $salon->bank_account_iban,
                 'services_list' => $data['services_list'] ?? $salon->services_list,
 
+                'trade_license' => $data['trade_license'] ?? $salon->trade_license,
+                'vat_certificate' => $data['vat_certificate'] ?? $salon->vat_certificate,
+                'bank_account_certificate' => $data['bank_account_certificate'] ?? $salon->bank_account_certificate,
+
+
                 // old data
                 'name' => '',
                 'phone_code' => '',
