@@ -13,6 +13,7 @@ use App\Services\FilterService;
 use App\Services\ImageService;
 use App\Services\MessageService;
 use App\Services\PhoneService;
+use Illuminate\Support\Facades\Log;
 
 class SalonService
 {
@@ -88,19 +89,32 @@ class SalonService
 
         // filter_provider 
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'discount') {
-            $query->whereHas('services', function ($query) {
-                $query->where('discount_percentage', '>', 0);
-            })->withMax('services', 'discount_percentage')
-                ->orderByDesc('services_max_discount_percentage');
+            $query->where('is_approved', true)
+                  ->where('is_active', true)
+                  ->whereHas('services', function ($query) {
+                      $query->where('discount_percentage', '>', 0)
+                            ->where('is_active', true);
+                  })
+                  ->withMax('services', 'discount_percentage')
+                  ->orderByDesc('services_max_discount_percentage');
         }
         // trending
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'trending') {
-            $query->withCount(['bookings' => function ($query) {
-                $query->where('created_at', '>=', now()->subDays(14))
-                    ->where('status', 'completed');
-            }])
-                ->orderBy('bookings_count', 'desc')
-                ->having('bookings_count', '>', 0);
+            $query->where('is_approved', true)
+                  ->where('is_active', true)
+                  ->withCount(['bookings' => function ($query) {
+                      $query->where('created_at', '>=', now()->subDays(14))
+                            ->where('status', 'completed');
+                  }])
+                  ->orderBy('bookings_count', 'desc')
+                  ->having('bookings_count', '>', 0);
+        }
+
+        // للتأكد من أن الاستعلام يعمل
+        if (isset($data['filter_provider'])) {
+            Log::info('Filter provider: ' . $data['filter_provider']);
+            Log::info('SQL Query: ' . $query->toSql());
+            Log::info('Query Bindings: ' . json_encode($query->getBindings()));
         }
 
         return FilterService::applyFilters(
