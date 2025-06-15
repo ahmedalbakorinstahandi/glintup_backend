@@ -85,29 +85,31 @@ class SalonService
         $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country', 'id'];
         $inFields = ['id', 'type'];
 
+        // تطبيق الفلتر الأساسي
         $query = SalonPermission::filterIndex($query);
 
         // filter_provider 
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'discount') {
-            $query->where('is_approved', true)
-                  ->where('is_active', true)
-                  ->whereHas('services', function ($query) {
-                      $query->where('discount_percentage', '>', 0)
-                            ->where('is_active', true);
-                  })
-                  ->withMax('services', 'discount_percentage')
-                  ->orderByDesc('services_max_discount_percentage');
+            $query->whereHas('services', function ($query) {
+                $query->where('discount_percentage', '>', 0)
+                      ->where('is_active', true);
+            })
+            ->with(['services' => function($query) {
+                $query->where('discount_percentage', '>', 0)
+                      ->where('is_active', true)
+                      ->orderBy('discount_percentage', 'desc');
+            }])
+            ->withMax('services', 'discount_percentage')
+            ->orderByDesc('services_max_discount_percentage');
         }
         // trending
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'trending') {
-            $query->where('is_approved', true)
-                  ->where('is_active', true)
-                  ->withCount(['bookings' => function ($query) {
-                      $query->where('created_at', '>=', now()->subDays(14))
-                            ->where('status', 'completed');
-                  }])
-                  ->orderBy('bookings_count', 'desc')
-                  ->having('bookings_count', '>', 0);
+            $query->withCount(['bookings' => function ($query) {
+                $query->where('created_at', '>=', now()->subDays(14))
+                      ->where('status', 'completed');
+            }])
+            ->orderBy('bookings_count', 'desc')
+            ->having('bookings_count', '>', 0);
         }
 
         // للتأكد من أن الاستعلام يعمل
@@ -115,6 +117,10 @@ class SalonService
             Log::info('Filter provider: ' . $data['filter_provider']);
             Log::info('SQL Query: ' . $query->toSql());
             Log::info('Query Bindings: ' . json_encode($query->getBindings()));
+            
+            // للتحقق من عدد الصالونات قبل التطبيق
+            $count = $query->count();
+            Log::info('Total salons before filters: ' . $count);
         }
 
         return FilterService::applyFilters(
