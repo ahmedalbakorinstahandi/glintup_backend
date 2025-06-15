@@ -13,7 +13,6 @@ use App\Services\FilterService;
 use App\Services\ImageService;
 use App\Services\MessageService;
 use App\Services\PhoneService;
-use Illuminate\Support\Facades\Log;
 
 class SalonService
 {
@@ -85,44 +84,19 @@ class SalonService
         $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country', 'id'];
         $inFields = ['id', 'type'];
 
-        // تطبيق الفلتر الأساسي
         $query = SalonPermission::filterIndex($query);
 
         // filter_provider 
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'discount') {
             $query->whereHas('services', function ($query) {
-                $query->where('discount_percentage', '>', 0)
-                      ->where('is_active', true);
-            })
-            ->with(['services' => function($query) {
-                $query->where('discount_percentage', '>', 0)
-                      ->where('is_active', true)
-                      ->orderBy('discount_percentage', 'desc');
-            }])
-            ->withMax('services', 'discount_percentage')
-            ->orderByDesc('services_max_discount_percentage');
-        }
-        // trending
-        if (isset($data['filter_provider']) && $data['filter_provider'] == 'trending') {
-            $query->withCount(['bookings' => function ($query) {
-                $query->where('created_at', '>=', now()->subDays(14))
-                      ->where('status', 'completed');
-            }])
-            ->orderBy('bookings_count', 'desc')
-            ->having('bookings_count', '>', 0);
-        }
+                $query->where('discount_percentage', '>', 0);
+            });
 
-        // للتأكد من أن الاستعلام يعمل
-        if (isset($data['filter_provider'])) {
-            $user = User::auth();
-            Log::info('Current user: ' . $user->id . ' - Role: ' . $user->role);
-            Log::info('Filter provider: ' . $data['filter_provider']);
-            Log::info('SQL Query: ' . $query->toSql());
-            Log::info('Query Bindings: ' . json_encode($query->getBindings()));
-            
-            // للتحقق من عدد الصالونات قبل التطبيق
-            $count = $query->count();
-            Log::info('Total salons before filters: ' . $count);
+            // Load services with discount and order by highest discount
+            $query->with(['services' => function($query) {
+                $query->where('discount_percentage', '>', 0)
+                      ->orderBy('discount_percentage', 'desc');
+            }]);
         }
 
         return FilterService::applyFilters(
