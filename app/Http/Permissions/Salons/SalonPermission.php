@@ -8,10 +8,17 @@ use App\Services\MessageService;
 
 class SalonPermission
 {
-    public static function filterIndex($request)
+    public static function filterIndex($query)
     {
 
-        return $request;
+        $user = User::auth();
+
+        if ($user->isCustomer()) {
+            $query->where('is_approved', true)->where('is_active', true);
+        }
+
+
+        return $query;
     }
     public static function canShow(Salon $salon)
     {
