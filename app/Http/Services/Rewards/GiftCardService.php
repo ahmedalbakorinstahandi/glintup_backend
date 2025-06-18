@@ -19,7 +19,7 @@ class GiftCardService
 {
     public function index($data)
     {
-        $query = GiftCard::query()->with(['sender', 'recipient']);
+        $query = GiftCard::query()->with(['sender', 'recipient', 'salon']);
 
 
         $query = GiftCardPermission::filterIndex($query);

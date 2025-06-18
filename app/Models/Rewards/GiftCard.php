@@ -2,6 +2,7 @@
 
 namespace App\Models\Rewards;
 
+use App\Models\Salons\Salon;
 use App\Models\Services\Service;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -79,7 +80,7 @@ class GiftCard extends Model
     // salon
     public function salon()
     {
-        return $this->belongsTo(User::class, 'salon_id')->withTrashed();
+        return $this->belongsTo(Salon::class, 'salon_id')->withTrashed();
     }
 
 
