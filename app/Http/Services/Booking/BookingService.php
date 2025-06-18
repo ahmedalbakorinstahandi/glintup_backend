@@ -42,30 +42,30 @@ class BookingService
         $numericFields = [];
         $dateFields = ['date', 'created_at'];
         $exactMatchFields = ['user_id', 'salon_id', 'status'];
-        $inFields = ['id', 'bookingServices.service_id'];
+        $inFields = ['id', 'bookingServices.service_id', 'status'];
 
         $query = BookingPermission::filterIndex($query);
 
         // البحث المبسط والفعال
         if (!empty($data['search'])) {
             $search = trim($data['search']);
-            
-            $query->where(function($q) use ($search) {
+
+            $query->where(function ($q) use ($search) {
                 // البحث في كود الحجز
                 $q->where('code', 'LIKE', "%{$search}%")
-                  // البحث في ملاحظات الحجز
-                  ->orWhere('notes', 'LIKE', "%{$search}%")
-                  // البحث في اسم العميل
-                  ->orWhereHas('user', function($userQuery) use ($search) {
-                      $userQuery->where('first_name', 'LIKE', "%{$search}%")
-                                ->orWhere('last_name', 'LIKE', "%{$search}%")
-                                ->orWhere('phone', 'LIKE', "%{$search}%");
-                  })
-                  // البحث في اسم الصالون
-                  ->orWhereHas('salon', function($salonQuery) use ($search) {
-                      $salonQuery->where('name', 'LIKE', "%{$search}%")
-                                 ->orWhere('merchant_commercial_name', 'LIKE', "%{$search}%");
-                  });
+                    // البحث في ملاحظات الحجز
+                    ->orWhere('notes', 'LIKE', "%{$search}%")
+                    // البحث في اسم العميل
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('first_name', 'LIKE', "%{$search}%")
+                            ->orWhere('last_name', 'LIKE', "%{$search}%")
+                            ->orWhere('phone', 'LIKE', "%{$search}%");
+                    })
+                    // البحث في اسم الصالون
+                    ->orWhereHas('salon', function ($salonQuery) use ($search) {
+                        $salonQuery->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('merchant_commercial_name', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
