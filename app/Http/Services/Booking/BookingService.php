@@ -37,25 +37,7 @@ class BookingService
             'payments'
         ]);
 
-        $searchFields = [
-            'code',
-            'notes',
-            // ['user.first_name', 'user.last_name'],
-            'salon.merchant_commercial_name',
-            'salon.merchant_legal_name',
-            'salon.address',
-            'salon.city_street_name',
-            'salon.contact_name',
-            'salon.contact_number',
-            'salon.contact_email',
-            'salon.business_contact_name',
-            'salon.business_contact_email',
-            'salon.business_contact_number',
-            'salon.tags',
-            'salon.city',
-            'salon.country',
-            'salon.description',
-        ];
+        $searchFields = [];
 
         $numericFields = [];
         $dateFields = ['date', 'created_at'];
@@ -90,6 +72,28 @@ class BookingService
                     $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$numericSearch}%"]);
                 }
             });
+
+            // Search in additional salon fields
+            $query->orWhereHas('salon', function($q) use ($search) {
+                $q->where('merchant_commercial_name', 'LIKE', "%{$search}%")
+                  ->orWhere('merchant_legal_name', 'LIKE', "%{$search}%")
+                  ->orWhere('address', 'LIKE', "%{$search}%")
+                  ->orWhere('city_street_name', 'LIKE', "%{$search}%")
+                  ->orWhere('contact_name', 'LIKE', "%{$search}%")
+                  ->orWhere('contact_number', 'LIKE', "%{$search}%")
+                  ->orWhere('contact_email', 'LIKE', "%{$search}%")
+                  ->orWhere('business_contact_name', 'LIKE', "%{$search}%")
+                  ->orWhere('business_contact_email', 'LIKE', "%{$search}%")
+                  ->orWhere('business_contact_number', 'LIKE', "%{$search}%")
+                  ->orWhere('tags', 'LIKE', "%{$search}%")
+                  ->orWhere('city', 'LIKE', "%{$search}%")
+                  ->orWhere('country', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+
+            // Search by booking code and notes
+            $query->orWhere('code', 'LIKE', "%{$search}%")
+                  ->orWhere('notes', 'LIKE', "%{$search}%");
         }
 
         $bookings = $query->get();
@@ -1405,12 +1409,12 @@ class BookingService
 
         foreach ($services as $service) {
             $bookingService = $service['booking_service'];
-            
+
             //     "message": "Could not parse '2025-06-25 00:00:00 13:00': Failed to parse time string (2025-06-25 00:00:00 13:00) at position 20 (1): Double time specification",
 
             $bookingService->update([
                 'start_date_time' => Carbon::parse($booking->date->format('Y-m-d') . ' ' . $service['start_time']),
-                'end_date_time' => Carbon::parse($booking->date->format('Y-m-d') . ' ' . $service['end_time']), 
+                'end_date_time' => Carbon::parse($booking->date->format('Y-m-d') . ' ' . $service['end_time']),
             ]);
 
             // إضافة سجل الحالة
@@ -1426,6 +1430,4 @@ class BookingService
 
         return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
     }
-
-
 }
