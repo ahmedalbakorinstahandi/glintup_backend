@@ -32,13 +32,10 @@ class GroupService
 
         $user = User::auth();
 
-        //  مجموعات الخدمات الي مافيها خدمات ما بدي اياها للعميل
-
+        // Don't show service groups with empty group_services array to customers
         if ($user->isCustomer()) {
-            $query->whereDoesntHave('groupServices', function ($query) use ($user) {
-                $query->whereHas('service', function ($query) use ($user) {
-                    $query->where('salon_id', $user->salon_id);
-                });
+            $query->whereHas('groupServices', function($q) {
+                $q->whereNotNull('service_id');
             });
         }
 
