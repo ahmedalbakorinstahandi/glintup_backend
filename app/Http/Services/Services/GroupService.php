@@ -30,14 +30,14 @@ class GroupService
             $query->orWhereNull('salon_id');
         }
 
-        $user = User::auth();
+        // $user = User::auth();
 
-        // Don't show service groups with empty group_services array to customers
-        if ($user->isCustomer()) {
-            $query->whereHas('groupServices', function($q) {
-                $q->whereNotNull('service_id');
-            });
-        }
+        // // Don't show service groups with empty group_services array to customers
+        // if ($user->isCustomer()) {
+        //     $query->whereHas('groupServices', function($q) {
+        //         $q->whereNotNull('service_id');
+        //     });
+        // }
 
 
         $data['sort_field'] = 'orders';

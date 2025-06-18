@@ -538,7 +538,8 @@ class Salon extends Model
             $user->longitude
         );
 
-        return round($distance, 2);
+        // تحويل من متر إلى كيلومتر
+        return round($distance / 1000, 2);
 
         // return rand(1, 100) + 0.0;
     }
