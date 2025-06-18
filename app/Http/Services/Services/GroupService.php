@@ -4,6 +4,7 @@ namespace App\Http\Services\Services;
 
 use App\Models\Services\Group;
 use App\Http\Permissions\Services\GroupPermission;
+use App\Models\Users\User;
 use App\Services\FilterService;
 use App\Services\LanguageService;
 use App\Services\MessageService;
@@ -29,12 +30,18 @@ class GroupService
             $query->orWhereNull('salon_id');
         }
 
-        // if groupServices is not empty, then get the groupServices with the service
-        if (isset($data['groupServices'])) {
-            $query->whereHas('groupServices', function ($query) use ($data) {
-                $query->whereIn('service_id', $data['groupServices']);
+        $user = User::auth();
+
+        //  مجموعات الخدمات الي مافيها خدمات ما بدي اياها للعميل
+
+        if ($user->isCustomer()) {
+            $query->whereDoesntHave('groupServices', function ($query) use ($user) {
+                $query->whereHas('service', function ($query) use ($user) {
+                    $query->where('salon_id', $user->salon_id);
+                });
             });
         }
+
 
         $data['sort_field'] = 'orders';
         $data['sort_order'] = 'asc';
