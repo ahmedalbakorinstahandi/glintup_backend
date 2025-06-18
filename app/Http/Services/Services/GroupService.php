@@ -29,6 +29,13 @@ class GroupService
             $query->orWhereNull('salon_id');
         }
 
+        // if groupServices is not empty, then get the groupServices with the service
+        if (isset($data['groupServices'])) {
+            $query->whereHas('groupServices', function ($query) use ($data) {
+                $query->whereIn('service_id', $data['groupServices']);
+            });
+        }
+
         $data['sort_field'] = 'orders';
         $data['sort_order'] = 'asc';
 
@@ -59,8 +66,6 @@ class GroupService
     public function create($validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, new Group);
-
-
 
 
         $group = Group::create($validatedData);
