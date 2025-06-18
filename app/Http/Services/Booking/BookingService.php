@@ -46,6 +46,29 @@ class BookingService
 
         $query = BookingPermission::filterIndex($query);
 
+        // البحث المبسط والفعال
+        if (!empty($data['search'])) {
+            $search = trim($data['search']);
+            
+            $query->where(function($q) use ($search) {
+                // البحث في كود الحجز
+                $q->where('code', 'LIKE', "%{$search}%")
+                  // البحث في ملاحظات الحجز
+                  ->orWhere('notes', 'LIKE', "%{$search}%")
+                  // البحث في اسم العميل
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('first_name', 'LIKE', "%{$search}%")
+                                ->orWhere('last_name', 'LIKE', "%{$search}%")
+                                ->orWhere('phone', 'LIKE', "%{$search}%");
+                  })
+                  // البحث في اسم الصالون
+                  ->orWhereHas('salon', function($salonQuery) use ($search) {
+                      $salonQuery->where('name', 'LIKE', "%{$search}%")
+                                 ->orWhere('merchant_commercial_name', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
         $query = FilterService::applyFilters(
             $query,
             $data,
@@ -56,45 +79,6 @@ class BookingService
             $inFields,
             false
         );
-
-        if (!empty($data['search'])) {
-            $search = $data['search'];
-            $numericSearch = preg_replace('/[^0-9]/', '', $search); // Get only numbers for phone search
-
-            $query->orWhereHas('user', function ($q) use ($search, $numericSearch) {
-                // Search by name - trim extra spaces and make case insensitive
-                $nameSearch = trim($search);
-                if (!empty($nameSearch)) {
-                    $q->whereRaw("LOWER(CONCAT(TRIM(first_name), ' ', TRIM(last_name))) LIKE ?", ["%" . strtolower($nameSearch) . "%"]);
-                }
-                // Search by phone number
-                if (!empty($numericSearch)) {
-                    $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$numericSearch}%"]);
-                }
-            });
-
-            // Search in additional salon fields
-            $query->orWhereHas('salon', function($q) use ($search) {
-                $q->where('merchant_commercial_name', 'LIKE', "%{$search}%")
-                  ->orWhere('merchant_legal_name', 'LIKE', "%{$search}%")
-                  ->orWhere('address', 'LIKE', "%{$search}%")
-                  ->orWhere('city_street_name', 'LIKE', "%{$search}%")
-                  ->orWhere('contact_name', 'LIKE', "%{$search}%")
-                  ->orWhere('contact_number', 'LIKE', "%{$search}%")
-                  ->orWhere('contact_email', 'LIKE', "%{$search}%")
-                  ->orWhere('business_contact_name', 'LIKE', "%{$search}%")
-                  ->orWhere('business_contact_email', 'LIKE', "%{$search}%")
-                  ->orWhere('business_contact_number', 'LIKE', "%{$search}%")
-                  ->orWhere('tags', 'LIKE', "%{$search}%")
-                  ->orWhere('city', 'LIKE', "%{$search}%")
-                  ->orWhere('country', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
-            });
-
-            // Search by booking code and notes
-            $query->orWhere('code', 'LIKE', "%{$search}%")
-                  ->orWhere('notes', 'LIKE', "%{$search}%");
-        }
 
         $bookings = $query->get();
 
