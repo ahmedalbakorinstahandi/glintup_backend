@@ -68,7 +68,7 @@ class SalonResource extends JsonResource
             'block_message'   => $this->block_message,
             'bio'             => $this->bio,
             'tags'            => $this->tags,
-            'is_open' => $this->isOpen(),
+            'is_open' => $this->resource->isOpen(),
             'type'            => $this->type,
             'country'         => $this->country,
             'city'            => $this->city,
