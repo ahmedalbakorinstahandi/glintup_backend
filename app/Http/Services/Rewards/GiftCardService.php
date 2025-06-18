@@ -19,7 +19,7 @@ class GiftCardService
 {
     public function index($data)
     {
-        $query = GiftCard::query()->with(['sender', 'recipient', 'salon']);
+        $query = GiftCard::query()->with(['sender', 'recipient']);
 
 
         $query = GiftCardPermission::filterIndex($query);
@@ -98,10 +98,15 @@ class GiftCardService
 
     public function show($id)
     {
-        $item = GiftCard::with(['sender', 'recipient', 'salon'])->find($id);
+        $item = GiftCard::with(['sender', 'recipient'])->find($id);
         if (!$item) {
             MessageService::abort(404, 'messages.gift_card.item_not_found');
         }
+
+        if ($item->salon_id) {
+            $item->load(['salon']);
+        }
+
         return $item;
     }
 
@@ -113,12 +118,29 @@ class GiftCardService
         $data['phone'] = $phoneParts['national_number'];
 
 
-        return GiftCard::create($data);
+
+        $giftCard = GiftCard::create($data);
+
+        $giftCard->load(['sender', 'recipient']);
+
+        if ($giftCard->salon_id) {
+            $giftCard->load(['salon']);
+        }
+
+        return $giftCard;
     }
 
     public function update($item, $data)
     {
         $item->update($data);
+
+
+        if ($item->salon_id) {
+            $item->load(['salon']);
+        }
+
+        $item->load(['sender', 'recipient']);
+
         return $item;
     }
 
