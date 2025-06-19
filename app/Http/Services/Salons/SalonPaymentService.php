@@ -14,11 +14,25 @@ class SalonPaymentService
         $query = SalonPayment::with(['paymentable', 'user']);
 
         $query = SalonPaymentPermission::filterIndex($query);
-        
+
+        if (isset($data['search'])) {
+            $query->where(function ($query) use ($data) {
+                $query->whereHas('user', function ($query) use ($data) {
+                    $query->where('first_name', 'like', '%' . $data['search'] . '%')
+                        ->orWhere('last_name', 'like', '%' . $data['search'] . '%')
+                        ->orWhere('phone', 'like', '%' . $data['search'] . '%')
+                        ->orWhere('email', 'like', '%' . $data['search'] . '%')
+                        ->orWhere('phone_code', 'like', '%' . $data['search'] . '%');
+                });
+
+                $query->orWhere('code', 'like', '%' . $data['search'] . '%');
+            });
+        }
+
         return FilterService::applyFilters(
             $query,
             $data,
-            ['status', 'method'],
+            [],
             ['amount'],
             ['created_at'],
             ['salon_id', 'user_id'],

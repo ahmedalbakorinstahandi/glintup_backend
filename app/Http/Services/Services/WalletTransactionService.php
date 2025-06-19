@@ -81,10 +81,23 @@ class WalletTransactionService
 
         $query = WalletTransactionPermission::filterIndex($query);
 
+
+        if (isset($data['search'])) {
+            $query->where(function ($query) use ($data) {
+                $query->whereHas('user', function ($query) use ($data) {
+                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $data['search'] . '%'])
+                        ->orWhereRaw("CONCAT(phone_code, phone) LIKE ?", ['%' . str_replace('+', '', $data['search']) . '%'])
+                        ->orWhere('email', 'like', '%' . $data['search'] . '%');
+                });
+
+                $query->orWhere('description', 'like', '%' . $data['search'] . '%');
+            });
+        }
+
         return FilterService::applyFilters(
             $query,
             $data,
-            ['description'],
+            [],
             ['amount'],
             ['created_at'],
             ['user_id', 'status', 'type', 'direction', 'is_refund'],

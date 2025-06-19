@@ -67,7 +67,8 @@ class BookingService
                     ->orWhereHas('user', function ($userQuery) use ($search) {
                         $userQuery->where('first_name', 'LIKE', "%{$search}%")
                             ->orWhere('last_name', 'LIKE', "%{$search}%")
-                            ->orWhere('phone', 'LIKE', "%{$search}%");
+                            ->orWhere('phone', 'LIKE', "%{$search}%")
+                        ;
                     })
                     // البحث في اسم الصالون
                     ->orWhereHas('salon', function ($salonQuery) use ($search) {
@@ -602,8 +603,8 @@ class BookingService
         $use_free_services = $data['use_free_services'] ?? false;
         $payment_method = $data['payment_type'] ?? 'wallet';
 
-        $service_amount_data = $use_free_services ? 
-            $bookingDetails['with_free_services'] : 
+        $service_amount_data = $use_free_services ?
+            $bookingDetails['with_free_services'] :
             $bookingDetails['with_out_free_services'];
 
         $amount = $service_amount_data['total_amount_after_discount'];
@@ -794,7 +795,7 @@ class BookingService
     private function createSalonPayment($booking, $user, $amount, $payment_method)
     {
         $system_percentage = $this->getSalonSystemPercentage($booking->salon);
-        
+
         $payment = SalonPayment::create([
             'paymentable_id' => $booking->id,
             'paymentable_type' => Booking::class,
