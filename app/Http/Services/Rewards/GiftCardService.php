@@ -307,7 +307,7 @@ class GiftCardService
             $full_phone = str_replace(' ', '', $data['phone_code'] . $data['phone']);
 
             $website_url = "https://glintup.ae/";
-            $full_name = User::auth()->first_name . ' ' . User::auth()->last_name;
+            $full_name = $user->first_name . ' ' . $user->last_name;
 
             if ($data['type'] == 'amount') {
                 $details = trans('messages.gift_card_amount_details', [
