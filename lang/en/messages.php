@@ -108,6 +108,9 @@ return [
         'cannot_reschedule_rejected_booking' => 'Cannot reschedule a rejected booking',
         'service_not_found_or_invalid' => 'Service not found or invalid',
         'services_rescheduled_successfully' => 'Services rescheduled successfully',
+        'thanks_message' => 'Thank you for using GlintUp!',
+        'cancel_policy' => 'You can cancel the booking up to 24 hours before the appointment, except for makeup artist services where 20% of the amount is deducted.',
+        'service_policy' => 'We provide high-quality services and strictly adhere to our standards. The value of the services cannot be refunded after execution successfully.',
     ],
 
 

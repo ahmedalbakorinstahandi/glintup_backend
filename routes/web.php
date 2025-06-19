@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Booking\InvoiceController;
 use App\Models\Booking\Booking;
 use App\Models\Booking\Invoice;
 use Illuminate\Support\Facades\Route;
@@ -111,3 +112,6 @@ Route::get('/invoices/{id}', function ($id) {
 
     return view('invoice', compact('invoice', 'salon', 'customer'))->with('currency', 'AED');
 });
+
+
+Route::get('/invoices/{code}/{lang}', [InvoiceController::class, 'show']);

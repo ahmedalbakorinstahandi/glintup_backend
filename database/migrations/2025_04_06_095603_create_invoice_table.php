@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('code');
             $table->unsignedBigInteger('booking_id');
             $table->foreign('booking_id')->references('id')->on('bookings');
-            $table->double('amount');
+            // $table->double('amount');
             $table->double('tax');
-            $table->double('discount')->nullable();
-            $table->enum('status', ["unpaid","partially_paid","paid"]);
+            // $table->double('discount')->nullable();
+            // $table->enum('status', ["unpaid","partially_paid","paid"]);
             $table->timestamps();
             $table->softDeletes();
         });

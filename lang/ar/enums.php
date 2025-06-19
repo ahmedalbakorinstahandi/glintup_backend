@@ -1,6 +1,6 @@
 <?php
 
- return [
+return [
     'genders' => [
         'male' => 'ذكر',
         'female' => 'أنثى',
@@ -17,7 +17,7 @@
         'completed' => 'مكتملة',
         'cancelled' => 'ملغاة',
     ],
-    'payment_mehtod' => [
+    'payment_method' => [
         'unpaid'         => 'غير مدفوع',
         'partially_paid' => 'مدفوع جزئيًا',
         'full_paid'           => 'مدفوع',
@@ -34,5 +34,12 @@
         'male'   => 'رجال',
         'female' => 'نساء',
         'both'   => 'كلاهما',
+    ],
+
+    'salon_type' => [
+        'salon'        => 'صالون',
+        'home_service' => 'صالون خدمة منزلية',
+        'beautician'   => 'خبيرة تجميل',
+        'clinic'       => 'عيادة',
     ],
 ];

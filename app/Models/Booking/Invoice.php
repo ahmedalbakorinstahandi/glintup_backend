@@ -12,19 +12,18 @@ class Invoice extends Model
     protected $fillable = [
         'code',
         'booking_id',
-        'amount',
+        // 'amount',
         'tax',
         'discount',
-        'status',
+        // 'status',
     ];
 
     protected $casts = [
-        'amount'      => 'double',
+        // 'amount'      => 'double',
         'tax'         => 'double',
-        'discount'    => 'double',
+        // 'discount'    => 'double',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
-        'deleted_at'  => 'datetime',
     ];
 
     public function booking()
@@ -35,6 +34,27 @@ class Invoice extends Model
     // ✅ خصائص مخصصة
     public function getTotalAmountAttribute(): float
     {
-        return $this->amount + $this->tax - ($this->discount ?? 0);
+        return $this->booking->getTotalPriceAttribute() + $this->tax;
     }
+
+    
+
+    public function getStatusAttribute(): string
+    {
+        // status paid / partially_paid / unpaid
+        $totalPaid = $this->booking->payments->where('status', 'confirm')->sum('amount');
+        $totalAmount = $this->booking->getTotalPriceAttribute();
+
+        if ($totalPaid >= $totalAmount) {
+            return 'paid';
+        }
+
+        if ($totalPaid > 0) {
+            return 'partially_paid';
+        }
+
+        return 'unpaid';
+    }
+
+    
 }

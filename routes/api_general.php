@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\General;
 
+use App\Http\Controllers\Booking\InvoiceController;
 use App\Http\Controllers\Salons\SalonPermissionController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
@@ -45,3 +46,5 @@ Route::prefix('general')->group(function () {
         Route::get('/salon-permissions', [SalonPermissionController::class, 'index']);
     });
 });
+
+Route::get('/invoices/{id}', [InvoiceController::class, 'show']);

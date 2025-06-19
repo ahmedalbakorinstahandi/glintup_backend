@@ -188,4 +188,7 @@ class BookingController extends Controller
             'data' => new BookingResource($booking),
         ]);
     }
+
+
+    
 }

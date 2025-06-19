@@ -7,6 +7,7 @@ use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Models\Booking\Booking;
 use App\Models\Booking\Coupon;
 use App\Models\Booking\CouponUsage;
+use App\Models\Booking\Invoice;
 use App\Models\General\Address;
 use App\Models\General\Setting;
 use App\Models\General\Status;
@@ -22,6 +23,7 @@ use App\Services\MessageService;
 use App\Services\PhoneService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class BookingService
 {
@@ -265,13 +267,16 @@ class BookingService
             }
         }
 
+        $invoice = $this->createInvoice($booking);
+
         $booking->load([
             'user',
             'salon',
             'bookingServices.service',
             'transactions',
             'couponUsage',
-            'payments'
+            'payments',
+            'invoice'
         ]);
 
         return $booking;
@@ -758,7 +763,9 @@ class BookingService
             }
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        $invoice = $this->createInvoice($booking);
+
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
 
         return $booking;
     }
@@ -1413,5 +1420,17 @@ class BookingService
         // TODO: إرسال إشعار للصالون
 
         return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+    }
+
+
+    public function createInvoice(Booking $booking)
+    {
+        $invoice = Invoice::create([
+            'code' => 'GLT-INV-' . strtoupper(Str::random(4)) . '-' . strtoupper(Str::random(4)),
+            'booking_id' => $booking->id,
+            'tax' => 0,
+        ]);
+
+        return $invoice;
     }
 }

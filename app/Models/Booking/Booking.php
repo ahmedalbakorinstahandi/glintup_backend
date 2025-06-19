@@ -111,6 +111,29 @@ class Booking extends Model
         return $totalPrice;
     }
 
+    public function getTotalPriceBeforeDiscountAttribute()
+    {
+        $totalPrice = 0;
+
+        foreach ($this->bookingServices as $service) {
+            $finalPrice = $service->getFinalPriceAttribute();
+
+            // Check if the service is free for the user
+            $freeService = FreeService::where([
+                'user_id' => $this->user_id,
+                'service_id' => $service->id,
+                'booking_id' => $this->id,
+            ])->first();
+
+
+            if (!$freeService) {
+                $totalPrice += $finalPrice;
+            }
+        }
+
+        return $totalPrice;
+    }
+
     // // getTotalAmountRefundedAttribute
     // public function getTotalAmountRefundedForAttribute()
     // {

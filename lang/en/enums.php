@@ -35,4 +35,10 @@ return [
         'female' => 'Women',
         'both'   => 'Both',
     ],
+    'salon_type' => [
+        'salon'        => 'Salon',
+        'home_service' => 'Home Service',
+        'beautician'   => 'Makeup Artist',
+        'clinic'       => 'Clinic',
+    ],
 ];
