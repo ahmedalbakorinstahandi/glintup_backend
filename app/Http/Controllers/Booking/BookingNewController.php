@@ -88,12 +88,12 @@ class BookingNewController
             }
         }
 
-        $booking = $this->bookingService->createFromUserNew($data);
+        $data = $this->bookingService->createFromUserNew($data);
 
         return response()->json([
             'success' => true,
             'message' => trans('messages.booking.item_created_successfully'),
-            'data' => new BookingResource($booking),
+            'data' =>  !isset($data['payment']) ? new BookingResource($data['booking']) : $data['payment'],
         ]);
     }
 
@@ -147,7 +147,6 @@ class BookingNewController
                 'start_time' => $item['start_time'],
                 'end_time' => $item['end_time'],
             ];
-            
         }
 
         $booking = $this->bookingService->rescheduleBookingServices($booking, $services);
