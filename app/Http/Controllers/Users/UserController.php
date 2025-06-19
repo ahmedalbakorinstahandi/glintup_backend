@@ -195,8 +195,7 @@ class UserController extends Controller
         ]);
 
 
-        // merge with request provider_filter = discount
-        request()->merge(['provider_filter' => 'discount']);
+        $request = request()->merge(['filter_provider' => 'discount']);
 
         $salons_have_discount = $salonService->index([
             'filter_provider' => 'discount',
