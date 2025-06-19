@@ -107,7 +107,7 @@ class BookingService
             MessageService::abort(404, 'messages.booking.item_not_found');
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'address']);
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'address', 'invoice']);
 
         return $booking;
     }
@@ -585,7 +585,7 @@ class BookingService
             }
         }
 
-        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
 
         return $booking;
     }
@@ -1280,7 +1280,7 @@ class BookingService
 
         // TODO send notification to salon
 
-        return  $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        return  $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
     }
 
 
@@ -1375,7 +1375,7 @@ class BookingService
             'code' => 'SP' . str_pad(SalonPayment::max('id') + 1, 6, '0', STR_PAD_LEFT),
         ]);
 
-        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
     }
 
 
@@ -1419,7 +1419,7 @@ class BookingService
 
         // TODO: إرسال إشعار للصالون
 
-        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments']);
+        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
     }
 
 
