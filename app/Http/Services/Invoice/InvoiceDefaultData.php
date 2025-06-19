@@ -13,10 +13,10 @@ class InvoiceDefaultData
 
         $salon = $booking->salon;
 
-        $services = $booking->bookingServices;
+        $bookingServices = $booking->bookingServices;
 
         $services = [];
-        foreach ($services as $service) {
+        foreach ($bookingServices as $service) {
             $services[] = [
                 'name' => $service->service->name[$lang],
                 'duration' => $service->duration_minutes,
