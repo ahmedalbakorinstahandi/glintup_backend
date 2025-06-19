@@ -28,6 +28,8 @@ use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Customer;
 use Stripe\EphemeralKey;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class BookingService
 {
@@ -650,21 +652,7 @@ class BookingService
             ['stripe_version' => '2023-10-16']
         );
 
-        // Prepare booking data for metadata
-        $bookingData = [
-            'user_id' => $user->id,
-            'salon_id' => $data['salon_id'],
-            'date' => $data['date'],
-            'time' => $data['time'] ?? '00:00:00',
-            'services' => json_encode($data['services']),
-            'address_id' => $data['address_id'] ?? null,
-            'coupon_id' => $data['coupon_id'] ?? null,
-            'use_free_services' => $use_free_services,
-            'created_by' => 'customer',
-            'booking_details' => json_encode($bookingDetails),
-        ];
-
-        // Create payment intent with booking data in metadata
+        // Create payment intent first
         $paymentIntent = PaymentIntent::create([
             'amount' => $amount * 100, // Convert to cents
             'currency' => 'aed',
@@ -675,9 +663,34 @@ class BookingService
                 'type' => 'booking',
                 'user_id' => $user->id,
                 'phone' => $user->phone_code . ' ' . $user->phone,
-                'booking_data' => json_encode($bookingData),
                 'amount' => $amount,
             ],
+        ]);
+
+        // Prepare booking data for cache
+        $bookingData = [
+            'user_id' => $user->id,
+            'salon_id' => $data['salon_id'],
+            'date' => $data['date'],
+            'time' => $data['time'] ?? '00:00:00',
+            'services' => $data['services'],
+            'address_id' => $data['address_id'] ?? null,
+            'coupon_id' => $data['coupon_id'] ?? null,
+            'use_free_services' => $use_free_services,
+            'created_by' => 'customer',
+            'booking_details' => $bookingDetails,
+            'notes' => $data['notes'] ?? null,
+        ];
+
+        // Store booking data in cache for 1 hour
+        $cacheKey = "booking_data_{$paymentIntent->id}";
+        Cache::put($cacheKey, $bookingData, 3600);
+
+        Log::info('Booking data stored in cache', [
+            'payment_intent_id' => $paymentIntent->id,
+            'cache_key' => $cacheKey,
+            'user_id' => $user->id,
+            'amount' => $amount
         ]);
 
         return [
@@ -697,6 +710,7 @@ class BookingService
         $data['created_by'] = 'customer';
         $data['status'] = 'confirmed';
         $data['time'] = $data['time'] ?? '00:00:00';
+        $data['notes'] = $data['notes'] ?? null;
 
         $booking = Booking::create($data);
         $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);

@@ -17,6 +17,7 @@ use App\Models\Users\WalletTransaction as UserWalletTransaction;
 use App\Models\Salons\SalonMenuRequest as SalonSalonMenuRequest;
 use App\Http\Services\Booking\BookingService;
 use App\Models\Users\User;
+use Illuminate\Support\Facades\Cache;
 
 class StripeWebhookController extends Controller
 {
@@ -85,11 +86,17 @@ class StripeWebhookController extends Controller
 
     private function handleBookingPayment($session)
     {
+        // Get booking data from cache using payment intent ID
+        $cacheKey = "booking_data_{$session->payment_intent}";
+        
         try {
-            // Get booking data from metadata
-            $bookingData = json_decode($session->metadata->booking_data ?? '', true);
+            $bookingData = Cache::get($cacheKey);
+            
             if (!$bookingData) {
-                Log::error('Booking data not found in metadata', ['session' => $session]);
+                Log::error('Booking data not found in cache', [
+                    'payment_intent' => $session->payment_intent,
+                    'cache_key' => $cacheKey
+                ]);
                 return;
             }
 
@@ -100,7 +107,7 @@ class StripeWebhookController extends Controller
                 return;
             }
 
-            // Get amount
+            // Get amount from metadata
             $amount = $session->metadata->amount ?? 0;
 
             // Create booking using BookingService
@@ -111,8 +118,11 @@ class StripeWebhookController extends Controller
                 $bookingData,
                 'stripe',
                 $bookingData['use_free_services'],
-                json_decode($bookingData['booking_details'], true)
+                $bookingData['booking_details']
             );
+
+            // Remove booking data from cache after successful creation
+            Cache::forget($cacheKey);
 
             Log::info('Booking created successfully', [
                 'booking_id' => $booking->id,
@@ -123,7 +133,8 @@ class StripeWebhookController extends Controller
             Log::error('Error creating booking', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'session' => $session
+                'payment_intent' => $session->payment_intent,
+                'cache_key' => $cacheKey
             ]);
         }
     }
@@ -133,11 +144,14 @@ class StripeWebhookController extends Controller
         $type = $session->metadata->type ?? null;
         $paymentIntentId = $session->payment_intent;
 
-        // For booking payments, we don't need to do anything since the booking hasn't been created yet
+        // For booking payments, clean up cache data
         if ($type === 'booking') {
-            Log::info('Booking payment failed', [
+            $cacheKey = "booking_data_{$paymentIntentId}";
+            Cache::forget($cacheKey);
+            
+            Log::info('Booking payment failed - cache cleaned', [
                 'payment_intent' => $paymentIntentId,
-                'metadata' => $session->metadata
+                'cache_key' => $cacheKey
             ]);
             return;
         }
