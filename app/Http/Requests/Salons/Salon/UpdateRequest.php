@@ -50,6 +50,9 @@ class UpdateRequest extends BaseFormRequest
             'bank_account_holder_name' => 'nullable|string|max:255',
             'bank_account_iban' => 'nullable|string|max:255',
             'services_list' => 'nullable|string|max:255',
+            'trade_license' => 'nullable|string|max:255',
+            'vat_certificate' => 'nullable|string|max:255',
+            'bank_account_certificate' => 'nullable|string|max:255',
         ];
 
         $user = User::auth();
