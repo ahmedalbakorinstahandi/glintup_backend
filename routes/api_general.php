@@ -48,3 +48,4 @@ Route::prefix('general')->group(function () {
 });
 
 Route::get('/invoices/{id}', [InvoiceController::class, 'show']);
+Route::get('/invoices/{id}/pdf', [InvoiceController::class, 'showPdf']);

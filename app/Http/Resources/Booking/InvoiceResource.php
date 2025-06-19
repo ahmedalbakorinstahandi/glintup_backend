@@ -20,6 +20,7 @@ class InvoiceResource extends JsonResource
             'coupon_discount' => $this->getCouponDiscount(),
             'status'         => $this->status,
             'invoice_url'    => url('/api/invoices/' . $this->code),
+            'invoice_pdf_url' => url('/api/invoices/' . $this->code . '/pdf'),
 
             'created_at'     => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'     => $this->updated_at?->format('Y-m-d H:i:s'),
