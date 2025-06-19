@@ -17,10 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon', 110);
-            $table->enum('type', ["amount","custom"]);
-            $table->double('amount')->nullable();
-            $table->string('currency', 10);
             $table->unsignedBigInteger('order');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
