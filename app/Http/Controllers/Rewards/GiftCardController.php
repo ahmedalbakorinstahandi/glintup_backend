@@ -89,13 +89,21 @@ class GiftCardController extends Controller
     {
         $data = $this->giftCardService->createByUser($request->validated());
 
-        return response()->json(
-            [
+        // Check if it's a payment response (Stripe) or direct gift card (wallet)
+        if (is_array($data) && isset($data['payment'])) {
+            return response()->json([
+                'success' => true,
+                'message' => trans('messages.gift_card.payment_required'),
+                'data' => $data['payment'],
+            ]);
+        } else {
+            // Direct gift card object (wallet payment)
+            return response()->json([
                 'success' => true,
                 'message' => trans('messages.gift_card.sent_successfully'),
-                'data' => !isset($data['payment']) ? new GiftCardResource($data['gift_card']) : $data['payment'],
-            ]
-        );
+                'data' => new GiftCardResource($data),
+            ]);
+        }
     }
 
     //$receive
