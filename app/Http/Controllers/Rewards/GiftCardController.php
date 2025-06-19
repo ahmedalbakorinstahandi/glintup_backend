@@ -87,13 +87,13 @@ class GiftCardController extends Controller
     // create gift card by user 
     public function createByUser(CreateByUserRequest $request)
     {
-        $gift = $this->giftCardService->createByUser($request->validated());
+        $data = $this->giftCardService->createByUser($request->validated());
 
         return response()->json(
             [
                 'success' => true,
                 'message' => trans('messages.gift_card.sent_successfully'),
-                'data' => new GiftCardResource($gift),
+                'data' => !isset($data['payment']) ? new GiftCardResource($data['gift_card']) : $data['payment'],
             ]
         );
     }
