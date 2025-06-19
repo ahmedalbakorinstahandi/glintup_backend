@@ -42,7 +42,7 @@ class InvoiceDefaultData
                 'total_before_discount' => $booking->getTotalPriceBeforeDiscountAttribute(),
                 'coupon_discount' => $booking->couponUsage ? ($booking->couponUsage->coupon->discount_value . ' ' . ($booking->couponUsage->coupon->discount_type == 'percentage' ? '%' : 'AED')) : null,
                 'total_after_discount' => $booking->getTotalPriceAttribute(),
-                'notes' => ''
+                'notes' => $booking->notes,
             ],
             'customer' => [
                 'name' => $booking->user->first_name . ' ' . $booking->user->last_name,
