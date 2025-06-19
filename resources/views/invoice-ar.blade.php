@@ -151,8 +151,8 @@
     <div class="totals">
       <div><span class="bold">المجموع الفرعي:</span> {{ number_format($invoice['total_before_discount'], 2) }} {{ $currency }}</div>
       <div><span class="bold">الخصم:</span> {{ number_format($invoice['coupon_discount'], 2) }} {{ $currency }}</div>
-      <div><span class="bold">الضريبة (5٪):</span> {{ number_format(($invoice['total_after_discount'] * 0.05), 2) }} {{ $currency }}</div>
-      <div><span class="bold">الإجمالي:</span> {{ number_format($invoice['total_after_discount'] * 1.05, 2) }} {{ $currency }}</div>
+      <!-- <div><span class="bold">الضريبة (5٪):</span> {{ number_format(($invoice['total_after_discount'] * 0.05), 2) }} {{ $currency }}</div> -->
+      <div><span class="bold">الإجمالي:</span> {{ number_format($invoice['total_after_discount'], 2) }} {{ $currency }}</div>
       <div><span class="bold">حالة الدفع:</span> {{ $invoice['payment_status'] }}</div>
     </div>
 
