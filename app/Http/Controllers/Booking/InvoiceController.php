@@ -9,10 +9,12 @@ use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    public function show(Request $request, $id)
+    public function show(Request $request, $id, $lang = null)
     {
         // Get language preference (default to English if not specified)
-        $lang = $request->header('Accept-Language', 'en');
+        if (!$lang) {
+            $lang = $request->header('Accept-Language', 'en');
+        }
 
         // Validate language
         if (!in_array($lang, ['en', 'ar'])) {
