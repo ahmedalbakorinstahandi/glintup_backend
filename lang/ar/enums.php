@@ -20,7 +20,7 @@ return [
     'payment_method' => [
         'unpaid'         => 'غير مدفوع',
         'partially_paid' => 'مدفوع جزئيًا',
-        'full_paid'           => 'مدفوع',
+        'paid'           => 'مدفوع',
     ],
     'created_by' => [
         'customer' => 'العميل',

@@ -45,8 +45,8 @@ class InvoiceDefaultData
                 'notes' => ''
             ],
             'customer' => [
-                'name' => $booking->user->full_name,
-                'phone' => $booking->user->full_phone
+                'name' => $booking->user->first_name . ' ' . $booking->user->last_name,
+                'phone' => $booking->user->phone_code . $booking->user->phone
             ],
             'services' => $services,
             'currency' => 'AED',
