@@ -103,10 +103,74 @@
     .footer p {
       margin: 3px 0;
     }
+
+    /* PDF Download Buttons */
+    .pdf-actions {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+    }
+
+    .pdf-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 0 10px;
+      background-color: #dc3545;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .pdf-btn:hover {
+      background-color: #c82333;
+      color: white;
+      text-decoration: none;
+    }
+
+    .pdf-btn.secondary {
+      background-color: #6c757d;
+    }
+
+    .pdf-btn.secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .language-switch {
+      margin-top: 10px;
+    }
+
+    .language-switch a {
+      color: #007bff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .language-switch a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <div class="invoice-box">
+    <!-- PDF Download Actions -->
+    <div class="pdf-actions">
+      <a href="{{ $pdf_url ?? '#' }}" class="pdf-btn" target="_blank">
+        📄 تحميل PDF
+      </a>
+      <a href="{{ $pdf_url ?? '#' }}" class="pdf-btn secondary" download>
+        💾 حفظ PDF
+      </a>
+      <div class="language-switch">
+        <a href="{{ url('/invoices/' . ($invoice_code ?? '') . '/en') }}">English</a>
+        <a href="{{ url('/invoices/' . ($invoice_code ?? '') . '/ar') }}">العربية</a>
+      </div>
+    </div>
+
     <div class="header">
       <img src="{{ $logo }}" alt="شعار التطبيق" class="logo">
       <h1>فاتورة ضريبية</h1>
