@@ -20,7 +20,7 @@ return [
     'payment_method' => [
         'unpaid'         => 'Unpaid',
         'partially_paid' => 'Partially Paid',
-        'full_paid'           => 'Full Paid',
+        'paid'           => 'Full Paid',
     ],
     'created_by' => [
         'customer' => 'Customer',
