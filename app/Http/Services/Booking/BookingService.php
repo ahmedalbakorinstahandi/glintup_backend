@@ -24,6 +24,10 @@ use App\Services\PhoneService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+use Stripe\Customer;
+use Stripe\EphemeralKey;
 
 class BookingService
 {
@@ -592,177 +596,139 @@ class BookingService
 
     public function createFromUserNew($data)
     {
-
         $bookingDetails = $this->returnBookingDetails($data);
-
         $use_free_services = $data['use_free_services'] ?? false;
+        $payment_method = $data['payment_type'] ?? 'wallet';
 
-        $service_amount_data = [];
-
-        if ($use_free_services) {
-            $service_amount_data = $bookingDetails['with_free_services'];
-        } else {
-            $service_amount_data = $bookingDetails['with_out_free_services'];
-        }
-
-        $you_have_enough_balance_to_pay =  $service_amount_data['you_have_enough_balance_to_pay'];
-
-        if (!$you_have_enough_balance_to_pay) {
-            MessageService::abort(422, 'messages.user.not_enough_balance');
-        }
-
+        $service_amount_data = $use_free_services ? 
+            $bookingDetails['with_free_services'] : 
+            $bookingDetails['with_out_free_services'];
 
         $amount = $service_amount_data['total_amount_after_discount'];
-
         $user = User::auth();
+
+        if ($payment_method === 'wallet') {
+            return $this->processWalletPayment($user, $amount, $data, $service_amount_data, $use_free_services, $bookingDetails);
+        } else if ($payment_method === 'stripe') {
+            return $this->processStripePayment($user, $amount, $data, $service_amount_data, $use_free_services, $bookingDetails);
+        }
+
+        MessageService::abort(422, 'messages.invalid_payment_method');
+    }
+
+    private function processWalletPayment($user, $amount, $data, $service_amount_data, $use_free_services, $bookingDetails)
+    {
+        if (!$service_amount_data['you_have_enough_balance_to_pay']) {
+            MessageService::abort(422, 'messages.user.not_enough_balance');
+        }
 
         $user_balance = $user->balance;
         $user->balance = $user_balance - $amount;
         $user->save();
 
+        return $this->createBooking($user, $amount, $data, 'wallet', $use_free_services, $bookingDetails);
+    }
 
+    private function processStripePayment($user, $amount, $data, $service_amount_data, $use_free_services, $bookingDetails)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
+        // Create or get Stripe customer
+        if (!$user->stripe_customer_id) {
+            $customer = Customer::create([
+                'email' => $user->email,
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'phone' => $user->phone,
+            ]);
+            $user->stripe_customer_id = $customer->id;
+            $user->save();
+        }
 
+        // Create ephemeral key
+        $ephemeralKey = EphemeralKey::create(
+            ['customer' => $user->stripe_customer_id],
+            ['stripe_version' => '2023-10-16']
+        );
+
+        // Prepare booking data for metadata
+        $bookingData = [
+            'user_id' => $user->id,
+            'salon_id' => $data['salon_id'],
+            'date' => $data['date'],
+            'time' => $data['time'] ?? '00:00:00',
+            'services' => json_encode($data['services']),
+            'address_id' => $data['address_id'] ?? null,
+            'coupon_id' => $data['coupon_id'] ?? null,
+            'use_free_services' => $use_free_services,
+            'created_by' => 'customer',
+            'booking_details' => json_encode($bookingDetails),
+        ];
+
+        // Create payment intent with booking data in metadata
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $amount * 100, // Convert to cents
+            'currency' => 'aed',
+            'customer' => $user->stripe_customer_id,
+            'setup_future_usage' => 'off_session',
+            'automatic_payment_methods' => ['enabled' => true],
+            'metadata' => [
+                'type' => 'booking',
+                'user_id' => $user->id,
+                'phone' => $user->phone_code . ' ' . $user->phone,
+                'booking_data' => json_encode($bookingData),
+                'amount' => $amount,
+            ],
+        ]);
+
+        return [
+            'payment' => [
+                'client_secret' => $paymentIntent->client_secret,
+                'customer_id' => $user->stripe_customer_id,
+                'ephemeral_key' => $ephemeralKey->secret,
+                'amount' => $amount,
+            ]
+        ];
+    }
+
+    public function createBooking($user, $amount, $data, $payment_method, $use_free_services, $bookingDetails)
+    {
         $data['code'] = rand(100000, 999999);
-
-
-
         $data['user_id'] = $user->id;
-
-        $data['created_by'] = 'customer'; // "salon","customer"
-        $data['status'] = 'confirmed'; // "pending", "confirmed", "completed", "cancelled"
-
-        // test value
-        $data['time']  = '00:00:00';
+        $data['created_by'] = 'customer';
+        $data['status'] = 'confirmed';
+        $data['time'] = $data['time'] ?? '00:00:00';
 
         $booking = Booking::create($data);
         $booking->code = "BOOKING" . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
-
         $booking->save();
 
-
-        // booking service location
+        // Handle address if provided
         if (isset($data['address_id'])) {
-
-            $address = Address::find($data['address_id']);
-
-            $booking->address()->create([
-                'addressable_id' => $booking->id,
-                'addressable_type' => Booking::class,
-                'name' => $address->name,
-                'address' => $address->address,
-                'address_secondary' => $address->address_secondary,
-                'city' => $address->city,
-                'country' => $address->country,
-                'postal_code' => $address->postal_code,
-                'latitude' => $address->latitude,
-                'longitude' => $address->longitude,
-                'city_place_id' => $address->city_place_id
-            ]);
+            $this->createBookingAddress($booking, $data['address_id']);
         }
 
-        // create transaction for user balance
-        $transaction = WalletTransaction::create(
-            [
-                'user_id' => $user->id,
-                'amount' => $amount,
-                'currency' => 'AED',
-                'description' => [
-                    'en' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'en'),
-                    'ar' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'ar'),
-                ],
-                'status' => 'completed',
-                'type' => 'booking',
-                'is_refund' => false,
-                'transactionable_id' => $booking->id,
-                'transactionable_type' => Booking::class,
-                'direction' => "out",
-                'metadata' => [],
-            ]
-        );
+        // Create transaction
+        $this->createBookingTransaction($booking, $user, $amount, $payment_method);
 
+        // Create salon payment
+        $this->createSalonPayment($booking, $user, $amount, $payment_method);
 
-        $salon = $booking->salon;
-
-        $salon_type = $salon->type; // "salon", "home_service", "beautician", "clinic"
-        // salons_provider_percentage,clinics_provider_percentage,home_service_provider_percentage,makeup_artists_provider_percentage
-
-        switch ($salon_type) {
-            case 'salon':
-                $system_percentage = Setting::where('key', 'salons_provider_percentage')->first()->value ?? 0;
-                break;
-            case 'home_service':
-                $system_percentage = Setting::where('key', 'home_service_provider_percentage')->first()->value ?? 0;
-                break;
-            case 'beautician':
-                $system_percentage = Setting::where('key', 'makeup_artists_provider_percentage')->first()->value ?? 0;
-                break;
-            case 'clinic':
-                $system_percentage = Setting::where('key', 'clinics_provider_percentage')->first()->value ?? 0;
-                break;
-            default:
-                $system_percentage = 0;
-        }
-
-        // booking payment
-        $salonPayment =  SalonPayment::create([
-            'paymentable_id' => $booking->id,
-            'paymentable_type' => Booking::class,
-            'user_id' => $user->id,
-            'salon_id' => $booking->salon_id,
-            'amount' => $amount,
-            'currency' => 'AED',
-            'method' => 'wallet',
-            'status' => 'confirm',
-            'is_refund' => false,
-            'system_percentage' => $system_percentage,
-        ]);
-
-        $salonPayment->code = 'SP' . str_pad($salonPayment->id, 6, '0', STR_PAD_LEFT);
-        $salonPayment->save();
-
-
-        // check if user have free services and use them
+        // Handle free services if used
         if ($use_free_services) {
-            foreach ($bookingDetails['selected_free_services'] as $freeService) {
-                if (is_object($freeService)) {
-                    $freeService->is_used = 1;
-                    $freeService->booking_id = $booking->id;
-                    $freeService->save();
-                }
-            }
+            $this->handleFreeServices($booking, $bookingDetails);
         }
 
-        // check if user have coupon_id: CouponUsage
+        // Handle coupon if provided
         if (isset($data['coupon_id'])) {
-            CouponUsage::create([
-                'coupon_id' => $data['coupon_id'],
-                'user_id' => $user->id,
-                'booking_id' => $booking->id,
-                'used_at' => now(),
-            ]);
+            $this->createCouponUsage($booking, $data['coupon_id'], $user);
         }
 
-
-
-        // booking services
+        // Create booking services
         if (isset($data['services'])) {
-            foreach ($data['services'] as $service) {
-                $serviceObject = Service::find($service['id']);
-
-                $booking->bookingServices()->create([
-                    'service_id' => $service['id'],
-                    'price' => $serviceObject->price,
-                    'currency' => $serviceObject->currency,
-                    'discount_percentage' => $serviceObject->discount_percentage,
-                    'start_date_time' => Carbon::parse($data['date'] . ' ' . $service['start_time']),
-                    'end_date_time' => Carbon::parse($data['date'] . ' ' . $service['end_time']),
-                    'duration_minutes' => $serviceObject->duration_minutes,
-                    'status' => 'confirmed',
-                ]);
-            }
+            $this->createBookingServices($booking, $data);
         }
 
+        // Create invoice
         $invoice = $this->createInvoice($booking);
 
         $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
@@ -770,9 +736,120 @@ class BookingService
         return $booking;
     }
 
+    // Helper methods moved from main function
+    private function createBookingAddress($booking, $address_id)
+    {
+        $address = Address::find($address_id);
+        $booking->address()->create([
+            'addressable_id' => $booking->id,
+            'addressable_type' => Booking::class,
+            'name' => $address->name,
+            'address' => $address->address,
+            'address_secondary' => $address->address_secondary,
+            'city' => $address->city,
+            'country' => $address->country,
+            'postal_code' => $address->postal_code,
+            'latitude' => $address->latitude,
+            'longitude' => $address->longitude,
+            'city_place_id' => $address->city_place_id
+        ]);
+    }
 
+    private function createBookingTransaction($booking, $user, $amount, $payment_method)
+    {
+        return WalletTransaction::create([
+            'user_id' => $user->id,
+            'amount' => $amount,
+            'currency' => 'AED',
+            'description' => [
+                'en' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'en'),
+                'ar' => __('messages.booking.booking_details', ['code' => $booking->code, 'salon' => $booking->salon->merchant_commercial_name], 'ar'),
+            ],
+            'status' => 'completed',
+            'type' => 'booking',
+            'is_refund' => false,
+            'transactionable_id' => $booking->id,
+            'transactionable_type' => Booking::class,
+            'direction' => "out",
+            'metadata' => [
+                'payment_method' => $payment_method
+            ],
+        ]);
+    }
 
+    private function createSalonPayment($booking, $user, $amount, $payment_method)
+    {
+        $system_percentage = $this->getSalonSystemPercentage($booking->salon);
+        
+        $payment = SalonPayment::create([
+            'paymentable_id' => $booking->id,
+            'paymentable_type' => Booking::class,
+            'user_id' => $user->id,
+            'salon_id' => $booking->salon_id,
+            'amount' => $amount,
+            'currency' => 'AED',
+            'method' => $payment_method,
+            'status' => 'confirm',
+            'is_refund' => false,
+            'system_percentage' => $system_percentage,
+        ]);
 
+        $payment->code = 'SP' . str_pad($payment->id, 6, '0', STR_PAD_LEFT);
+        $payment->save();
+
+        return $payment;
+    }
+
+    private function getSalonSystemPercentage($salon)
+    {
+        $type_mapping = [
+            'salon' => 'salons_provider_percentage',
+            'home_service' => 'home_service_provider_percentage',
+            'beautician' => 'makeup_artists_provider_percentage',
+            'clinic' => 'clinics_provider_percentage'
+        ];
+
+        $setting_key = $type_mapping[$salon->type] ?? null;
+        return $setting_key ? (Setting::where('key', $setting_key)->first()->value ?? 0) : 0;
+    }
+
+    private function handleFreeServices($booking, $bookingDetails)
+    {
+        foreach ($bookingDetails['selected_free_services'] as $freeService) {
+            if (is_object($freeService)) {
+                $freeService->is_used = 1;
+                $freeService->booking_id = $booking->id;
+                $freeService->save();
+            }
+        }
+    }
+
+    private function createCouponUsage($booking, $coupon_id, $user)
+    {
+        return CouponUsage::create([
+            'coupon_id' => $coupon_id,
+            'user_id' => $user->id,
+            'booking_id' => $booking->id,
+            'used_at' => now(),
+        ]);
+    }
+
+    private function createBookingServices($booking, $data)
+    {
+        foreach ($data['services'] as $service) {
+            $serviceObject = Service::find($service['id']);
+            $booking->bookingServices()->create([
+                'service_id' => $service['id'],
+                'price' => $serviceObject->price,
+                'currency' => $serviceObject->currency,
+                'discount_percentage' => $serviceObject->discount_percentage,
+                'start_date_time' => Carbon::parse($data['date'] . ' ' . $service['start_time']),
+                'end_date_time' => Carbon::parse($data['date'] . ' ' . $service['end_time']),
+                'duration_minutes' => $serviceObject->duration_minutes,
+                'status' => $booking->status,
+            ]);
+        }
+    }
 
     public function cancelBooking($booking, $cancelBySalon)
     {

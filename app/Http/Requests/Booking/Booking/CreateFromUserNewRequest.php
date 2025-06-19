@@ -33,6 +33,7 @@ class CreateFromUserNewRequest extends BaseFormRequest
             'notes'          => 'nullable|string',
             'salon_id' => 'required|exists:salons,id,deleted_at,NULL',
             'use_free_services' => 'nullable|boolean',
+            'payment_type' => 'required|in:wallet,stripe',
         ];
 
 
