@@ -186,15 +186,20 @@ class UserController extends Controller
             'limit' => 2,
         ]);
 
-        $salons_have_discount = $salonService->index([
-            'filter_provider' => 'discount',
-            'limit' => 2,
-        ]);
 
         $nearby_salons = $salonService->index([
             'filter_provider' => 'nearby',
             'latitude' => request()->get('latitude') ?? null,
             'longitude' => request()->get('longitude') ?? null,
+            'limit' => 2,
+        ]);
+
+
+        // merge with request provider_filter = discount
+        request()->merge(['provider_filter' => 'discount']);
+
+        $salons_have_discount = $salonService->index([
+            'filter_provider' => 'discount',
             'limit' => 2,
         ]);
 
