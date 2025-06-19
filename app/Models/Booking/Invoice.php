@@ -34,10 +34,10 @@ class Invoice extends Model
     // ✅ خصائص مخصصة
     public function getTotalAmountAttribute(): float
     {
-        return $this->booking->getTotalPriceAttribute() + $this->tax;
+        return $this->booking->getTotalPriceAttribute();
     }
 
-    
+
 
     public function getStatusAttribute(): string
     {
@@ -55,6 +55,4 @@ class Invoice extends Model
 
         return 'unpaid';
     }
-
-    
 }
