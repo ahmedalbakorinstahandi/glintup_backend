@@ -145,41 +145,6 @@ class UserController extends Controller
         $longitude = request()->get('longitude');
 
 
-        # TODO
-
-        // $trendingSalons = Salon::where('is_approved', true)
-        //     ->where('is_active', true)
-        //     ->withCount(['bookings' => function ($query) {
-        //         $query->where('created_at', '>=', now()->subDays(14))
-        //             ->where('status', 'completed');
-        //     }])
-        //     ->orderBy('bookings_count', 'desc')
-        //     ->having('bookings_count', '>', 0)
-        //     ->limit(2)
-        //     ->get();
-
-        // $salons_have_discount = Salon::where('is_approved', true)
-        //     ->where('is_active', true)
-        //     ->whereHas('services', function ($query) {
-        //         $query->where('discount_percentage', '>', 0)
-        //               ->where('is_active', true);
-        //     })
-        //     ->with(['services' => function($query) {
-        //         $query->where('discount_percentage', '>', 0)
-        //               ->where('is_active', true)
-        //               ->orderBy('discount_percentage', 'desc');
-        //     }])
-        //     ->withMax('services', 'discount_percentage')
-        //     ->orderByDesc('services_max_discount_percentage')
-        //     ->limit(2)
-        //     ->get();
-
-        // // للتأكد من وجود صالونات
-        // if ($salons_have_discount->isEmpty()) {
-        //     Log::info('No salons with discounts found');
-        // }
-
-
         $salonService = new SalonService();
         $trendingSalons = $salonService->index([
             'filter_provider' => 'trending',

@@ -23,6 +23,16 @@ class PromotionAdService
 
         $query = PromotionAdPermission::filterIndex($query);
 
+
+        if (isset($data['get_app_ads_available']) && $data['get_app_ads_available'] == 1) {
+            $query->where('valid_from', '<=', now())
+                ->where('valid_to', '>=', now())
+                ->where('is_active', 1)
+                ->where('status', 'approved');
+        }
+
+
+
         return FilterService::applyFilters(
             $query,
             $data,
