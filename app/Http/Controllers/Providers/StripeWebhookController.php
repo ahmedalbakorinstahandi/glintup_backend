@@ -86,16 +86,28 @@ class StripeWebhookController extends Controller
 
     private function handleBookingPayment($session)
     {
+        // Get payment intent ID - handle both payment_intent and checkout_session
+        $paymentIntentId = $session->id ?? $session->payment_intent;
+        
+        Log::info('Processing booking payment', [
+            'session_id' => $session->id ?? 'null',
+            'session_payment_intent' => $session->payment_intent ?? 'null',
+            'final_payment_intent_id' => $paymentIntentId,
+            'session_type' => get_class($session)
+        ]);
+        
         // Get booking data from cache using payment intent ID
-        $cacheKey = "booking_data_{$session->payment_intent}";
+        $cacheKey = "booking_data_{$paymentIntentId}";
         
         try {
             $bookingData = Cache::get($cacheKey);
             
             if (!$bookingData) {
                 Log::error('Booking data not found in cache', [
-                    'payment_intent' => $session->payment_intent,
-                    'cache_key' => $cacheKey
+                    'payment_intent' => $paymentIntentId,
+                    'cache_key' => $cacheKey,
+                    'session_type' => get_class($session),
+                    'session_id' => $session->id ?? 'null'
                 ]);
                 return;
             }
@@ -126,14 +138,14 @@ class StripeWebhookController extends Controller
 
             Log::info('Booking created successfully', [
                 'booking_id' => $booking->id,
-                'payment_intent' => $session->payment_intent
+                'payment_intent' => $paymentIntentId
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error creating booking', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'payment_intent' => $session->payment_intent,
+                'payment_intent' => $paymentIntentId,
                 'cache_key' => $cacheKey
             ]);
         }
@@ -142,7 +154,7 @@ class StripeWebhookController extends Controller
     private function handlePaymentFailure($session)
     {
         $type = $session->metadata->type ?? null;
-        $paymentIntentId = $session->payment_intent;
+        $paymentIntentId = $session->id ?? $session->payment_intent;
 
         // For booking payments, clean up cache data
         if ($type === 'booking') {
