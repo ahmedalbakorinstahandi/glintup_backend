@@ -172,7 +172,7 @@
 
     <div class="footer">
       <p>{{ $footer['thanks_message'] }}</p>
-      <p>{{ $footer['refund_policy'] }}</p>
+      <p>{{ $footer['cancel_policy'] }}</p>
       <p>{{ $footer['service_policy'] }}</p>
       <p>تم إصدار هذه الفاتورة تلقائيًا من النظام</p>
     </div>

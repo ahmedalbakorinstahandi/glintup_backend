@@ -182,7 +182,7 @@
 
         <div class="footer">
             <p>{{ $footer['thanks_message'] }}</p>
-            <p>{{ $footer['refund_policy'] }}</p>
+            <p>{{ $footer['cancel_policy'] }}</p>
             <p>{{ $footer['service_policy'] }}</p>
             <p>This invoice was generated automatically by the system</p>
         </div>
