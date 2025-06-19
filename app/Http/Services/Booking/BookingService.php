@@ -642,7 +642,7 @@ class BookingService
 
 
         // booking service location
-        if ($data['address_id']) {
+        if (isset($data['address_id'])) {
 
             $address = Address::find($data['address_id']);
 
