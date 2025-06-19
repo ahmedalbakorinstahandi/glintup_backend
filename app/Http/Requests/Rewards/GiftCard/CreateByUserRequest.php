@@ -19,6 +19,7 @@ class CreateByUserRequest extends BaseFormRequest
             'services.*' => 'required_if:type,services|exists:services,id,deleted_at,NULL',
             'message' => 'required|string',
             'theme_id' => 'nullable|integer',
+            'payment_type' => 'required|in:wallet,stripe',
         ];
     }
 }

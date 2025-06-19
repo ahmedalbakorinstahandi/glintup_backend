@@ -18,6 +18,7 @@ use App\Models\Salons\SalonMenuRequest as SalonSalonMenuRequest;
 use App\Http\Services\Booking\BookingService;
 use App\Models\Users\User;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Services\Rewards\GiftCardService;
 
 class StripeWebhookController extends Controller
 {
@@ -27,6 +28,10 @@ class StripeWebhookController extends Controller
 
         if ($type === 'booking') {
             return $this->handleBookingPayment($session);
+        }
+
+        if ($type === 'gift_card') {
+            return $this->handleGiftCardPayment($session);
         }
 
         $transactionId = $session->metadata->transaction_id ?? null;
@@ -81,6 +86,72 @@ class StripeWebhookController extends Controller
                     'transactionable_type' => SalonSalonMenuRequest::class,
                 ]);
                 break;
+        }
+    }
+
+    private function handleGiftCardPayment($session)
+    {
+        // Get payment intent ID - handle both payment_intent and checkout_session
+        $paymentIntentId = $session->id ?? $session->payment_intent;
+        
+        Log::info('Processing gift card payment', [
+            'session_id' => $session->id ?? 'null',
+            'session_payment_intent' => $session->payment_intent ?? 'null',
+            'final_payment_intent_id' => $paymentIntentId,
+            'session_type' => get_class($session)
+        ]);
+        
+        // Get gift card data from cache using payment intent ID
+        $cacheKey = "gift_card_data_{$paymentIntentId}";
+        
+        try {
+            $giftCardData = Cache::get($cacheKey);
+            
+            if (!$giftCardData) {
+                Log::error('Gift card data not found in cache', [
+                    'payment_intent' => $paymentIntentId,
+                    'cache_key' => $cacheKey,
+                    'session_type' => get_class($session),
+                    'session_id' => $session->id ?? 'null'
+                ]);
+                return;
+            }
+
+            // Get user
+            $user = User::find($giftCardData['user_id']);
+            if (!$user) {
+                Log::error('User not found', ['user_id' => $giftCardData['user_id']]);
+                return;
+            }
+
+            // Get amount from metadata
+            $amount = $session->metadata->amount ?? 0;
+
+            // Create gift card using GiftCardService
+            $giftCardService = app(GiftCardService::class);
+            $giftCard = $giftCardService->createGiftCard(
+                $user,
+                $amount,
+                $giftCardData,
+                $giftCardData['recipient_id'] ? User::find($giftCardData['recipient_id']) : null,
+                'stripe'
+            );
+
+            // Remove gift card data from cache after successful creation
+            Cache::forget($cacheKey);
+
+            Log::info('Gift card created successfully', [
+                'gift_card_id' => $giftCard->id,
+                'payment_intent' => $paymentIntentId
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating gift card', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'payment_intent' => $paymentIntentId,
+                'cache_key' => $cacheKey
+            ]);
         }
     }
 
@@ -162,6 +233,18 @@ class StripeWebhookController extends Controller
             Cache::forget($cacheKey);
             
             Log::info('Booking payment failed - cache cleaned', [
+                'payment_intent' => $paymentIntentId,
+                'cache_key' => $cacheKey
+            ]);
+            return;
+        }
+
+        // For gift card payments, clean up cache data
+        if ($type === 'gift_card') {
+            $cacheKey = "gift_card_data_{$paymentIntentId}";
+            Cache::forget($cacheKey);
+            
+            Log::info('Gift card payment failed - cache cleaned', [
                 'payment_intent' => $paymentIntentId,
                 'cache_key' => $cacheKey
             ]);

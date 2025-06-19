@@ -14,6 +14,12 @@ use App\Models\Users\User;
 use App\Models\Users\WalletTransaction;
 use App\Services\PhoneService;
 use App\Services\WhatsappMessageService;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+use Stripe\Customer;
+use Stripe\EphemeralKey;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class GiftCardService
 {
@@ -152,37 +158,26 @@ class GiftCardService
     //createByUser
     public function createByUser($data)
     {
-
         // sender_id is current user
         // recipient_id is user with phone number and code
-
         $user = User::auth();
+        $payment_type = $data['payment_type'] ?? 'wallet';
 
         $recipient = User::where('phone_code', $data['phone_code'])
             ->where('phone', $data['phone'])
             ->where('role', 'customer')
             ->first();
 
-
         if ($recipient) {
-
             if ($recipient && $recipient->id == $user->id) {
                 MessageService::abort(422, 'messages.gift_card.cannot_send_to_yourself');
             }
-
             $data['recipient_id'] = $recipient->id;
-
-            //TODO:send notification to recipient
         }
-
-
-
-
 
         $total = 0;
         // type is services or amount
         if ($data['type'] == 'services') {
-
             $data['amount'] = null;
             $data['currency'] = null;
             $data['tax'] = null;
@@ -200,18 +195,26 @@ class GiftCardService
                 ->get();
 
             // حساب التكلفة
-
             foreach ($services as $service) {
                 $total += $service->getFinalPriceAttribute();
             }
         } else {
             $data['services'] = null;
             $data['salon_id'] = null;
-
             $total = $data['amount'];
         }
 
+        if ($payment_type === 'wallet') {
+            return $this->processWalletPayment($user, $total, $data, $recipient);
+        } else if ($payment_type === 'stripe') {
+            return $this->processStripePayment($user, $total, $data, $recipient);
+        }
 
+        MessageService::abort(422, 'messages.invalid_payment_method');
+    }
+
+    private function processWalletPayment($user, $total, $data, $recipient)
+    {
         $user_balance = $user->balance;
 
         if ($user_balance < $total) {
@@ -221,13 +224,84 @@ class GiftCardService
         $user->balance -= $total;
         $user->save();
 
+        return $this->createGiftCard($user, $total, $data, $recipient, 'wallet');
+    }
 
+    private function processStripePayment($user, $total, $data, $recipient)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
+        // Create or get Stripe customer
+        if (!$user->stripe_customer_id) {
+            $customer = Customer::create([
+                'email' => $user->email,
+                'name' => $user->first_name . ' ' . $user->last_name,
+                'phone' => $user->phone,
+            ]);
+            $user->stripe_customer_id = $customer->id;
+            $user->save();
+        }
 
+        // Create ephemeral key
+        $ephemeralKey = EphemeralKey::create(
+            ['customer' => $user->stripe_customer_id],
+            ['stripe_version' => '2023-10-16']
+        );
 
+        // Create payment intent first
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $total * 100, // Convert to cents
+            'currency' => 'aed',
+            'customer' => $user->stripe_customer_id,
+            'setup_future_usage' => 'off_session',
+            'automatic_payment_methods' => ['enabled' => true],
+            'metadata' => [
+                'type' => 'gift_card',
+                'user_id' => $user->id,
+                'phone' => $user->phone_code . ' ' . $user->phone,
+                'amount' => $total,
+            ],
+        ]);
+
+        // Prepare gift card data for cache
+        $giftCardData = [
+            'user_id' => $user->id,
+            'recipient_id' => $recipient?->id ?? null,
+            'phone_code' => $data['phone_code'],
+            'phone' => $data['phone'],
+            'type' => $data['type'],
+            'amount' => $data['amount'] ?? null,
+            'currency' => $data['currency'] ?? null,
+            'services' => $data['services'] ?? null,
+            'message' => $data['message'],
+            'salon_id' => $data['salon_id'] ?? null,
+            'theme_id' => $data['theme_id'] ?? 1,
+        ];
+
+        // Store gift card data in cache for 1 hour
+        $cacheKey = "gift_card_data_{$paymentIntent->id}";
+        Cache::put($cacheKey, $giftCardData, 3600);
+
+        Log::info('Gift card data stored in cache', [
+            'payment_intent_id' => $paymentIntent->id,
+            'cache_key' => $cacheKey,
+            'user_id' => $user->id,
+            'amount' => $total
+        ]);
+
+        return [
+            'payment' => [
+                'client_secret' => $paymentIntent->client_secret,
+                'customer_id' => $user->stripe_customer_id,
+                'ephemeral_key' => $ephemeralKey->secret,
+                'amount' => $total,
+            ]
+        ];
+    }
+
+    public function createGiftCard($user, $total, $data, $recipient, $payment_method)
+    {
         $message = $data['message'];
-
-
 
         if (!$recipient || ($recipient && !$recipient->is_verified && $recipient->added_by == 'salon')) {
             $full_phone = str_replace(' ', '', $data['phone_code'] . $data['phone']);
@@ -267,14 +341,11 @@ class GiftCardService
             WhatsappMessageService::send($full_phone, $message);
         }
 
-
-
         $data['sender_id'] = $user->id;
         $code = GiftCard::generateCode();
         while (GiftCard::where('code', $code)->withTrashed()->exists()) {
             $code = GiftCard::generateCode();
         }
-
 
         $giftCard = GiftCard::create([
             'code' => $code,
@@ -292,39 +363,37 @@ class GiftCardService
             'theme_id' => $data['theme_id'] ?? 1,
         ]);
 
-
         // transaction
-        $transaction = WalletTransaction::create(
-            [
-                'user_id' => $user->id,
-                'amount' => $total,
-                'currency' => 'AED',
-                'description' => [
-                    'en' => __('messages.gift_card.transaction_details', ['code' => $giftCard->code, 'amount' => $total, 'currency' => 'AED'], 'en'),
-                    'ar' => __('messages.gift_card.transaction_details', ['code' => $giftCard->code, 'amount' => $total, 'currency' => 'AED'], 'ar'),
-                ],
-                'status' => 'completed',
-                'type' => 'gift_card',
-                'is_refund' => false,
-                'transactionable_id' => $giftCard->id,
-                'transactionable_type' => GiftCard::class,
-                'direction' => "out",
-                'metadata' => [],
-            ]
-        );
+        $transaction = WalletTransaction::create([
+            'user_id' => $user->id,
+            'amount' => $total,
+            'currency' => 'AED',
+            'description' => [
+                'en' => __('messages.gift_card.transaction_details', ['code' => $giftCard->code, 'amount' => $total, 'currency' => 'AED'], 'en'),
+                'ar' => __('messages.gift_card.transaction_details', ['code' => $giftCard->code, 'amount' => $total, 'currency' => 'AED'], 'ar'),
+            ],
+            'status' => 'completed',
+            'type' => 'gift_card',
+            'is_refund' => false,
+            'transactionable_id' => $giftCard->id,
+            'transactionable_type' => GiftCard::class,
+            'direction' => "out",
+            'metadata' => [
+                'payment_method' => $payment_method,
+            ],
+        ]);
 
         $system_percentage = Setting::where('key', 'system_percentage_gift')->first()->value ?? 0;
 
-
         if ($data['type'] == 'services') {
-            $salonPayment =  SalonPayment::create([
+            $salonPayment = SalonPayment::create([
                 'paymentable_id' => $giftCard->id,
                 'paymentable_type' => GiftCard::class,
                 'user_id' => $user->id,
                 'salon_id' => $data['salon_id'],
                 'amount' => $total,
                 'currency' => 'AED',
-                'method' => 'wallet',
+                'method' => $payment_method,
                 'status' => 'confirm',
                 'is_refund' => false,
                 'system_percentage' => $system_percentage,
@@ -334,11 +403,8 @@ class GiftCardService
             $salonPayment->save();
         }
 
-
-
         return $giftCard;
     }
-
 
     // 'phone_code' => 'required|string',
     // 'phone' => 'required|string',
@@ -465,3 +531,4 @@ class GiftCardService
         return $giftCards;
     }
 }
+
