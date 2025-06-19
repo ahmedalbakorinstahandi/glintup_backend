@@ -88,13 +88,23 @@ class BookingNewController
             }
         }
 
-        $data = $this->bookingService->createFromUserNew($data);
+        $result = $this->bookingService->createFromUserNew($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => trans('messages.booking.item_created_successfully'),
-            'data' =>  !isset($data['payment']) ? new BookingResource($data['booking']) : $data['payment'],
-        ]);
+        // Check if it's a payment response (Stripe) or direct booking (wallet)
+        if (is_array($result) && isset($result['payment'])) {
+            return response()->json([
+                'success' => true,
+                'message' => trans('messages.booking.payment_required'),
+                'data' => $result['payment'],
+            ]);
+        } else {
+            // Direct booking object (wallet payment)
+            return response()->json([
+                'success' => true,
+                'message' => trans('messages.booking.item_created_successfully'),
+                'data' => new BookingResource($result),
+            ]);
+        }
     }
 
 
