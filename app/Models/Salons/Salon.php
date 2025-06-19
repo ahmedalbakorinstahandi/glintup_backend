@@ -598,22 +598,22 @@ class Salon extends Model
 
     public function getTradeLicenseUrlAttribute(): string
     {
-        return $this->trade_license ? asset('storage/' . $this->trade_license) : null;
+        return $this->trade_license ? asset('storage/' . $this->trade_license) : '';
     }
 
     public function getVatCertificateUrlAttribute(): string
     {
-        return $this->vat_certificate ? asset('storage/' . $this->vat_certificate) : null;
+        return $this->vat_certificate ? asset('storage/' . $this->vat_certificate) : '';
     }
 
     public function getBankAccountCertificateUrlAttribute(): string
     {
-        return $this->bank_account_certificate ? asset('storage/' . $this->bank_account_certificate) : null;
+        return $this->bank_account_certificate ? asset('storage/' . $this->bank_account_certificate) : '';
     }
 
 
     public function getServicesListUrlAttribute(): string
     {
-        return $this->services_list ? asset('storage/' . $this->services_list) : null;
+        return $this->services_list ? asset('storage/' . $this->services_list) : '';
     }
 }
