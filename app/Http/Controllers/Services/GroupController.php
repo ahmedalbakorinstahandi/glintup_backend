@@ -9,6 +9,8 @@ use App\Http\Resources\Services\GroupResource;
 use App\Http\Services\Services\GroupService;
 use App\Http\Permissions\Services\GroupPermission;
 use App\Http\Requests\Services\Group\ReOrderRequest;
+use App\Models\Rewards\FreeService;
+use App\Models\Users\User;
 use App\Services\ResponseService;
 
 class GroupController extends Controller
@@ -23,9 +25,29 @@ class GroupController extends Controller
     public function index()
     {
         $groups = $this->groupService->index(request()->all());
+
+
+
+        $user = User::auth();
+
+        if ($user->isCustomer()) {
+
+            $salon_id = request()->get('salon_id', null);
+
+            $freeServices = FreeService::where('user_id', $user->id)
+                ->where('is_used', false)
+                ->whereHas('service', function($query) use ($salon_id) {
+                    $query->where('salon_id', $salon_id);
+                })
+                ->get();
+        }
+
+
+
         return response()->json([
             'success' => true,
             'data' => GroupResource::collection($groups->items()),
+            'free_services' => $freeServices,
             'meta' => ResponseService::meta($groups),
         ]);
     }

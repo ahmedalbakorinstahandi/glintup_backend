@@ -4,6 +4,7 @@ namespace App\Http\Services\Services;
 
 use App\Models\Services\Group;
 use App\Http\Permissions\Services\GroupPermission;
+use App\Models\Rewards\FreeService;
 use App\Models\Users\User;
 use App\Services\FilterService;
 use App\Services\LanguageService;
@@ -38,6 +39,9 @@ class GroupService
         //         $q->whereNotNull('service_id');
         //     });
         // }
+
+
+
 
 
         $data['sort_field'] = 'orders';

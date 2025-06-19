@@ -2,7 +2,9 @@
 
 namespace App\Models\Services;
 
+use App\Models\Rewards\FreeService;
 use App\Models\Salons\Salon;
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
