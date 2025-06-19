@@ -115,3 +115,4 @@ Route::get('/invoices/{id}', function ($id) {
 
 
 Route::get('/invoices/{code}/{lang}', [InvoiceController::class, 'show']);
+Route::get('/invoices/{code}/pdf', [InvoiceController::class, 'showPdf']);
