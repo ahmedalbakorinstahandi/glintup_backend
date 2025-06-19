@@ -36,8 +36,8 @@ class InvoiceDefaultData
             'invoice' => [
                 'number' => $invoice->code,
                 'booking_number' => $booking->code,
-                'date' => $invoice->date->format('d-m-Y'),
-                // 'time' => $invoice->created_at->format('H:i'),
+                'date' => $invoice->created_at->format('d-m-Y'),
+                'time' => $invoice->created_at->format('H:i'),
                 'payment_status' => trans("enums.payment_method.{$invoice->status}", [], $lang),
                 'total_before_discount' => $booking->getTotalPriceBeforeDiscountAttribute(),
                 'coupon_discount' => $booking->couponUsage->coupon->discount_value . ' ' . $booking->couponUsage->coupon->discount_type == 'percentage' ? '%' : 'AED',
