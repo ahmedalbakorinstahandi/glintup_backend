@@ -87,7 +87,7 @@ class InvoiceController extends Controller
         $mpdf->WriteHTML($html);
 
         // Return PDF directly without saving to storage
-        return response($mpdf->Output('', \Mpdf\Output\Destination::STRING))
+        return response($mpdf->Output('', 'S'))
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="invoice_' . $invoice->code . '.pdf"');
     }
