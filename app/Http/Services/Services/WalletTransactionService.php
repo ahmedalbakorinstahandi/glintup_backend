@@ -84,7 +84,7 @@ class WalletTransactionService
         return FilterService::applyFilters(
             $query,
             $data,
-            ['description'],
+            ['description', ['user.first_name', 'user.last_name']],
             ['amount'],
             ['created_at'],
             ['user_id', 'status', 'type', 'direction', 'is_refund'],
