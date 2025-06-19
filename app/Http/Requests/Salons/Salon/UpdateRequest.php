@@ -32,34 +32,7 @@ class UpdateRequest extends BaseFormRequest
             'email'                     => 'nullable|email',
             'description'               => 'nullable|string',
             'location'                  => 'nullable|string|max:255',
-            'types' => [
-                'nullable',
-                'array',
-                'distinct',
-                function ($attribute, $value, $fail) {
-
-                    $id = request()->route('id');
-
-                    $salon = Salon::find($id);
-                    if (!$salon) {
-                        $fail("The salon with ID {$id} does not exist.");
-                        return;
-                    }
-
-                    $type = $salon->type;
-
-                    $allowedTypes = match ($type) {
-                        'salon' => ['home_service', 'beautician'],
-                        'clinic' => ['home_service'],
-                        default => [],
-                    };
-
-                    if (!empty($value) && array_diff($value, $allowedTypes)) {
-                        $fail("The selected {$attribute} is invalid for the type {$type}.");
-                    }
-                },
-            ],
-            'types.*' => 'required|string|in:salon,home_service,beautician,clinic',
+            'type'                      => 'nullable|string|in:salon,home_service,beautician,clinic',
             'country'                   => 'nullable|string|max:255',
             'city'                      => 'nullable|string|max:255',
             'tags'                      => 'nullable|string',

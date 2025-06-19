@@ -125,7 +125,7 @@ class SalonService
                 "*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) as distance",
                 [$latitude, $longitude, $latitude]
             )
-            ->orderBy('distance');
+                ->orderBy('distance');
         }
 
         return FilterService::applyFilters(
@@ -221,7 +221,6 @@ class SalonService
                 'description' => $data['description'] ?? $salon->description,
                 'latitude' => $data['latitude'] ?? $salon->latitude,
                 'longitude' => $data['longitude'] ?? $salon->longitude,
-                'types' => !isset($data['types']) ? $salon->types : implode(',', $data['types']),
                 'bio' => $data['bio'] ?? $salon->bio,
 
                 'is_active' => $data['is_active'] ?? $salon->is_active,
@@ -241,6 +240,7 @@ class SalonService
                 'trade_license' => $data['trade_license'] ?? $salon->trade_license,
                 'vat_certificate' => $data['vat_certificate'] ?? $salon->vat_certificate,
                 'bank_account_certificate' => $data['bank_account_certificate'] ?? $salon->bank_account_certificate,
+                'type' => $data['type'] ?? $salon->type,
 
 
                 // old data
@@ -249,7 +249,6 @@ class SalonService
                 'phone' => '',
                 'email' => null,
                 'location' => '',
-                'type' => 'salon',
                 'country' => '',
                 'city' => '',
             ]
