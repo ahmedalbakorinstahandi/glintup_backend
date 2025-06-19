@@ -75,13 +75,31 @@ class InvoiceController extends Controller
             'margin_top' => 10,
             'margin_bottom' => 10,
             'margin_left' => 10,
-            'margin_right' => 10
+            'margin_right' => 10,
+            'default_font' => 'cairo',
+            'default_font_size' => 12,
+            'useOTL' => 0xFF,
+            'useKashida' => 75
         ]);
 
         // Set document properties
         $mpdf->SetTitle("Invoice {$invoice->code}");
         $mpdf->SetAuthor('GlintUp');
         $mpdf->SetCreator('GlintUp System');
+
+        // Set text direction based on language
+        if ($lang === 'ar') {
+            $mpdf->SetDirectionality('rtl');
+        }
+
+        // Register Cairo font for Arabic text
+        $mpdf->fontdata['cairo'] = [
+            'R' => 'Cairo-Regular.ttf',
+            'B' => 'Cairo-Bold.ttf',
+            'useOTL' => 0xFF,
+            'useKashida' => 75,
+        ];
+        $mpdf->SetFont('cairo');
 
         // Write HTML to PDF
         $mpdf->WriteHTML($html);
