@@ -72,14 +72,20 @@ class InvoiceController extends Controller
             'tempDir' => storage_path('framework/cache'),
             'mode' => 'utf-8',
             'format' => 'A4',
-            'margin_top' => 10,
-            'margin_bottom' => 10,
-            'margin_left' => 10,
-            'margin_right' => 10,
+            'margin_top' => 5,
+            'margin_bottom' => 5,
+            'margin_left' => 5,
+            'margin_right' => 5,
             'default_font' => 'cairo',
             'default_font_size' => 12,
             'useOTL' => 0xFF,
-            'useKashida' => 75
+            'useKashida' => 75,
+            'shrink_tables_to_fit' => 1,
+            'use_kwt' => true,
+            'keepColumns' => true,
+            'keep_table_proportions' => true,
+            'title_magnification' => 1,
+            'use_auto_font_size' => true
         ]);
 
         // Set document properties
