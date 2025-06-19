@@ -16,15 +16,13 @@ class Gift extends Model
     protected $fillable = [
         'name',
         'icon',
-        'type',
-        'amount',
-        'currency',
         'order',
+        'is_active',
     ];
 
     protected $casts = [
-        'amount'     => 'double',
         'order'      => 'integer',
+        'is_active'  => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -48,8 +46,5 @@ class Gift extends Model
         return asset('storage/' . $this->icon);
     }
 
-    // public function getTypeLabelAttribute(): string
-    // {
-    //     return ucfirst($this->type);
-    // }
+     
 }

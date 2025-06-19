@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\General;
 
 use App\Http\Controllers\Booking\InvoiceController;
+use App\Http\Controllers\Rewards\GiftController;
 use App\Http\Controllers\Salons\SalonPermissionController;
 use App\Http\Controllers\Users\UserAuthController;
 use App\Http\Controllers\Users\UserController;
@@ -18,7 +19,14 @@ Route::prefix('guests')->group(function () {
         Route::get('/', 'index');
         Route::get('/unread-count', 'unreadCount');
     });
+
+
+    Route::prefix('gifts')->controller(GiftController::class)->group(function () {
+        Route::get('/', 'index');
+    });
 });
+
+
 
 Route::prefix('general')->group(function () {
 

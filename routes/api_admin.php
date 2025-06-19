@@ -8,6 +8,7 @@ use App\Http\Controllers\General\ComplaintController;
 use App\Http\Controllers\General\NotificationController;
 use App\Http\Controllers\General\SettingController;
 use App\Http\Controllers\Rewards\GiftCardController;
+use App\Http\Controllers\Rewards\GiftController;
 use App\Http\Controllers\Rewards\LoyaltyPointController;
 use App\Http\Controllers\Salons\SalonAuthController;
 use App\Http\Controllers\Salons\SalonController;
@@ -192,8 +193,12 @@ Route::prefix('admin')->group(function () {
 
 
         // gift cards
-        Route::prefix('gift-cards')->group(function () {
-            Route::get('/', [GiftCardController::class, 'index']);
+        Route::prefix('gifts')->controller(GiftController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
         });
 
 

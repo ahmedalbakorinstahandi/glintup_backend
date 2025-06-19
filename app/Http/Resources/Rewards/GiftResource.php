@@ -13,10 +13,7 @@ class GiftResource extends JsonResource
             'name'         => $this->name,
             'icon'         => $this->icon,
             'icon_url'     => $this->icon_url,
-            'type'         => $this->type,
-            // 'type_label'   => $this->type_label,
-            'amount'       => $this->amount,
-            'currency'     => $this->currency,
+            'is_active'    => $this->is_active,
             'order'        => $this->order,
 
             'created_at'   => $this->created_at?->format('Y-m-d H:i:s'),
