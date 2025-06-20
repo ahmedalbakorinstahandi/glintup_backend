@@ -4,6 +4,7 @@ namespace App\Http\Services\Rewards;
 
 use App\Models\Rewards\Gift;
 use App\Services\FilterService;
+use App\Services\LanguageService;
 use App\Services\MessageService;
 use App\Services\OrderHelper;
 
@@ -43,7 +44,7 @@ class GiftService
 
         $data['order'] = 0;
 
-        $gift = Gift::create($data);
+        $gift = Gift::create(LanguageService::prepareTranslatableData($data, new Gift));
 
 
         OrderHelper::assign($gift, 'order');
@@ -53,7 +54,7 @@ class GiftService
 
     public function update($gift, $data)
     {
-        $gift->update($data);
+        $gift->update(LanguageService::prepareTranslatableData($data, $gift));
 
         return $gift;
     }

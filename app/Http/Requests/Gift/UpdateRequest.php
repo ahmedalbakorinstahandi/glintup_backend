@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Gift;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Services\LanguageService;
 
 class UpdateRequest extends BaseFormRequest
 {
@@ -16,7 +17,7 @@ class UpdateRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
+            'name' => LanguageService::translatableFieldRules('nullable|string|max:255'),
             'icon' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean',
         ];
