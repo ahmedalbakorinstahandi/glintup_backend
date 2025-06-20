@@ -33,7 +33,7 @@ class GiftService
         $gift = Gift::where('id', $id)->first();
 
         if (!$gift) {
-            MessageService::abort(4040, 'Gift not found');
+            MessageService::abort(4040, 'messages.gift.item_not_found');
         }
 
         return $gift;

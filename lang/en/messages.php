@@ -111,6 +111,14 @@ return [
 
     ],
 
+    'gift' => [
+        'item_created_successfully' => 'Gift created successfully',
+        'item_updated_successfully' => 'Gift updated successfully',
+        'item_deleted_successfully' => 'Gift deleted successfully',
+        'failed_delete_item'        => 'Failed to delete gift',
+        'item_not_found'            => 'Gift not found',
+    ],
+
     'invoice' => [
         'thanks_message' => 'Thank you for using GlintUp!',
         'cancel_policy' => 'You can cancel the booking up to 24 hours before the appointment, except for makeup artist services where 20% of the amount is deducted.',

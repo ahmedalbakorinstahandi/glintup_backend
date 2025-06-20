@@ -114,6 +114,14 @@ return [
 
     ],
 
+    'gift' => [
+        'item_created_successfully' => 'تم إنشاء الهدية بنجاح',
+        'item_updated_successfully' => 'تم تحديث الهدية بنجاح',
+        'item_deleted_successfully' => 'تم حذف الهدية بنجاح',
+        'failed_delete_item'        => 'فشل في حذف الهدية',
+        'item_not_found'            => 'الهدية غير موجودة',
+    ],
+
     'invoice' => [
         'thanks_message' => 'شكرا لك على استخدام GlintUp!',
         'cancel_policy' => 'يمكنك إلغاء الحجز قبل موعده بـ 24 ساعة مجاناً، باستثناء خدمات خبيرات التجميل حيث يتم خصم 20% من قيمة الحجز',

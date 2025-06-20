@@ -51,7 +51,7 @@ class GiftController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'message' => trans('messages.gifts.created_successfully'),
+                'message' => trans('messages.gift.item_created_successfully'),
                 'data' => new GiftResource($gift),
             ]
         );
@@ -64,7 +64,7 @@ class GiftController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'message' => trans('messages.gifts.updated_successfully'),
+                'message' => trans('messages.gift.item_updated_successfully'),
                 'data' => new GiftResource($gift),
             ]
         );
@@ -77,7 +77,7 @@ class GiftController extends Controller
         return response()->json(
             [
                 'success' => true,
-                'message' => trans('messages.gifts.deleted_successfully'),
+                'message' => trans('messages.gift.item_deleted_successfully'),
             ]
         );
     }
