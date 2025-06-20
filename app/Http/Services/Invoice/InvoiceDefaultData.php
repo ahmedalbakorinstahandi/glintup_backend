@@ -3,6 +3,7 @@
 namespace App\Http\Services\Invoice;
 
 use App\Models\Booking\Invoice;
+use App\Models\Rewards\FreeService;
 
 class InvoiceDefaultData
 {
@@ -17,10 +18,12 @@ class InvoiceDefaultData
 
         $services = [];
         foreach ($bookingServices as $service) {
+            $freeService = FreeService::where('booking_id', $booking->id)->where('service_id', $service->service_id)->first();
+             
             $services[] = [
                 'name' => $service->service->name[$lang],
                 'duration' => $service->duration_minutes,
-                'discounted_price' => $service->getFinalPriceAttribute()
+                'discounted_price' => $freeService ? 0 : $service->getFinalPriceAttribute()
             ];
         }
 

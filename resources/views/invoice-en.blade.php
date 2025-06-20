@@ -162,7 +162,7 @@
             <div><span class="bold">Subtotal:</span> {{ number_format($invoice['total_before_discount'], 2) }} {{ $currency }}</div>
             <div><span class="bold">Discount:</span> {{ number_format($invoice['coupon_discount'], 2) }} {{ $currency }}</div>
             <!-- <div><span class="bold">VAT (5%):</span> {{ number_format($invoice['total_after_discount'] * 0.05, 2) }} {{ $currency }}</div> -->
-            <div><span class="bold">Total:</span> {{ number_format($invoice['total_after_discount'] * 1.05, 2) }} {{ $currency }}</div>
+            <div><span class="bold">Total:</span> {{ number_format($invoice['total_after_discount'], 2) }} {{ $currency }}</div>
             <div><span class="bold">Payment Status:</span> {{ $invoice['payment_status'] }}</div>
         </div>
 
