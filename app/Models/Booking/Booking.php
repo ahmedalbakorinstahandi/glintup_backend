@@ -121,7 +121,7 @@ class Booking extends Model
             // Check if the service is free for the user
             $freeService = FreeService::where([
                 'user_id' => $this->user_id,
-                'service_id' => $service->id,
+                'service_id' => $service->service_id,
                 'booking_id' => $this->id,
             ])->first();
 
