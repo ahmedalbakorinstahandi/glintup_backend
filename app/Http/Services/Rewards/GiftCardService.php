@@ -25,7 +25,7 @@ class GiftCardService
 {
     public function index($data)
     {
-        $query = GiftCard::query()->with(['sender', 'recipient', 'salon']);
+        $query = GiftCard::query()->with(['sender', 'recipient', 'salon', 'theme']);
 
 
         $query = GiftCardPermission::filterIndex($query);
@@ -104,7 +104,7 @@ class GiftCardService
 
     public function show($id)
     {
-        $item = GiftCard::with(['sender', 'recipient'])->find($id);
+        $item = GiftCard::with(['sender', 'recipient', 'theme'])->find($id);
         if (!$item) {
             MessageService::abort(404, 'messages.gift_card.item_not_found');
         }
@@ -127,7 +127,7 @@ class GiftCardService
 
         $giftCard = GiftCard::create($data);
 
-        $giftCard->load(['sender', 'recipient']);
+        $giftCard->load(['sender', 'recipient', 'theme']);
 
         if ($giftCard->salon_id) {
             $giftCard->load(['salon']);
@@ -145,7 +145,7 @@ class GiftCardService
             $item->load(['salon']);
         }
 
-        $item->load(['sender', 'recipient']);
+        $item->load(['sender', 'recipient', 'theme']);
 
         return $item;
     }
@@ -403,19 +403,12 @@ class GiftCardService
             $salonPayment->save();
         }
 
+        $giftCard->load(['sender', 'recipient', 'theme']);
+
         return $giftCard;
     }
 
-    // 'phone_code' => 'required|string',
-    // 'phone' => 'required|string',
-    // 'type' => 'required|in:services,amount',
-    // 'amount' => 'required_if:type,amount|numeric',
-    // 'currency' => 'required_if:type,amount|string',
-    // 'salon_id' => 'required_if:type,services|exists:salons,id,deleted_at,NULL',
-    // 'services' => 'nullable|array|max:3',
-    // 'services.*' => 'required_if:type,services|exists:services,id,deleted_at,NULL',
-    // 'message' => 'required|string',
-
+  
 
 
     // استلام بطاقة الهدايا
@@ -503,6 +496,9 @@ class GiftCardService
         // TODO: send notification to sender
 
 
+        $giftCard->load(['sender', 'recipient', 'theme']);
+
+
         return $giftCard;
     }
 
@@ -531,4 +527,3 @@ class GiftCardService
         return $giftCards;
     }
 }
-

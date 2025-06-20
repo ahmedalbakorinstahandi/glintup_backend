@@ -83,6 +83,11 @@ class GiftCard extends Model
         return $this->belongsTo(Salon::class, 'salon_id')->withTrashed();
     }
 
+    public function theme()
+    {
+        return $this->belongsTo(Gift::class, 'theme_id')->withTrashed();
+    }
+
 
     public static function generateCode(): string
     {
