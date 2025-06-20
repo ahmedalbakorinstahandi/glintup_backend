@@ -21,15 +21,15 @@ Route::prefix('guests')->group(function () {
     });
 
 
-    Route::prefix('gifts')->controller(GiftController::class)->group(function () {
-        Route::get('/', 'index');
-    });
 });
 
 
 
 Route::prefix('general')->group(function () {
-
+    
+    Route::prefix('gifts')->controller(GiftController::class)->group(function () {
+        Route::get('/', 'index');
+    });
 
     Route::post('check-phone-number', [UserAuthController::class, 'checkPhoneNumber']);
 
