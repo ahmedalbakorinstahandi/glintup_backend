@@ -32,7 +32,7 @@ class GroupController extends Controller
 
         if ($user->isCustomer()) {
 
-            $salon_id = request()->get('salon_id', null);
+            $salon_id = request()->get('salon_id', 0);
 
             $freeServices = FreeService::where('user_id', $user->id)
                 ->where('is_used', false)
