@@ -59,7 +59,9 @@ class GiftController extends Controller
 
     public function update(UpdateRequest $request, $id)
     {
-        $gift = $this->giftService->update($id, $request->validated());
+        $gift = $this->giftService->show($id);
+
+        $gift = $this->giftService->update($gift, $request->validated());
 
         return response()->json(
             [
@@ -72,7 +74,9 @@ class GiftController extends Controller
 
     public function destroy($id)
     {
-        $gift = $this->giftService->destroy($id);
+        $gift = $this->giftService->show($id);
+
+        $this->giftService->destroy($gift);
 
         return response()->json(
             [
