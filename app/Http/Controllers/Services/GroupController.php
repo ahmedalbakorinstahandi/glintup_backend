@@ -36,7 +36,7 @@ class GroupController extends Controller
 
             $freeServices = FreeService::where('user_id', $user->id)
                 ->where('is_used', false)
-                ->whereHas('service', function($query) use ($salon_id) {
+                ->whereHas('service', function ($query) use ($salon_id) {
                     $query->where('salon_id', $salon_id);
                 })
                 ->get();
@@ -47,7 +47,7 @@ class GroupController extends Controller
         return response()->json([
             'success' => true,
             'data' => GroupResource::collection($groups->items()),
-            'free_services' => $freeServices,
+            'free_services' => $freeServices ?? [],
             'meta' => ResponseService::meta($groups),
         ]);
     }
