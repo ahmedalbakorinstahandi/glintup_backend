@@ -303,43 +303,46 @@ class GiftCardService
     {
         $message = $data['message'];
 
-        if (!$recipient || ($recipient && !$recipient->is_verified && $recipient->added_by == 'salon')) {
-            $full_phone = str_replace(' ', '', $data['phone_code'] . $data['phone']);
+        // if (!$recipient || ($recipient && !$recipient->is_verified && $recipient->added_by == 'salon')) {
+        $full_phone = str_replace(' ', '', $data['phone_code'] . $data['phone']);
 
-            $website_url = "https://glintup.ae/";
-            $full_name = $user->first_name . ' ' . $user->last_name;
+        $ios_link_app = Setting::where('key', 'ios_app_url')->first()->value ?? '';
+        $android_link_app = Setting::where('key', 'android_app_url')->first()->value ?? '';
+        $full_name = $user->first_name . ' ' . $user->last_name;
 
-            if ($data['type'] == 'amount') {
-                $details = trans('messages.gift_card_amount_details', [
-                    'amount' => $data['amount'],
-                    'currency' => $data['currency'],
-                ]);
-            } else {
-                $serviceNames = "";
+        if ($data['type'] == 'amount') {
+            $details = trans('messages.gift_card_amount_details', [
+                'amount' => $data['amount'],
+                'currency' => $data['currency'],
+            ]);
+        } else {
+            $serviceNames = "";
 
-                foreach ($data['services'] as $serviceId) {
-                    $service = Service::find($serviceId);
+            foreach ($data['services'] as $serviceId) {
+                $service = Service::find($serviceId);
 
-                    $lang = app()->getLocale();
-                    if ($service) {
-                        $serviceNames .= "-" . $service->name[$lang] . "\n";
-                    }
+                $lang = app()->getLocale();
+                if ($service) {
+                    $serviceNames .= "-" . $service->name[$lang] . "\n";
                 }
-
-                $details = trans('messages.gift_card_service_details', [
-                    'services' => $serviceNames,
-                ]);
             }
 
-            $message = trans('messages.gift_card_message', [
-                'sender'  => $full_name,
-                'details' => $details,
-                'note'    => $data['message'],
-                'link'    => $website_url,
+            $details = trans('messages.gift_card_service_details', [
+                'services' => $serviceNames,
             ]);
-
-            WhatsappMessageService::send($full_phone, $message);
         }
+
+        $message = trans('messages.gift_card_message', [
+            'sender'  => $full_name,
+            'details' => $details,
+            'note'    => $data['message'],
+            'ios_link' => $ios_link_app,
+            'android_link' => $android_link_app,
+            'greeting' => $recipient ? ($recipient->first_name ?? '') : (app()->getLocale() == 'ar' ? 'عزيزي' : 'Dear'),
+        ]);
+
+        WhatsappMessageService::send($full_phone, $message);
+        // }
 
         $data['sender_id'] = $user->id;
         $code = GiftCard::generateCode();
@@ -408,7 +411,7 @@ class GiftCardService
         return $giftCard;
     }
 
-  
+
 
 
     // استلام بطاقة الهدايا

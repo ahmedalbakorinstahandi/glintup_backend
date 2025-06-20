@@ -256,7 +256,21 @@ return [
         'sent_successfully' => 'Gift card sent successfully',
     ],
 
-    'gift_card_message' => "Hi,\n\nYou have received a gift card from :sender.\n\nDetails:\n:details\n\nMessage from sender:\n:note\n\nPlease download the app from the link below and register to claim your gift card.\n\n:link",
+    'gift_card_message' => ":greeting ♥, You have received a gift 🎁 on Glint Up app 🎉
+
+:details
+
+:note
+
+- Download Glint Up APP
+- Verify your phone number 
+- Redeem your gift card in the gifts section
+
+Download the GlintUp app now to enjoy our services!
+
+iOS: :ios_link
+
+Android: :android_link",
 
     'gift_card_amount_details' => "Gift Card Value: :amount :currency",
 
