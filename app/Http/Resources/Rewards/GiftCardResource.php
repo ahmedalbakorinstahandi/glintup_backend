@@ -34,7 +34,9 @@ class GiftCardResource extends JsonResource
             'sender'         => new UserResource($this->whenLoaded('sender')),
             'recipient'      => new UserResource($this->whenLoaded('recipient')),
             'salon'          => $this->type == 'amount' ? null :  new SalonResource($this->whenLoaded('salon')),
-            'theme'          => new GiftResource($this->whenLoaded('theme')),
+            'theme'          => new GiftResource($this->whenLoaded('theme', function () {
+                return $this->theme;
+            })),
 
             'created_at'     => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at'     => $this->updated_at?->format('Y-m-d H:i:s'),
