@@ -84,12 +84,12 @@ class Group extends Model
     public function canSalonEdit()
     {
         $user = User::auth();
-        
-        if ($user->isUserSalon()) {
+
+        if ($user && $user->isUserSalon()) {
             if ($user->salon->id == $this->salon_id) {
                 return true;
             }
-        } elseif ($user->isAdmin()) {
+        } elseif ($user && $user->isAdmin()) {
             return true;
         }
         return false;
