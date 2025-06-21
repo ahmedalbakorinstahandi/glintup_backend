@@ -120,7 +120,8 @@ class Salon extends Model
 
         if ($user) {
             return $this->hasOne(LoyaltyPoint::class, 'salon_id')
-                ->where('user_id', $user->id);
+                ->where('user_id', $user->id) ->with(['freeService.service', 'user', 'salon']);
+                // 'myLoyaltyPoints.freeService.service', 'myLoyaltyPoints.user', 'myLoyaltyPoints.salon'
         }
 
         return null;
