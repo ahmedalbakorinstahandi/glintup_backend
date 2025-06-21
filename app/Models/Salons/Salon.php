@@ -534,8 +534,15 @@ class Salon extends Model
 
     public function getDistance($user): ?float
     {
-        if (!$user->latitude || !$user->longitude) return null;
         if (!$this->latitude || !$this->longitude) return null;
+        if (!$user->latitude || !$user->longitude) {
+            if (request()->latitude && request()->longitude) {
+                $this->latitude = request()->latitude;
+                $this->longitude = request()->longitude;
+            } else {
+                return null;
+            }
+        }
 
         $distance = $this->haversineGreatCircleDistance(
             $this->latitude,
