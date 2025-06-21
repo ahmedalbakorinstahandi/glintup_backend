@@ -30,7 +30,7 @@ class GroupController extends Controller
 
         $user = User::auth();
 
-        if ($user->isCustomer()) {
+        if ($user && $user->isCustomer()) {
 
             $salon_id = request()->get('salon_id', 0);
 
