@@ -116,8 +116,14 @@ class Salon extends Model
 
     public function myLoyaltyPoints()
     {
-        return $this->hasOne(LoyaltyPoint::class, 'salon_id')
-            ->where('user_id', User::auth()->id);
+        $user = User::auth();
+
+        if ($user) {
+            return $this->hasOne(LoyaltyPoint::class, 'salon_id')
+                ->where('user_id', $user->id);
+        }
+
+        return null;
     }
 
     // get my gift cards in this salon not token and not used
