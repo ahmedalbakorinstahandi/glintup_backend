@@ -12,7 +12,11 @@ class SettingService
     public function index($data)
     {
         $query = Setting::query();
+
+        $data['limit'] = 1000;
+
         $query = SettingPermission::filterIndex($query);
+
         return FilterService::applyFilters(
             $query,
             $data,

@@ -78,6 +78,7 @@ class SalonService
             'business_contact_email',
             'bio',
             'tags',
+            'services.name',
         ];
         $numericFields = [];
         $dateFields = ['created_at'];
