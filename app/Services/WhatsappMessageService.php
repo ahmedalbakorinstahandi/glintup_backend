@@ -40,6 +40,10 @@ class WhatsappMessageService
 
     public static function send(string $number, string $message): array
     {
+
+        return [];
+
+
         $params = [
             'token' => '3u2tx8mllx3ztblj',
             'to'    => $number,
