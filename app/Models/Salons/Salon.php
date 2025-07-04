@@ -447,7 +447,7 @@ class Salon extends Model
                 }
             }
 
-            return $locale === 'ar' ? 'مفتوح الآن' : 'Currently open';
+            return $locale === 'ar' ? 'مفتوح' : 'Open';
         }
 
         return $locale === 'ar'
