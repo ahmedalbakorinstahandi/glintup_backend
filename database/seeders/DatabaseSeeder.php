@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // run SalonPermissionSeeder
         // $this->call(Salons\SalonSeeder::class);
         // $this->call(Salons\SalonStaffSeeder::class);
-        // $this->call(Users\AdminSeeder::class);
+        $this->call(Users\AdminSeeder::class);
         $this->call(Salons\SalonPermissionSeeder::class);
         $this->call(SettingSeeder::class);
     }

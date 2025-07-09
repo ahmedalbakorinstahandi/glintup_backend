@@ -2,6 +2,9 @@
 
 namespace Database\Seeders\Users;
 
+use App\Models\Admins\AdminPermission;
+use App\Models\Admins\UserAdminPermission;
+use App\Models\Users\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,14 +16,14 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        $admin = User::create([
             'first_name' => 'Admin',
             'last_name' => 'User',
             'gender' => 'male',
             'birth_date' => '1990-01-01',
             'avatar' => null,
             'phone_code' => '+971',
-            'phone' => '9711234567890',
+            'phone' => '1234567890',
             'password' => bcrypt('password'),
             'role' => 'admin',
             'is_active' => true,
@@ -33,5 +36,17 @@ class AdminSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        // assign admin permission to admin
+        $adminPermissions = AdminPermission::all();
+        
+
+        foreach ($adminPermissions as $permission) {
+            UserAdminPermission::create([
+                'user_id' => $admin->id,
+                'permission_id' => $permission->id,
+            ]);
+        }
+
     }
 }
