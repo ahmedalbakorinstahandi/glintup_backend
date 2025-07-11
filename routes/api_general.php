@@ -19,14 +19,18 @@ Route::prefix('guests')->group(function () {
         Route::get('/', 'index');
         Route::get('/unread-count', 'unreadCount');
     });
-
-
 });
 
 
+// settings
+Route::prefix('settings')->controller(SettingController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('{id}', 'show');
+});
+
 
 Route::prefix('general')->group(function () {
-    
+
     Route::prefix('gifts')->controller(GiftController::class)->group(function () {
         Route::get('/', 'index');
     });

@@ -29,6 +29,17 @@ class SettingController extends Controller
         ]);
     }
 
+
+    public function show($id)
+    {
+        $setting = $this->settingService->show($id);
+
+        return response()->json([
+            'success' => true,
+            'data' => new SettingResource($setting),
+        ]);
+    }
+
     // updateSettings
     public function updateSettings(UpdateRequest $request)
     {

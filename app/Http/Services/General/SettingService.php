@@ -29,6 +29,8 @@ class SettingService
     }
 
 
+
+
     // multi data updates
     public function updateSettings($data)
     {
@@ -43,9 +45,12 @@ class SettingService
         return [];
     }
 
-    public function show($id)
+    public function show($idOrKey)
     {
-        $item = Setting::find($id);
+        $item = Setting::where('key', $idOrKey)
+            ->orWhere('id', $idOrKey)
+            ->first();
+
         if (!$item) {
             MessageService::abort(404, 'messages.setting.item_not_found');
         }

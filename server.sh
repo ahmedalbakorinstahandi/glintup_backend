@@ -21,3 +21,7 @@ git pull
 6. change permissions of storage/framework and storage/logs
 7. run migrations // php artisan migrate
 8. run seeders // php artisan db:seed
+9. storage link // 
+  // php artisan storage:link
+  // change permissions of storage/app permissions to 777
+  // chown root:root storage/app -R
