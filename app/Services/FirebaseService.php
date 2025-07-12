@@ -310,6 +310,79 @@ class FirebaseService
         return $config;
     }
 
+    /**
+     * Send a single notification to multiple FCM registration tokens
+     * (multicast). Returns the raw Firebase response so you can inspect
+     * per-token success / failure.
+     *
+     * @param  string[] $registrationTokens  An array of FCM tokens
+     * @param  string   $title               Notification title
+     * @param  string   $body                Notification body
+     * @param  array    $data                Extra key/value payload (optional)
+     * @param  string|null $channelId        Android channel-id (optional)
+     * @return array                         [
+     *                                          'success' => bool,
+     *                                          'message' => string,
+     *                                          'response' => \Kreait\Firebase\Messaging\MulticastSendReport|mixed
+     *                                       ]
+     */
+    public static function sendToTokens(
+        array $registrationTokens,
+        string $title,
+        string $body,
+        array $data = [],
+        ?string $channelId = null
+    ) {
+        if (empty($registrationTokens)) {
+            return [
+                'success' => false,
+                'message' => 'No registration tokens supplied.',
+            ];
+        }
+
+        $messaging = self::getFirebaseMessaging()->createMessaging();
+
+        // Build common notification + data part once
+        $notification = FirebaseNotification::create($title, $body);
+
+        $androidConfig = null;
+        if ($channelId) {
+            $androidConfig = [
+                'notification' => [
+                    'channel_id' => $channelId,
+                ],
+            ];
+        }
+
+        // Multicast message
+        $message = CloudMessage::new()
+            ->withNotification($notification)
+            ->withData($data);
+
+        if ($androidConfig) {
+            $message = $message->withAndroidConfig($androidConfig);
+        }
+
+        try {
+            /** @var \Kreait\Firebase\Messaging\MulticastSendReport $report */
+            $report = $messaging->sendMulticast($message, $registrationTokens);
+
+            return [
+                'success'  => true,
+                'message'  => sprintf(
+                    'Sent to %d tokens (%d success, %d failure)',
+                    // $report->tokens()->count(),
+                    $report->successes()->count(),
+                    $report->failures()->count()
+                ),
+                'response' => $report,
+            ];
+        } catch (\Throwable $e) {
+            return self::handleException($e);
+        }
+    }
+
+
 
     public static function sendIncomingCall($topic, $serviceRequestId, $requestFilter, $customerName, $avatar, $phone)
     {
