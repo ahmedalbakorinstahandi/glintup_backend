@@ -143,6 +143,8 @@ class UserAuthController extends Controller
 
         $this->userAuthService->logout($token);
 
+        PersonalAccessToken::where('token', $token)->update(['logouted_at' => now()]);
+
         return response()->json([
             'success' => true,
             'message' => trans('messages.user_logged_out_successfully'),

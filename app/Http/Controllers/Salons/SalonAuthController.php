@@ -13,6 +13,7 @@ use App\Http\Services\Salons\SalonAuthService;
 use App\Models\Users\User;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class SalonAuthController extends Controller
 {
@@ -126,6 +127,8 @@ class SalonAuthController extends Controller
         $token = request()->bearerToken();
 
         $this->salonAuthService->logout($token);
+
+        PersonalAccessToken::where('token', $token)->update(['logouted_at' => now()]);
 
         return response()->json([
             'success' => true,

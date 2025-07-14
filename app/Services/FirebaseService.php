@@ -152,6 +152,49 @@ class FirebaseService
         }
     }
 
+
+    public static function sendToTokensAndStorage($users_ids, $notificationable, $title, $body, $replace, $data = [], $isCustom = false, $channelId = null)
+    {
+        $messaging = self::getFirebaseMessaging()->createMessaging();
+
+        $tokens = PersonalAccessToken::whereIn('user_id', $users_ids)->whereNull('logouted_at')->pluck('device_token')->toArray();
+
+
+        NotificationService::storeNotification(
+            $users_ids,
+            $notificationable,
+            $title,
+            $body,
+            $replace,
+            $data,
+            $isCustom
+        );
+
+        $data['notificationable_id'] = $notificationable['id'] ?? null;
+        $type = $notificationable['type'] ?? 'Custom';
+        $data['notificationable_type'] = $type;
+
+        if ($isCustom) {
+            $messageConfig = self::sendToTokens([], $title,  $body,  $data, $channelId);
+        } else {
+            $messageConfig = self::sendToTokens([], __($title, $replace), __($body, $replace), $data, $channelId);
+        }
+        $message = CloudMessage::fromArray($messageConfig);
+
+
+        try {
+            $response = $messaging->send($message);
+            return [
+                'success' => true,
+                'message' => 'Notification sent successfully',
+                'response' => $response,
+            ];
+        } catch (\Throwable $e) {
+            return self::handleException($e);
+        }
+    }
+
+
     /**
      * Unsubscribe from a specific topic.
      */

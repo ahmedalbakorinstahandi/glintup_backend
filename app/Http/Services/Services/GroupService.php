@@ -75,6 +75,7 @@ class GroupService
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, new Group);
 
+        $validatedData['orders'] = 1;
 
         $group = Group::create($validatedData);
 
