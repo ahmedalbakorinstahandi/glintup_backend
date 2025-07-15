@@ -14,7 +14,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class FirebaseService
 {
-    protected static $firebaseMessaging;
+    public static $firebaseMessaging;
 
     /**
      * Subscribe to a topic using a token.
@@ -115,9 +115,7 @@ class FirebaseService
     }
     public static function sendToTopicAndStorage($topic, $users_ids, $notificationable, $title, $body, $replace, $data = [], $isCustom = false, $channelId = null)
     {
-        $messaging = self::getFirebaseMessaging()->createMessaging();
-
-
+        // Store notification first (this should always work)
         NotificationService::storeNotification(
             $users_ids,
             $notificationable,
@@ -128,28 +126,77 @@ class FirebaseService
             $isCustom
         );
 
+        // Prepare data for Firebase
         $data['notificationable_id'] = $notificationable['id'] ?? null;
         $type = $notificationable['type'] ?? 'Custom';
         $data['notificationable_type'] = $type;
 
-        if ($isCustom) {
-            $messageConfig = self::createMessageConfig($topic, $title,  $body,  $data, $channelId);
-        } else {
-            $messageConfig = self::createMessageConfig($topic, __($title, $replace), __($body, $replace), $data, $channelId);
-        }
-        $message = CloudMessage::fromArray($messageConfig);
+        // Try to send Firebase notification with retry logic
+        $maxRetries = 3;
+        $retryDelay = 2; // seconds
+        
+        for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+            try {
+                $messaging = self::getFirebaseMessaging()->createMessaging();
 
+                if ($isCustom) {
+                    $messageConfig = self::createMessageConfig($topic, $title,  $body,  $data, $channelId);
+                } else {
+                    $messageConfig = self::createMessageConfig($topic, __($title, $replace), __($body, $replace), $data, $channelId);
+                }
+                $message = CloudMessage::fromArray($messageConfig);
 
-        try {
-            $response = $messaging->send($message);
-            return [
-                'success' => true,
-                'message' => 'Notification sent successfully',
-                'response' => $response,
-            ];
-        } catch (\Throwable $e) {
-            return self::handleException($e);
+                $response = $messaging->send($message);
+                
+                Log::info('Firebase notification sent successfully', [
+                    'topic' => $topic,
+                    'attempt' => $attempt,
+                    'response' => $response,
+                ]);
+                
+                return [
+                    'success' => true,
+                    'message' => 'Notification sent successfully',
+                    'response' => $response,
+                ];
+                
+            } catch (\Throwable $e) {
+                $errorMessage = $e->getMessage();
+                $isInvalidGrant = str_contains($errorMessage, 'invalid_grant');
+                
+                Log::warning('Firebase notification attempt failed', [
+                    'attempt' => $attempt,
+                    'max_retries' => $maxRetries,
+                    'error' => $errorMessage,
+                    'topic' => $topic,
+                ]);
+                
+                // If it's an invalid_grant error and we have more retries, wait and try again
+                if ($isInvalidGrant && $attempt < $maxRetries) {
+                    Log::info('Retrying Firebase notification after invalid_grant error', [
+                        'attempt' => $attempt + 1,
+                        'delay' => $retryDelay,
+                    ]);
+                    
+                    sleep($retryDelay);
+                    $retryDelay *= 2; // Exponential backoff
+                    
+                    // Reset Firebase messaging instance to force re-initialization
+                    self::$firebaseMessaging = null;
+                    
+                    continue;
+                }
+                
+                // If we've exhausted retries or it's not an invalid_grant error, handle the exception
+                return self::handleException($e);
+            }
         }
+        
+        // This should never be reached, but just in case
+        return [
+            'success' => false,
+            'message' => 'Failed to send notification after all retry attempts',
+        ];
     }
 
 
@@ -283,11 +330,27 @@ class FirebaseService
     /**
      * Setup Firebase Messaging.
      */
-    protected static function getFirebaseMessaging()
+    public static function getFirebaseMessaging()
     {
         if (!self::$firebaseMessaging) {
-            $serviceAccount = self::loadServiceAccount();
-            self::$firebaseMessaging = (new Factory)->withServiceAccount($serviceAccount);
+            try {
+                $serviceAccount = self::loadServiceAccount();
+                
+                // Validate service account data
+                if (!self::validateServiceAccount($serviceAccount)) {
+                    throw new \Exception("Invalid Firebase service account configuration.");
+                }
+                
+                self::$firebaseMessaging = (new Factory)
+                    ->withServiceAccount($serviceAccount);
+                    
+            } catch (\Throwable $e) {
+                Log::error('Firebase initialization failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+                throw $e;
+            }
         }
 
         return self::$firebaseMessaging;
@@ -296,17 +359,48 @@ class FirebaseService
     /**
      * Load service account data.
      */
-    protected static function loadServiceAccount()
+    public static function loadServiceAccount()
     {
         $serviceAccountPath = storage_path('firebase/glint-up-firebase-adminsdk-fbsvc-f7a7261316.json');
 
         if (!file_exists($serviceAccountPath)) {
-            throw new \Exception("Firebase service account file not found.");
+            throw new \Exception("Firebase service account file not found at: " . $serviceAccountPath);
         }
 
-        $serviceAccount = json_decode(file_get_contents($serviceAccountPath), true);
+        $serviceAccountContent = file_get_contents($serviceAccountPath);
+        if (!$serviceAccountContent) {
+            throw new \Exception("Unable to read Firebase service account file.");
+        }
+
+        $serviceAccount = json_decode($serviceAccountContent, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception("Invalid JSON in Firebase service account file: " . json_last_error_msg());
+        }
 
         return $serviceAccount;
+    }
+
+    /**
+     * Validate service account configuration.
+     */
+    protected static function validateServiceAccount($serviceAccount)
+    {
+        $requiredFields = ['type', 'project_id', 'private_key_id', 'private_key', 'client_email', 'client_id'];
+        
+        foreach ($requiredFields as $field) {
+            if (!isset($serviceAccount[$field]) || empty($serviceAccount[$field])) {
+                Log::error('Firebase service account missing required field', ['field' => $field]);
+                return false;
+            }
+        }
+
+        // Validate private key format
+        if (!str_contains($serviceAccount['private_key'], '-----BEGIN PRIVATE KEY-----')) {
+            Log::error('Firebase service account has invalid private key format');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -314,15 +408,37 @@ class FirebaseService
      */
     protected static function handleException(\Throwable $e)
     {
+        $errorMessage = $e->getMessage();
+        $isInvalidGrant = str_contains($errorMessage, 'invalid_grant');
+        
+        if ($isInvalidGrant) {
+            Log::error('Firebase Invalid Grant Error - Possible causes: expired credentials, clock skew, or network issues', [
+                'error' => $errorMessage,
+                'trace' => $e->getTraceAsString(),
+                'timestamp' => now()->toISOString(),
+                'server_time' => date('Y-m-d H:i:s'),
+            ]);
+            
+            // Reset Firebase messaging instance to force re-initialization
+            self::$firebaseMessaging = null;
+            
+            return [
+                'success' => false,
+                'message' => 'Firebase authentication error. Please check credentials and try again.',
+                'error' => $errorMessage,
+                'retry_after' => 60, // Suggest retry after 1 minute
+            ];
+        }
+
         Log::error('Firebase Error', [
-            'error' => $e->getMessage(),
+            'error' => $errorMessage,
             'trace' => $e->getTraceAsString(),
         ]);
 
         return [
             'success' => false,
-            'message' => $e->getMessage(),
-            'error' => $e->getMessage(),
+            'message' => $errorMessage,
+            'error' => $errorMessage,
         ];
     }
 
