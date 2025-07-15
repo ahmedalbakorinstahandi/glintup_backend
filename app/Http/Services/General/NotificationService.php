@@ -16,7 +16,7 @@ class NotificationService
 {
     public function index($data)
     {
-        $query = Notification::query()->with(['user', 'notificationable']);
+        $query = Notification::query()->with(['user']);
 
         $query = NotificationPermission::filterIndex($query);
 
@@ -25,7 +25,7 @@ class NotificationService
 
     public function show($id)
     {
-        $notification = Notification::with(['user', 'notificationable'])->find($id);
+        $notification = Notification::with(['user'])->find($id);
 
         if (!$notification) {
             MessageService::abort(404, 'messages.notification.item_not_found');

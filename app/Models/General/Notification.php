@@ -49,11 +49,11 @@ class Notification extends Model
         return !is_null($this->read_at);
     }
 
-    // notificationable polymorphic relationship
-    public function notificationable()
-    {
-        return $this->morphTo()->withTrashed();
-    }
+    // // notificationable polymorphic relationship
+    // public function notificationable()
+    // {
+    //     return $this->morphTo()->withTrashed();
+    // }
 
 
     protected function title(): Attribute
