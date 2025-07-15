@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\General;
 
+use App\Http\Notifications\ComplaintNotification;
 use App\Models\General\Complaint;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -41,6 +42,8 @@ class ComplaintService
     public function create($data)
     {
         $complaint = Complaint::create($data);
+
+        ComplaintNotification::newComplaint($complaint);
 
         return $complaint;
     }
