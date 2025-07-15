@@ -40,6 +40,7 @@ class AdminUserController extends Controller
     public function create(CreateRequest $request)
     {
         $item = $this->service->create($request->validated());
+        
         return response()->json([
             'success' => true,
             'message' => trans('messages.admin_users.item_created_successfully'),

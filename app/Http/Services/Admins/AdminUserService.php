@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Admins;
 
+use App\Http\Notifications\AdminPermissionNotification;
 use App\Models\Users\User;
 use App\Models\Admins\{AdminPermission, UserAdminPermission};
 use App\Services\{FilterService, MessageService, PhoneService};
@@ -64,6 +65,8 @@ class AdminUserService
                     ]);
                 }
             }
+
+            AdminPermissionNotification::updateEmployeePermission($user);
 
             return $user->load(['adminPermissions']);
         });
