@@ -361,7 +361,7 @@ class FirebaseService
      */
     public static function loadServiceAccount()
     {
-        $serviceAccountPath = storage_path('firebase/glint-up-firebase-adminsdk-fbsvc-f7a7261316.json');
+        $serviceAccountPath = storage_path('firebase/glint-up-firebase-adminsdk-fbsvc-95f961c5dd.json');
 
         if (!file_exists($serviceAccountPath)) {
             throw new \Exception("Firebase service account file not found at: " . $serviceAccountPath);
