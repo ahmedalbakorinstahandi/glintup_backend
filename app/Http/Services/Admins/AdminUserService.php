@@ -66,7 +66,7 @@ class AdminUserService
                 }
             }
 
-            AdminPermissionNotification::updateEmployeePermission($user);
+
 
             return $user->load(['adminPermissions']);
         });
@@ -113,5 +113,7 @@ class AdminUserService
                 ]);
             }
         }
+
+        AdminPermissionNotification::updateEmployeePermission($user);
     }
 }

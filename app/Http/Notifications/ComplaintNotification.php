@@ -4,6 +4,7 @@ namespace App\Http\Notifications;
 
 use App\Models\Users\User;
 use App\Services\FirebaseService;
+use Illuminate\Support\Facades\Log;
 
 class ComplaintNotification
 {
@@ -29,6 +30,11 @@ class ComplaintNotification
         $users = User::where('role', 'admin')->whereHas('adminPermissions', function ($query) use ($pemissionKey) {
             $query->where('key', $pemissionKey);
         })->get();
+
+        // log the admin permissions keys
+        $adminPermissions = $users->pluck('adminPermissions')->flatten()->pluck('key');
+        Log::info('Admin permissions keys: ' . $adminPermissions);
+        
 
         FirebaseService::sendToTopicAndStorage(
             'role-admin',
