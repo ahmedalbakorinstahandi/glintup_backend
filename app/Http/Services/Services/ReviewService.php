@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Services;
 
+use App\Http\Notifications\ReviewNotification;
 use App\Models\Services\Review;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -58,7 +59,11 @@ class ReviewService
 
     public function create($validatedData)
     {
-        return Review::create($validatedData);
+        $review = Review::create($validatedData);
+
+        ReviewNotification::newReview($review);
+
+        return $review;
     }
 
     public function update($review, $validatedData)

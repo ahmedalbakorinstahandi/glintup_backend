@@ -10,7 +10,7 @@ class ComplaintNotification
 {
 
 
-    public static function newComplaint($complaint) 
+    public static function newComplaint($complaint)
     {
         $user = $complaint->user;
 
@@ -34,10 +34,9 @@ class ComplaintNotification
         // log the admin permissions keys
         $adminPermissions = $users->pluck('adminPermissions')->flatten()->pluck('key');
         Log::info('Admin permissions keys: ' . $adminPermissions);
-        
 
-        FirebaseService::sendToTopicAndStorage(
-            'role-admin',
+
+        FirebaseService::sendToTokensAndStorage(
             $users->pluck('id'),
             [
                 'id' => $complaint->id,

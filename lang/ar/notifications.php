@@ -8,7 +8,7 @@ return [
         ],
         'complaint' => [
             'new_complaint' => 'هنالك شكوى جديدة',
-            'new_complaint_body' => 'قام المستخدم :full_user_name بإرسال شكوى، المحتوى: :content', 
+            'new_complaint_body' => 'قام المستخدم :full_user_name بإرسال شكوى، المحتوى: :content',
         ],
         'ad' => [
             'new_ad' => 'هنالك إعلان جديد',
@@ -25,6 +25,16 @@ return [
         'user' => [
             'new_user' => 'هنالك مستخدم جديد',
             'new_user_body' => 'تم إنشاء مستخدم جديد :full_user_name, يرجى التحقق منه',
+        ],
+    ],
+
+    'salon' => [
+        'ad' => [
+            'approve_ad' => 'تمت الموافقة على إعلانك',
+            'approve_ad_body' => 'تمت الموافقة على إعلانك :ad_title, في المحل :salon_name',
+
+            'reject_ad' => 'تم رفض إعلانك',
+            'reject_ad_body' => 'تم رفض إعلانك :ad_title, في المحل :salon_name',
         ],
     ],
 ];

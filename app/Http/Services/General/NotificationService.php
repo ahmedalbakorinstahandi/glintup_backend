@@ -75,11 +75,28 @@ class NotificationService
                 $notificationData['title']['cu'] = $title;
                 $notificationData['message']['cu'] = $body;
             } else {
+
+                $filedsLocalesReplace = $replace['locales'] ?? [];
+
                 foreach ($locales as $locale) {
+
+                    foreach ($filedsLocalesReplace as $replaceItemKey => $replaceItem) {
+                        if (isset($replaceItem[$locale])) {
+                            $replace = $replaceItem[$locale];
+                        }
+                    }
+
+
                     $notificationData['title'][$locale] = __($title, $replace, $locale);
                     $notificationData['message'][$locale] = __($body, $replace, $locale);
                 }
             }
+
+            abort(
+                response()->json([
+                    'data' => $notificationData,
+                ])
+            );
 
             $notificationService->create($notificationData);
         }

@@ -29,8 +29,7 @@ class MenuRequestNotification
             $query->where('key', $pemissionKey);
         })->get();
 
-        FirebaseService::sendToTopicAndStorage(
-            'role-admin',
+        FirebaseService::sendToTokensAndStorage(
             $users->pluck('id'),
             [
                 'id' => $menuRequest->id,

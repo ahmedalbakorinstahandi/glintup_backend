@@ -8,7 +8,8 @@ use App\Services\FirebaseService;
 class UserNotification
 {
 
-    public static function newUser($user) {
+    public static function newUser($user)
+    {
         $title = 'notifications.admin.user.new_user';
         $body = 'notifications.admin.user.new_user_body';
 
@@ -21,8 +22,7 @@ class UserNotification
             $query->where('key', $pemissionKey);
         })->get();
 
-        FirebaseService::sendToTopicAndStorage(
-            'role-admin',
+        FirebaseService::sendToTokensAndStorage(
             $users->pluck('id'),
             [
                 'id' => $user->id,

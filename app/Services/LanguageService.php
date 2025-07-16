@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Builder;
 class LanguageService
 {
 
+    public static function getLocale()
+    {
+        return app()->getLocale();
+    }
+
 
     public static function getMultiLanguage()
     {

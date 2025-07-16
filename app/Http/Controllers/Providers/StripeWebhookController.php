@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Providers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Notifications\AdNotification;
+use App\Http\Notifications\MenuRequestNotification;
 use App\Models\Booking\SalonMenuRequest;
 use App\Models\Statistics\PromotionAd;
 use App\Models\Booking\WalletTransaction;
@@ -71,6 +73,7 @@ class StripeWebhookController extends Controller
                 $ad = PromotionAd::find($adId);
                 if ($ad) {
                     $ad->update(['status' => 'in_review']);
+                    AdNotification::newAd($ad);
                 }
                 break;
 
@@ -81,6 +84,7 @@ class StripeWebhookController extends Controller
                     'cost' => $session->metadata->data_cost,
                     'status' => 'pending',
                 ]);
+                MenuRequestNotification::newMenuRequest($request);
                 $walletTransaction->update([
                     'transactionable_id' => $request->id,
                     'transactionable_type' => SalonSalonMenuRequest::class,
@@ -93,20 +97,20 @@ class StripeWebhookController extends Controller
     {
         // Get payment intent ID - handle both payment_intent and checkout_session
         $paymentIntentId = $session->id ?? $session->payment_intent;
-        
+
         Log::info('Processing gift card payment', [
             'session_id' => $session->id ?? 'null',
             'session_payment_intent' => $session->payment_intent ?? 'null',
             'final_payment_intent_id' => $paymentIntentId,
             'session_type' => get_class($session)
         ]);
-        
+
         // Get gift card data from cache using payment intent ID
         $cacheKey = "gift_card_data_{$paymentIntentId}";
-        
+
         try {
             $giftCardData = Cache::get($cacheKey);
-            
+
             if (!$giftCardData) {
                 Log::error('Gift card data not found in cache', [
                     'payment_intent' => $paymentIntentId,
@@ -144,7 +148,6 @@ class StripeWebhookController extends Controller
                 'gift_card_id' => $giftCard->id,
                 'payment_intent' => $paymentIntentId
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error creating gift card', [
                 'error' => $e->getMessage(),
@@ -159,20 +162,20 @@ class StripeWebhookController extends Controller
     {
         // Get payment intent ID - handle both payment_intent and checkout_session
         $paymentIntentId = $session->id ?? $session->payment_intent;
-        
+
         Log::info('Processing booking payment', [
             'session_id' => $session->id ?? 'null',
             'session_payment_intent' => $session->payment_intent ?? 'null',
             'final_payment_intent_id' => $paymentIntentId,
             'session_type' => get_class($session)
         ]);
-        
+
         // Get booking data from cache using payment intent ID
         $cacheKey = "booking_data_{$paymentIntentId}";
-        
+
         try {
             $bookingData = Cache::get($cacheKey);
-            
+
             if (!$bookingData) {
                 Log::error('Booking data not found in cache', [
                     'payment_intent' => $paymentIntentId,
@@ -211,7 +214,6 @@ class StripeWebhookController extends Controller
                 'booking_id' => $booking->id,
                 'payment_intent' => $paymentIntentId
             ]);
-
         } catch (\Exception $e) {
             Log::error('Error creating booking', [
                 'error' => $e->getMessage(),
@@ -231,7 +233,7 @@ class StripeWebhookController extends Controller
         if ($type === 'booking') {
             $cacheKey = "booking_data_{$paymentIntentId}";
             Cache::forget($cacheKey);
-            
+
             Log::info('Booking payment failed - cache cleaned', [
                 'payment_intent' => $paymentIntentId,
                 'cache_key' => $cacheKey
@@ -243,7 +245,7 @@ class StripeWebhookController extends Controller
         if ($type === 'gift_card') {
             $cacheKey = "gift_card_data_{$paymentIntentId}";
             Cache::forget($cacheKey);
-            
+
             Log::info('Gift card payment failed - cache cleaned', [
                 'payment_intent' => $paymentIntentId,
                 'cache_key' => $cacheKey
@@ -253,7 +255,7 @@ class StripeWebhookController extends Controller
 
         $transactionId = $session->metadata->transaction_id ?? null;
         $walletTransaction = UserWalletTransaction::find($transactionId);
-        
+
         if ($walletTransaction && $walletTransaction->status === 'pending') {
             $metadata = $walletTransaction->metadata ?? [];
             $metadata['stripe_payment_id'] = $paymentIntentId;

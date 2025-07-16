@@ -2,19 +2,17 @@
 
 namespace App\Http\Notifications;
 
-use App\Models\Users\User;
 use App\Services\FirebaseService;
 
-class AdminPermissionNotification
+class SalonPermissionNotification
 {
     public static function updateEmployeePermission($user)
     {
-        $title = 'notifications.admin.employee_permission.update_employee_permission_title';
-        $body = 'notifications.admin.employee_permission.update_employee_permission_body';
+        $title = 'notifications.salon.employee.permission.update_title';
+        $body = 'notifications.salon.employee.permission.update_body';
 
-        $admin = User::auth();
         $data = [
-            'admin_user_name' => $admin->first_name . ' ' . $admin->last_name,
+            'employee_name' => $user->first_name . ' ' . $user->last_name,
         ];
 
         FirebaseService::sendToTokensAndStorage(

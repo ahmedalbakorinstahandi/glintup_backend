@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Statistics;
 
+use App\Http\Notifications\AdNotification;
 use App\Models\Statistics\PromotionAd;
 use App\Services\FilterService;
 use App\Services\LanguageService;
@@ -71,9 +72,13 @@ class PromotionAdService
 
         $ad->update($validatedData);
 
+        if ($ad->status == 'approved') {
+            AdNotification::approveAd($ad);
+        }
 
-        // TODO : check if approved or rejected and send notification to salon
-
+        if ($ad->status == 'rejected') {
+            AdNotification::rejectAd($ad);
+        }
 
         return $ad;
     }
@@ -239,6 +244,8 @@ class PromotionAdService
                 ]
             ],
         ]);
+
+
 
         return [
             'checkout_session' => $checkoutSession->id,

@@ -3,6 +3,7 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Http\Notifications\MenuRequestNotification;
 use App\Http\Permissions\Salons\SalonMenuRequestPermission;
 use App\Models\General\Setting;
 use App\Models\Salons\SalonMenuRequest;
@@ -120,6 +121,8 @@ class SalonMenuRequestService
                 ]
             ],
         ]);
+
+
 
         return [
             'checkout_session' => $checkoutSession->id,
