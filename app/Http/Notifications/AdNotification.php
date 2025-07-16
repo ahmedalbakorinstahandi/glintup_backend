@@ -4,6 +4,7 @@ namespace App\Http\Notifications;
 
 use App\Services\FirebaseService;
 use App\Services\LanguageService;
+use App\Http\Notifications\NotificationHelper;
 
 class AdNotification
 {
@@ -49,7 +50,8 @@ class AdNotification
 
         $locale = LanguageService::getLocale();
 
-        $data = [
+        // Data for translation replacements (only string values)
+        $replace = [
             'promotion_ad_id' => $ad->id,
             'salon_name' => $ad->salon->merchant_commercial_name,
             'ad_title' => $ad->title[$locale],
@@ -57,6 +59,7 @@ class AdNotification
                 'ad_title' => NotificationHelper::handleLocales($ad->title, 'ad_title'),
             ],
         ];
+
 
         $pemissionKey = 'Ads';
 
@@ -70,8 +73,8 @@ class AdNotification
             ],
             $title,
             $body,
-            $data,
-            $data
+            $replace,
+            $replace
         );
     }
 
@@ -83,11 +86,19 @@ class AdNotification
         $title = 'notifications.salon.ad.reject_ad';
         $body = 'notifications.salon.ad.reject_ad_body';
 
-        $data = [
+        $locale = LanguageService::getLocale();
+
+        // Data for translation replacements (only string values)
+        $replace = [
             'promotion_ad_id' => $ad->id,
             'salon_name' => $ad->salon->merchant_commercial_name,
-            'ad_title' => $ad->title,
+            'ad_title' => $ad->title[$locale],
+            'locales' => [
+                'ad_title' => NotificationHelper::handleLocales($ad->title, 'ad_title'),
+            ],
         ];
+
+
 
         $pemissionKey = 'Ads';
 
@@ -101,8 +112,8 @@ class AdNotification
             ],
             $title,
             $body,
-            $data,
-            $data
+            $replace,
+            $replace
         );
     }
 }
