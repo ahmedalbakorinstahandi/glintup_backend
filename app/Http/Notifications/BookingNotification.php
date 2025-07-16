@@ -43,8 +43,8 @@ class BookingNotification
     {
         $user = $booking->user;
 
-        $title = 'notifications.salon.booking.completed.title';
-        $body = 'notifications.salon.booking.completed.body';
+        $title = 'notifications.user.booking.completed.title';
+        $body = 'notifications.user.booking.completed.body';
 
         $data = [
             'booking_id' => $booking->id,
@@ -68,8 +68,8 @@ class BookingNotification
     {
         $user = $booking->user;
 
-        $title = 'notifications.salon.booking.cancelled.title';
-        $body = 'notifications.salon.booking.cancelled.body';
+        $title = 'notifications.user.booking.cancelled.title';
+        $body = 'notifications.user.booking.cancelled.body';
 
         $data = [
             'booking_id' => $booking->id,
@@ -93,8 +93,8 @@ class BookingNotification
     {
         $user = $booking->user;
 
-        $title = 'notifications.salon.booking.rejected.title';
-        $body = 'notifications.salon.booking.rejected.body';
+        $title = 'notifications.user.booking.rejected.title';
+        $body = 'notifications.user.booking.rejected.body';
 
         $data = [
             'booking_id' => $booking->id,
@@ -119,8 +119,8 @@ class BookingNotification
     {
         $user = $booking->user;
 
-        $title = 'notifications.salon.booking.new_booking.title';
-        $body = 'notifications.salon.booking.new_booking_body';
+        $title = 'notifications.user.booking.new_booking.title';
+        $body = 'notifications.user.booking.new_booking_body';
 
         $data = [
             'booking_id' => $booking->id,
