@@ -11,7 +11,7 @@ class NotificationHelper
     public static function getUsersSalonPermissions($salonId, $permissionKey)
     {
         return User::whereIn('role', ['salon_owner', 'staff'])->whereHas('salon', function ($query) use ($salonId) {
-            $query->where('id', $salonId);
+            $query->where('salons.id', $salonId);
         })->whereHas('salonPermissions', function ($query) use ($permissionKey) {
             $query->whereHas('permission', function ($query) use ($permissionKey) {
                 $query->where('key', $permissionKey);
