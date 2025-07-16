@@ -516,7 +516,7 @@ class FirebaseService
         // Multicast message
         $message = CloudMessage::new()
             ->withNotification($notification)
-            ->withData($data);
+            ->withData(array_map('strval', $data));
 
         if ($androidConfig) {
             $message = $message->withAndroidConfig($androidConfig);
