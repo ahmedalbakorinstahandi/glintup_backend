@@ -17,7 +17,6 @@ class LoyaltyPointNotification
         $data = [
             'loyalty_point_id' => $loyaltyPoint->id,
             'salon_name' => $loyaltyPoint->salon->merchant_commercial_name,
-            'points' => $loyaltyPoint->points,
         ];
 
         FirebaseService::sendToTokensAndStorage(

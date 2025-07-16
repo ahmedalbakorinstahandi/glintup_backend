@@ -86,7 +86,7 @@ return [
         'loyalty_point' => [
             'added_one_point' => [
                 'title' => 'لقد حصلت على نقطة ولاء جديدة',
-                'body' => 'تم إضافة نقطة ولاء جديدة :points في صالون :salon_name',
+                'body' => 'تم إضافة نقطة ولاء جديدة في صالون :salon_name',
             ],
             'won_reward' => [
                 'title' => 'مبروك! لقد ربحت هدية',
