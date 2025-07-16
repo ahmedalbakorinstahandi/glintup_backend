@@ -2,10 +2,8 @@
 
 namespace App\Http\Notifications;
 
-use App\Models\Users\User;
 use App\Services\FirebaseService;
 use App\Services\LanguageService;
-use NotificationHelper;
 
 class AdNotification
 {

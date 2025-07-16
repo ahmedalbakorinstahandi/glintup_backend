@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Http\Notifications;
+
+
 use App\Models\Users\User;
 use App\Services\LanguageService;
 
