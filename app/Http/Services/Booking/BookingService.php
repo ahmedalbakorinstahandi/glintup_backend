@@ -2,6 +2,8 @@
 
 namespace App\Http\Services\Booking;
 
+use App\Http\Notifications\BookingNotification;
+use App\Http\Notifications\LoyaltyPointNotification;
 use App\Http\Permissions\Booking\BookingPermission;
 use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Models\Booking\Booking;
@@ -286,6 +288,9 @@ class BookingService
             'invoice'
         ]);
 
+
+        BookingNotification::newBookingForUser($booking);
+
         return $booking;
     }
 
@@ -300,6 +305,9 @@ class BookingService
 
 
         if ($old_status != 'completed' && $booking->status == 'completed') {
+
+            BookingNotification::bookingCompleted($booking);
+
             // add point to loyalty program
             $user = User::find($booking->user_id);
 
@@ -311,13 +319,11 @@ class BookingService
 
 
                 if ($loyaltyProgram->points == 5) {
-                    //TODO send notification to user 
-                    // مبروك لقد حصلت على 5 نقاط ولاء
+                    LoyaltyPointNotification::loyaltyPointWonReward($loyaltyProgram);
                     $loyaltyProgram->taken_at = now();
                     $loyaltyProgram->save();
                 } else {
-                    //TODO send notification to user 
-                    // اما بزالنا نضيف لك نقطة ولاء جديدة
+                    LoyaltyPointNotification::loyaltyPointAdded($loyaltyProgram);
                 }
             } else {
                 LoyaltyPoint::create([
@@ -329,7 +335,7 @@ class BookingService
         }
         // cancelled booking
         if ($old_status != 'cancelled' && $booking->status == 'cancelled') {
-            // TODO :: send notification to user
+            BookingNotification::bookingCancelled($booking);
             $this->cancelBooking($booking, true);
         }
 
@@ -745,6 +751,8 @@ class BookingService
 
         // Create invoice
         $invoice = $this->createInvoice($booking);
+
+        BookingNotification::newBooking($booking);
 
         $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
 

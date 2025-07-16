@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Rewards;
 
+use App\Http\Notifications\GiftCardNotification;
 use App\Models\Rewards\GiftCard;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -342,7 +343,8 @@ class GiftCardService
         ]);
 
         WhatsappMessageService::send($full_phone, $message);
-        // }
+
+
 
         $data['sender_id'] = $user->id;
         $code = GiftCard::generateCode();
@@ -385,6 +387,8 @@ class GiftCardService
                 'payment_method' => $payment_method,
             ],
         ]);
+
+        GiftCardNotification::sendGiftCardToUser($giftCard);
 
         $system_percentage = Setting::where('key', 'system_percentage_gift')->first()->value ?? 0;
 
@@ -496,7 +500,7 @@ class GiftCardService
         $giftCard->received_at = now();
         $giftCard->save();
 
-        // TODO: send notification to sender
+        GiftCardNotification::receiveGiftCard($giftCard);
 
 
         $giftCard->load(['sender', 'recipient', 'theme']);

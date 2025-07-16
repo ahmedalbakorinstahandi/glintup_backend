@@ -79,7 +79,9 @@ class SalonStaffController extends Controller
     public function updatePermissions($id, UpdatePermissionsRequest $request)
     {
         $item = $this->service->show($id);
+
         $this->service->updatePermissions($item, $request->validated());
+        
         return response()->json([
             'success' => true,
             'message' => trans('messages.salon_staff.permissions_updated_successfully'),

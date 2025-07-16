@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return [
     'admin' => [
@@ -25,6 +25,59 @@ return [
         'user' => [
             'new_user' => 'There is a new user',
             'new_user_body' => 'The user :full_user_name has been created, please check it',
+        ],
+
+    ],
+
+    'salon' => [
+        'ad' => [
+            'approve_ad' => 'Ad approved',
+            'approve_ad_body' => 'The ad :ad_title in the salon :salon_name has been approved',
+
+            'reject_ad' => 'Ad rejected',
+            'reject_ad_body' => 'The ad :ad_title in the salon :salon_name has been rejected',
+        ],
+        'review' => [
+            'new_review' => 'There is a new review',
+            'new_review_body' => 'The user :full_user_name has added a new review, content: :review_content',
+        ],
+        'menu_request' => [
+            'accept_title' => 'Menu request accepted',
+            'accept_body' => 'The menu request :menu_request_id in the salon :salon_name has been accepted',
+
+            'reject_title' => 'Menu request rejected',
+            'reject_body' => 'The menu request :menu_request_id in the salon :salon_name has been rejected',
+        ],
+        'booking' => [
+            'new_booking' => 'There is a new booking',
+            'new_booking_body' => 'The user :full_user_name has created a new booking in the salon :salon_name',
+        ],
+    ],
+
+    'user' => [
+        'gift_card' => [
+            'new' => [
+                'title' => 'You have a new gift card',
+                'body' => 'You have received a gift card from :sender',
+            ],
+            'receive' => [
+                'title' => 'Your friend opened your gift',
+                'body' => 'Your friend, :sender, opened your gift. Thanks for spreading happiness and inviting them to GlintUp!',
+            ],
+        ],
+        'booking' => [
+            'completed' => [
+                'title' => 'Booking #:booking_id completed successfully',
+                'body' => 'We are pleased to inform you that your booking at :salon_name has been completed successfully. We hope you had a great experience. We look forward to seeing you again soon!',
+            ],
+            'cancelled' => [
+                'title' => 'Booking #:booking_id cancelled',
+                'body' => 'We are sorry to inform you that your booking at :salon_name has been cancelled. If you have any questions, please contact customer service. You can always reschedule for another time that suits you.',
+            ],
+            'rejected' => [
+                'title' => 'Booking #:booking_id rejected',
+                'body' => 'We are sorry to inform you that your booking at :salon_name has been rejected. This may be due to a busy schedule or unexpected circumstances. We hope you try again later or choose another salon.',
+            ],
         ],
 
     ],

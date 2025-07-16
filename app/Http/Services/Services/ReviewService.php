@@ -62,7 +62,8 @@ class ReviewService
         $review = Review::create($validatedData);
 
         ReviewNotification::newReview($review);
-
+        ReviewNotification::newReviewForSalon($review);
+        
         return $review;
     }
 

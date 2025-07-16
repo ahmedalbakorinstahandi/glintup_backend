@@ -138,13 +138,13 @@ class SalonMenuRequestService
                     'approved_at' => now(),
                 ]);
 
-                // TODO send notification to salon
+                MenuRequestNotification::acceptMenuRequest($request);
             } elseif ($data['status'] == 'rejected' && $request->status == 'pending') {
                 $request->update([
                     'rejected_at' => now(),
                 ]);
 
-                // TODO send notification to salon
+                MenuRequestNotification::rejectMenuRequest($request);
             }
         }
 

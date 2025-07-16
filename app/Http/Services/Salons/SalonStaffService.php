@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Http\Notifications\SalonPermissionNotification;
 use App\Http\Permissions\Salons\SalonStaffPermission;
 use App\Models\Salons\SalonStaff;
 use App\Models\Users\User;
@@ -133,5 +134,7 @@ class SalonStaffService
                 'salon_id' => $staff->salon_id,
             ]);
         }
+
+        SalonPermissionNotification::updateEmployeePermission($staff->user);
     }
 }
