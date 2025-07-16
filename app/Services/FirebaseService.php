@@ -223,7 +223,9 @@ class FirebaseService
         if ($isCustom) {
             $messageConfig = self::sendToTokens($tokens, $title,  $body,  $data, $channelId);
         } else {
-            $messageConfig = self::sendToTokens($tokens, __($title, $replace), __($body, $replace), $data, $channelId);
+            $customReplace = $replace;
+            unset($customReplace['locales']);
+            $messageConfig = self::sendToTokens($tokens, __($title, $customReplace), __($body, $customReplace), $data, $channelId);
         }
         $message = CloudMessage::fromArray($messageConfig);
 
