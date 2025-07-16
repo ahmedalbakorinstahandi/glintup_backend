@@ -516,7 +516,8 @@ class FirebaseService
         // Multicast message
         $message = CloudMessage::new()
             ->withNotification($notification)
-            ->withData(array_map('strval', $data));
+            ->withData($data);
+
 
         if ($androidConfig) {
             $message = $message->withAndroidConfig($androidConfig);
@@ -528,9 +529,9 @@ class FirebaseService
 
             return [
                 'success'  => true,
-                'message'  => sprintf(
+                'message' => sprintf(
                     'Sent to %d tokens (%d success, %d failure)',
-                    // $report->tokens()->count(),
+                    count($registrationTokens),
                     $report->successes()->count(),
                     $report->failures()->count()
                 ),
