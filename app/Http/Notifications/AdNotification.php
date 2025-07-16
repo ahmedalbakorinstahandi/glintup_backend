@@ -4,7 +4,6 @@ namespace App\Http\Notifications;
 
 use App\Services\FirebaseService;
 use App\Services\LanguageService;
-use App\Http\Notifications\NotificationHelper;
 
 class AdNotification
 {
@@ -50,7 +49,6 @@ class AdNotification
 
         $locale = LanguageService::getLocale();
 
-        // Data for translation replacements (only string values)
         $replace = [
             'promotion_ad_id' => $ad->id,
             'salon_name' => $ad->salon->merchant_commercial_name,
@@ -59,7 +57,6 @@ class AdNotification
                 'ad_title' => NotificationHelper::handleLocales($ad->title, 'ad_title'),
             ],
         ];
-
 
         $pemissionKey = 'Ads';
 
@@ -88,7 +85,6 @@ class AdNotification
 
         $locale = LanguageService::getLocale();
 
-        // Data for translation replacements (only string values)
         $replace = [
             'promotion_ad_id' => $ad->id,
             'salon_name' => $ad->salon->merchant_commercial_name,
@@ -97,8 +93,6 @@ class AdNotification
                 'ad_title' => NotificationHelper::handleLocales($ad->title, 'ad_title'),
             ],
         ];
-
-
 
         $pemissionKey = 'Ads';
 
