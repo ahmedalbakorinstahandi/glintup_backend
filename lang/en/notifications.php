@@ -78,6 +78,21 @@ return [
                 'title' => 'Booking #:booking_id rejected',
                 'body' => 'We are sorry to inform you that your booking at :salon_name has been rejected. This may be due to a busy schedule or unexpected circumstances. We hope you try again later or choose another salon.',
             ],
+            'new_booking' => [
+                'title' => 'New booking created for you',
+                'body' => 'A new booking has been created for you at :salon_name',
+            ],
+        ],
+
+        'loyalty_point' => [
+            'added_one_point' => [
+                'title' => 'You have a new loyalty point',
+                'body' => 'You have received a loyalty point from :salon_name',
+            ],
+            'won_reward' => [
+                'title' => 'You have won a reward',
+                'body' => 'You have won a reward from :salon_name',
+            ],
         ],
 
     ],
