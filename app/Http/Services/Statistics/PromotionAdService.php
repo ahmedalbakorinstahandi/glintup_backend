@@ -70,15 +70,20 @@ class PromotionAdService
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $ad);
 
+        $adStatus = $ad->status;
+
         $ad->update($validatedData);
 
-        if ($ad->status == 'approved') {
-            AdNotification::approveAd($ad);
+        if ($adStatus != $ad->status) {
+            if ($ad->status == 'approved') {
+                AdNotification::approveAd($ad);
+            }
+
+            if ($ad->status == 'rejected') {
+                AdNotification::rejectAd($ad);
+            }
         }
 
-        if ($ad->status == 'rejected') {
-            AdNotification::rejectAd($ad);
-        }
 
         return $ad;
     }

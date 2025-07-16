@@ -94,12 +94,6 @@ class NotificationService
                 }
             }
 
-            abort(
-                response()->json([
-                    'data' => $notificationData,
-                ])
-            );
-
             $notificationService->create($notificationData);
         }
     }
