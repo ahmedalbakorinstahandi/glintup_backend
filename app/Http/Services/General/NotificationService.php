@@ -77,18 +77,20 @@ class NotificationService
             } else {
 
                 $filedsLocalesReplace = $replace['locales'] ?? [];
+                $currentReplace = [];
 
                 foreach ($locales as $locale) {
+                    // Reset replace array for each locale
+                    $currentReplace = [];
 
                     foreach ($filedsLocalesReplace as $replaceItemKey => $replaceItem) {
                         if (isset($replaceItem[$locale])) {
-                            $replace = $replaceItem[$locale];
+                            $currentReplace[$replaceItemKey] = $replaceItem[$locale];
                         }
                     }
 
-
-                    $notificationData['title'][$locale] = __($title, $replace, $locale);
-                    $notificationData['message'][$locale] = __($body, $replace, $locale);
+                    $notificationData['title'][$locale] = __($title, $currentReplace, $locale);
+                    $notificationData['message'][$locale] = __($body, $currentReplace, $locale);
                 }
             }
 
