@@ -91,7 +91,7 @@ class SalonResource extends JsonResource
             'services_list_url' => $this->when($is_salon_or_admin, $this->services_list_url),
 
 
-            'discount_percentage' =>  $this->when(request()->has('filter_provider') && request()->filter_provider === 'discount', $this->getServiceWithHighestDiscountPercentage()),
+            'discount_percentage' => $this->getServiceWithHighestDiscountPercentage(),
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_salon_or_admin,  $this->bookings->where('status', 'completed')->count()),

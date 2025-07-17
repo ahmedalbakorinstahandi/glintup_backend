@@ -31,10 +31,10 @@ return [
     'salon' => [
         'ad' => [
             'approve_ad' => 'تمت الموافقة على إعلانك',
-            'approve_ad_body' => 'تمت الموافقة على إعلانك :ad_title, في المحل :salon_name',
+            'approve_ad_body' => 'تمت الموافقة على إعلانك :ad_title, من خلال إدارة GlintUp',
 
             'reject_ad' => 'تم رفض إعلانك',
-            'reject_ad_body' => 'تم رفض إعلانك :ad_title, في المحل :salon_name',
+            'reject_ad_body' => 'تم رفض إعلانك :ad_title, من خلال إدارة GlintUp',
         ],
         'review' => [
             'new_review' => 'هنالك مراجعة جديدة',
@@ -42,14 +42,14 @@ return [
         ],
         'menu_request' => [
             'accept_title' => 'تم قبول طلب القائمة',
-            'accept_body' => 'تم قبول طلب القائمة :menu_request_id, في المحل :salon_name',
+            'accept_body' => 'تم قبول طلب القائمة :menu_request_id, من خلال إدارة GlintUp',
 
             'reject_title' => 'تم رفض طلب القائمة',
-            'reject_body' => 'تم رفض طلب القائمة :menu_request_id, في المحل :salon_name',
+            'reject_body' => 'تم رفض طلب القائمة :menu_request_id, من خلال إدارة GlintUp',
         ],
         'booking' => [
             'new_booking' => 'هنالك حجز جديد',
-            'new_booking_body' => 'قام المستخدم :full_user_name بإنشاء حجز جديد في المحل :salon_name',
+            'new_booking_body' => 'قام المستخدم :full_user_name بإنشاء حجز جديد  رقم الحجز #:booking_id, يرجى التحقق منه',
         ],
     ],
 
