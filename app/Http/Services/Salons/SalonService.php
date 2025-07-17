@@ -85,7 +85,6 @@ class SalonService
         $exactMatchFields = ['is_active', 'is_approved', 'type', 'city', 'country', 'id'];
         $inFields = ['id', 'type'];
 
-        $query = SalonPermission::filterIndex($query);
 
         // filter_provider 
         if (isset($data['filter_provider']) && $data['filter_provider'] == 'discount') {
@@ -128,6 +127,9 @@ class SalonService
             )
                 ->orderBy('distance');
         }
+
+        $query = SalonPermission::filterIndex($query);
+
 
         return FilterService::applyFilters(
             $query,
