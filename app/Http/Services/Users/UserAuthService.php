@@ -36,8 +36,6 @@ class UserAuthService
             MessageService::abort(422, 'messages.user.registered_but_not_verified');
         }
 
-
-
         if (!$user || !Hash::check($loginUserData['password'], $user->password)) {
             return null;
         }

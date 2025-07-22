@@ -60,10 +60,7 @@ class Booking extends Model
     }
 
     // get revenue 
-    public function getRevenueAttribute()
-    {
-        return $this->payments->where('status', 'confirm')->where('is_refund', false)->sum('amount');
-    }
+   
 
 
     public function bookingServices()

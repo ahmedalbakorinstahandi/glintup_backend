@@ -44,7 +44,4 @@ class ActivityLog extends Model
             get: fn(string $value) => $multi ? $this->getAllTranslations('description') : $value,
         );
     }
-
-
-
 }

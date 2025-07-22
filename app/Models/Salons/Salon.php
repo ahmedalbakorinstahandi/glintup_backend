@@ -497,6 +497,18 @@ class Salon extends Model
         return $this->reviews()->avg('rating') ?? 0.0;
     }
 
+    public function getRevenueAttribute()
+    {
+        return $this->payments->where('status', 'confirm')->where('is_refund', false)->sum('amount');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(SalonPayment::class);
+    }
+
+
+
 
     // get persntage of evry rating level
     public function getRatingPercentageAttribute(): array
