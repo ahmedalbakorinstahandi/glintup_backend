@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Http\Loggers;
 
 use App\Models\Services\Service;
 use App\Models\Users\User;

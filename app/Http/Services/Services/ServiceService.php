@@ -3,12 +3,12 @@
 namespace App\Http\Services\Services;
 
 use App\Http\Permissions\Services\ServicePermission;
+use App\Http\Loggers\ServiceLogger;
 use App\Models\Salons\Salon;
 use App\Models\Services\Service;
 use App\Services\FilterService;
 use App\Services\LanguageService;
 use App\Services\MessageService;
-use App\Services\ServiceLogger;
 
 class ServiceService
 {
