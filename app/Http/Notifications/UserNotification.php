@@ -32,6 +32,6 @@ class UserNotification
             $body,
             $data,
             $data
-        );
+        ); 
     }
 }

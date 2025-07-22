@@ -8,6 +8,7 @@ use App\Models\Services\Service;
 use App\Services\FilterService;
 use App\Services\LanguageService;
 use App\Services\MessageService;
+use App\Services\ServiceLogger;
 
 class ServiceService
 {
@@ -77,7 +78,12 @@ class ServiceService
     public function update($service, $validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $service);
+
+        $oldService = $service->replicate();
+
         $service->update($validatedData);
+
+        ServiceLogger::logChanges($oldService, $service);
 
         $service->load(['salon', 'groupServices.group']);
 
