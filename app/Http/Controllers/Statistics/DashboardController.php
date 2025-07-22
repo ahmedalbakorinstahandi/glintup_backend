@@ -243,6 +243,9 @@ class DashboardController extends Controller
     // get statistics for salon 
     public function salonStatistics()
     {
+
+        PermissionHelper::checkSalonPermission('dashboard');
+
         $user = User::auth();
 
         $salonId = $user->salon->id;

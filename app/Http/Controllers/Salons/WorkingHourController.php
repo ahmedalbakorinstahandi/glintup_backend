@@ -8,6 +8,7 @@ use App\Http\Requests\Salons\WorkingHour\UpdateRequest;
 use App\Http\Permissions\Salons\WorkingHourPermission;
 use App\Http\Services\Salons\WorkingHourService;
 use App\Http\Resources\Salons\WorkingHourResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class WorkingHourController extends Controller
@@ -16,6 +17,8 @@ class WorkingHourController extends Controller
 
     public function __construct(WorkingHourService $workingHourService)
     {
+        PermissionHelper::checkSalonPermission('working_hours');
+        
         $this->workingHourService = $workingHourService;
     }
 

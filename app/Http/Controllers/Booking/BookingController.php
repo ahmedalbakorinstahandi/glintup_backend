@@ -23,6 +23,7 @@ class BookingController extends Controller
     public function __construct(BookingService $bookingService)
     {
         PermissionHelper::checkAdminPermission('appointments');
+        PermissionHelper::checkSalonPermission('appointments');
 
         $this->bookingService = $bookingService;
     }

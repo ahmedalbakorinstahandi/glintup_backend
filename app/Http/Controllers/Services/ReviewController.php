@@ -20,6 +20,7 @@ class ReviewController extends Controller
     public function __construct(ReviewService $reviewService)
     {
         PermissionHelper::checkAdminPermission('reviews');
+        PermissionHelper::checkSalonPermission('reviews');
 
         $this->reviewService = $reviewService;
     }

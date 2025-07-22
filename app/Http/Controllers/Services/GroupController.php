@@ -21,6 +21,7 @@ class GroupController extends Controller
     public function __construct(GroupService $groupService)
     {
         PermissionHelper::checkAdminPermission('services');
+        PermissionHelper::checkSalonPermission('services');
 
         $this->groupService = $groupService;
     }

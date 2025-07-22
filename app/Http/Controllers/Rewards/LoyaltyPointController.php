@@ -8,6 +8,7 @@ use App\Http\Requests\Rewards\LoyaltyPoint\UpdateRequest;
 use App\Http\Permissions\Rewards\LoyaltyPointPermission;
 use App\Http\Services\Rewards\LoyaltyPointService;
 use App\Http\Resources\Rewards\LoyaltyPointResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class LoyaltyPointController extends Controller
@@ -17,6 +18,7 @@ class LoyaltyPointController extends Controller
 
     public function __construct(LoyaltyPointService $service)
     {
+        PermissionHelper::checkSalonPermission('loyalty');
         $this->service = $service;
     }
 

@@ -20,6 +20,7 @@ class GiftCardController extends Controller
     public function __construct(GiftCardService $giftCardService)
     {
         PermissionHelper::checkAdminPermission('gift-cards');
+        PermissionHelper::checkSalonPermission('gift_cards');
 
         $this->giftCardService = $giftCardService;
     }

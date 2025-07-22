@@ -9,6 +9,7 @@ use App\Http\Permissions\Booking\CouponPermission;
 use App\Http\Services\Booking\CouponService;
 use App\Http\Resources\Booking\CouponResource;
 use App\Http\Services\Salons\SalonService;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class CouponController extends Controller
@@ -17,6 +18,7 @@ class CouponController extends Controller
 
     public function __construct(CouponService $couponService)
     {
+        PermissionHelper::checkSalonPermission('coupons');
         $this->couponService = $couponService;
     }
 

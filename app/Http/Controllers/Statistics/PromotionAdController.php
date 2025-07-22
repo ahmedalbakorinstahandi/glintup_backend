@@ -21,6 +21,7 @@ class PromotionAdController extends Controller
     public function __construct(PromotionAdService $promotionAdService)
     {
         PermissionHelper::checkAdminPermission('advertisements');
+        PermissionHelper::checkSalonPermission('ads');
 
         $this->promotionAdService = $promotionAdService;
     }

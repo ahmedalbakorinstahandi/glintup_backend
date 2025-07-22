@@ -9,12 +9,14 @@ use App\Http\Requests\Salons\SalonStaff\UpdatePermissionsRequest;
 use App\Http\Requests\Salons\SalonStaff\UpdateRequest;
 use App\Http\Services\Salons\SalonStaffService;
 use App\Http\Resources\Salons\SalonStaffResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class SalonStaffController extends Controller
 {
     public function __construct(protected SalonStaffService $service)
     {
+        PermissionHelper::checkSalonPermission('staff');
         $this->service = $service;
     }
 

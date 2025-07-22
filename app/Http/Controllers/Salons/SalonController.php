@@ -20,7 +20,7 @@ class SalonController extends Controller
     public function __construct(SalonService $salonService)
     {
         PermissionHelper::checkAdminPermission('salons');
-        
+
         $this->salonService = $salonService;
     }
 
@@ -101,6 +101,8 @@ class SalonController extends Controller
 
     public function updateMySalon(UpdateRequest $request)
     {
+
+        PermissionHelper::checkSalonPermission('salons');
 
         $user = User::auth();
 

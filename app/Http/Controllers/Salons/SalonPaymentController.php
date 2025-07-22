@@ -8,12 +8,14 @@ use App\Http\Requests\Salons\SalonPayment\UpdateRequest;
 use App\Http\Permissions\Salons\SalonPaymentPermission;
 use App\Http\Services\Salons\SalonPaymentService;
 use App\Http\Resources\Salons\SalonPaymentResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class SalonPaymentController extends Controller
 {
     public function __construct(protected SalonPaymentService $service)
     {
+        PermissionHelper::checkSalonPermission('payments');
         $this->service = $service;
     }
 

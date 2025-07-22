@@ -8,6 +8,7 @@ use App\Http\Requests\Salons\SalonCustomer\UpdateRequest;
 use App\Http\Permissions\Salons\SalonCustomerPermission;
 use App\Http\Services\Salons\SalonCustomerService;
 use App\Http\Resources\Salons\SalonCustomerResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class SalonCustomerController extends Controller
@@ -16,6 +17,7 @@ class SalonCustomerController extends Controller
 
     public function __construct(SalonCustomerService $service)
     {
+        PermissionHelper::checkSalonPermission('customers');
         $this->service = $service;
     }
 

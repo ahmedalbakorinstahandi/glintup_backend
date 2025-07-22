@@ -24,6 +24,7 @@ class ServiceController extends Controller
     public function __construct(ServiceService $serviceService)
     {
         PermissionHelper::checkAdminPermission('services');
+        PermissionHelper::checkSalonPermission('services');
 
         $this->serviceService = $serviceService;
     }
