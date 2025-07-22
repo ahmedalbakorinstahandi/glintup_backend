@@ -244,33 +244,86 @@ class DashboardController extends Controller
     // get statistics for salon 
     public function salonStatistics()
     {
-
         PermissionHelper::checkSalonPermission('dashboard');
 
-        $user = User::auth();
+        // daily,weekly,monthly,yearly,custom
+        $date = request('date', 'daily');
 
+        if (!in_array($date, ['daily', 'weekly', 'monthly', 'yearly', 'custom'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid date range',
+            ], 400);
+        }
+
+        if ($date == 'custom') {
+            $from = request('from');
+            $to = request('to');
+
+            if (!$from || !$to) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid date range',
+                ], 400);
+            }
+
+            $date = [$from, $to];
+        }
+
+        $user = User::auth();
         $salonId = $user->salon->id;
 
-        // Earnings
+        // Build date filter query
+        $dateQuery = function($query) use ($date) {
+            if (is_array($date)) {
+                $query->whereBetween('created_at', $date);
+            } else {
+                switch($date) {
+                    case 'daily':
+                        $query->whereDate('created_at', today());
+                        break;
+                    case 'weekly':
+                        $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                        break;
+                    case 'monthly':
+                        $query->whereMonth('created_at', now()->month)
+                            ->whereYear('created_at', now()->year);
+                        break;
+                    case 'yearly':
+                        $query->whereYear('created_at', now()->year);
+                        break;
+                }
+            }
+        };
+
+        // Earnings with date filter
         $earnings = SalonPayment::where('salon_id', $salonId)
             ->where('status', 'confirm')
+            ->where('is_refund', false)
+            ->tap($dateQuery)
             ->sum('amount');
 
-        // Appointments Count
-        $appointmentsCount = Booking::where('salon_id', $salonId)->count();
-
-        // Reviews Count
-        $reviewsCount = Booking::where('salon_id', $salonId)
+        // Appointments Count with date filter
+        $appointmentsCount = Booking::where('salon_id', $salonId)
+            ->tap($dateQuery)
             ->count();
 
-        // New Clients Count
+        // Reviews Count with date filter
+        $reviewsCount = Review::where('salon_id', $salonId)
+            ->tap($dateQuery)
+            ->count();
+
+        // New Clients Count with date filter
         $newClientsCount = User::whereHas('bookings', function ($query) use ($salonId) {
             $query->where('salon_id', $salonId);
-        })->where('created_at', '>=', now()->subMonth())->count();
+        })
+        ->tap($dateQuery)
+        ->count();
 
-        // Invoices not paid
+        // Invoices not paid with date filter
         $unpaidInvoicesCount = Booking::where('salon_id', $salonId)
             ->where('status', 'pending')
+            ->tap($dateQuery)
             ->count();
 
         // Revenue Overview
@@ -296,17 +349,19 @@ class DashboardController extends Controller
             ];
         })->toArray();
 
-        // Appointments Completed Count with percentage
+        // Appointments Completed Count with percentage and date filter
         $completedAppointmentsCount = Booking::where('salon_id', $salonId)
             ->where('status', 'completed')
+            ->tap($dateQuery)
             ->count();
         $completedPercentage = $appointmentsCount > 0
             ? ($completedAppointmentsCount / $appointmentsCount) * 100
             : 0;
 
-        // Appointments Cancelled Count with percentage
+        // Appointments Cancelled Count with percentage and date filter
         $cancelledAppointmentsCount = Booking::where('salon_id', $salonId)
             ->where('status', 'canceled')
+            ->tap($dateQuery)
             ->count();
         $cancelledPercentage = $appointmentsCount > 0
             ? ($cancelledAppointmentsCount / $appointmentsCount) * 100
@@ -317,15 +372,17 @@ class DashboardController extends Controller
             ->whereDate('date', now()->toDateString())
             ->get();
 
-        // Last 7 Reviews
+        // Last 7 Reviews with date filter
         $last7Reviews = Review::where('salon_id', $salonId)
+            ->tap($dateQuery)
             ->orderBy('created_at', 'desc')
             ->take(7)
             ->get();
 
-        // Ads Active Count
+        // Ads Active Count with date filter
         $adsActiveCount = PromotionAd::where('salon_id', $salonId)
             ->where('status', 'active')
+            ->tap($dateQuery)
             ->count();
 
         return response()->json([
