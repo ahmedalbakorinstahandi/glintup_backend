@@ -20,8 +20,9 @@ class AdminUserService
                 : explode(',', $data['permissions']);
 
             $query->whereHas('adminPermissions', function ($query) use ($permissionIds) {
-                $query->whereIn('permission_id', $permissionIds)
-                    ->groupBy('user_id')
+                $query->select('user_id')
+                    ->whereIn('permission_id', $permissionIds)
+                    ->groupBy('user_id', 'permission_id')
                     ->havingRaw('COUNT(DISTINCT permission_id) = ?', [count($permissionIds)]);
             });
         }
