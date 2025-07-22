@@ -38,7 +38,9 @@ class UserService
             $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
         }
 
-        $query = UserPermission::filterIndex($query);
+        // $query = UserPermission::filterIndex($query);
+
+        $query->where('role', 'customer');
 
 
         $users = $query->get();
