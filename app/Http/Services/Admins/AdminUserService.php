@@ -16,17 +16,17 @@ class AdminUserService
 
         $permissionIds = [];
 
-        if (!empty($data['permissions'])) {
+        if (!empty($data['permissions']) && $data['permissions'] != 'undefined') {
             $permissionIds = is_array($data['permissions'])
                 ? array_filter($data['permissions'])
                 : array_filter(explode(',', $data['permissions']));
-        }
 
-        if (!empty($permissionIds)) {
-            foreach ($permissionIds as $permissionId) {
-                $query->whereHas('adminPermissions', function ($q) use ($permissionId) {
-                    $q->where('permission_id', $permissionId);
-                });
+            if (!empty($permissionIds)) {
+                foreach ($permissionIds as $permissionId) {
+                    $query->whereHas('adminPermissions', function ($q) use ($permissionId) {
+                        $q->where('permission_id', $permissionId);
+                    });
+                }
             }
         }
 
