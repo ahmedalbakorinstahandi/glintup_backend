@@ -79,7 +79,7 @@ class ServiceService
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $service);
 
-        $oldService = $service->replicate();
+        $oldService = $service;
 
         $service->update($validatedData);
 

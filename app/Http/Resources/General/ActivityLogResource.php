@@ -14,6 +14,8 @@ class ActivityLogResource extends JsonResource
             'user_id'     => $this->user_id,
             'action'      => $this->action,
             'description' => $this->description,
+            'activityable_id' => $this->activityable_id,
+            'activityable_type' => $this->activityable_type,
 
             'user'        => new UserResource($this->whenLoaded('user')),
 
