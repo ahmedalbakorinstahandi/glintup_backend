@@ -16,19 +16,14 @@ class UserService
     {
         $query = User::query();
 
-        $query->where('role', 'customer'); // أولاً، حصر المستخدمين بالعملاء فقط
+        $query->where('role', 'customer');
 
-        // بحث بالأرقام (رقم الهاتف)
         if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] = str_replace(' ', '', $data['search']);
+            $data['search'] =  str_replace(' ', '', $data['search']);
             $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
-
-            $query->where(function ($q) use ($search) {
-                $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
-            });
+            $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
         }
 
-        // فلترة الحقول الأخرى
         $query = FilterService::applyFilters(
             $query,
             $data,
