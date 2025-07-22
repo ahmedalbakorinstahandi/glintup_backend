@@ -16,10 +16,10 @@ class UserService
     {
         $query = User::query();
 
-        $query = UserPermission::filterIndex($query);
 
 
-       
+
+
 
         $query = FilterService::applyFilters(
             $query,
@@ -38,7 +38,8 @@ class UserService
             $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
         }
 
-        $query->where('role', 'customer');
+        $query = UserPermission::filterIndex($query);
+
 
         $users = $query->get();
 
