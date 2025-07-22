@@ -14,8 +14,6 @@ use App\Models\Users\User;
 use App\Services\FirebaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class UserAuthController extends Controller
@@ -58,7 +56,7 @@ class UserAuthController extends Controller
         $phoneNumber = $request->phone;
 
         $res = $this->userAuthService->checkPhoneNumber($phoneNumber);
-       
+
 
         return response()->json([
             'success' => $res['valid'],
@@ -85,6 +83,8 @@ class UserAuthController extends Controller
         $user =   $this->userAuthService->verifyCode($request->validated());
 
         $token = $user->createToken($user->first_name . '-AuthToken')->plainTextToken;
+
+        FirebaseService::subscribeToAllTopic($request, $user);
 
 
         return response()->json([
@@ -120,6 +120,8 @@ class UserAuthController extends Controller
 
         $res = $this->userAuthService->resetPassword($request->validated());
 
+        FirebaseService::subscribeToAllTopic($request, $user);
+
         if ($res['success'] == true) {
 
             FirebaseService::subscribeToAllTopic($request, $user);
@@ -149,5 +151,39 @@ class UserAuthController extends Controller
             'success' => true,
             'message' => trans('messages.user_logged_out_successfully'),
         ], 200);
+    }
+
+    public function requestDeleteAccount()
+    {
+
+        $user = User::auth();
+        $this->userAuthService->requestDeleteAccount($user);
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.user.delete_account_code_message'),
+        ]);
+    }
+
+    public function confirmDeleteAccount(Request $request)
+    {
+        $request->validate([
+            'verify_code' => 'required|string',
+        ]);
+
+        $user = User::find(Auth::user()->id);
+        $res = $this->userAuthService->confirmDeleteAccount($user, $request->verify_code);
+
+        if (!$res) {
+            return response()->json([
+                'success' => false,
+                'message' => trans('messages.user.code_invalid'),
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.user.account_deleted_successfully'),
+        ]);
     }
 }

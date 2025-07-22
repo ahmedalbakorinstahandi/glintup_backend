@@ -29,7 +29,7 @@ class Booking extends Model
     ];
 
     protected $casts = [
-    'date'           => 'datetime',
+        'date'           => 'datetime',
         'time'           => 'datetime:H:i:s',
         'created_at'     => 'datetime',
         'updated_at'     => 'datetime',
@@ -57,6 +57,12 @@ class Booking extends Model
     public function couponUsage()
     {
         return $this->hasOne(CouponUsage::class);
+    }
+
+    // get revenue 
+    public function getRevenueAttribute()
+    {
+        return $this->payments->where('status', 'confirm')->where('is_refund', false)->sum('amount');
     }
 
 

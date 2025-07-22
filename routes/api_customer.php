@@ -64,6 +64,9 @@ Route::prefix('customer')->group(function () {
         Route::post('/forgot-password', [UserAuthController::class, 'forgotPassword']);
         Route::post('/reset-password', [UserAuthController::class, 'resetPassword'])->middleware('auth:sanctum');
         Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
+
+        Route::post('/request-delete-account', [UserAuthController::class, 'requestDeleteAccount'])->middleware('auth:sanctum');
+        Route::post('/confirm-delete-account', [UserAuthController::class, 'confirmDeleteAccount'])->middleware('auth:sanctum');
     });
 
 

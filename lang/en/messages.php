@@ -126,6 +126,8 @@ return [
     ],
 
 
+
+
     'user' => [
         'item_created_successfully' => 'User created successfully',
         'item_updated_successfully' => 'User updated successfully',
@@ -136,6 +138,9 @@ return [
         'is_banned' => 'User is banned',
         'already_registered' => 'User is already registered',
         'registered_but_not_verified' => 'User is registered but not verified',
+        'delete_account_code_message' => 'Your GlintUp account deletion code is: :verifyCode. Please use this code to delete your account. This code will expire in 30 minutes.',
+        'code_invalid' => 'The verify code is invalid.',
+        'account_deleted_successfully' => 'Your account has been deleted successfully.',
     ],
 
     'promotion_ad' => [
@@ -276,6 +281,7 @@ Android: :android_link",
 
     'gift_card_service_details' => "Gift Card Services:\n:services",
 
+    'phone_is_required' => 'Phone number is required',
 
     'setting' => [
         'item_created_successfully' => 'Setting created successfully',

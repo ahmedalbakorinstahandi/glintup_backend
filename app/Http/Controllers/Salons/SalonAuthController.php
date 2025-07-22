@@ -71,6 +71,8 @@ class SalonAuthController extends Controller
 
         $token = $user->createToken($user->first_name . '-AuthToken')->plainTextToken;
 
+        FirebaseService::subscribeToAllTopic($request, $user);
+
 
         return response()->json([
             'success' => true,

@@ -15,7 +15,6 @@ class CreateNewRequest extends BaseFormRequest
 
 
         if (!$phone) {
-            // TODO: Phone is required translation
             MessageService::abort(422, 'messages.phone_is_required');
         }
 
@@ -34,7 +33,6 @@ class CreateNewRequest extends BaseFormRequest
 
         if ($user) {
             if ($user->is_active == 0) {
-                // TODO: User is banned
                 MessageService::abort(422, 'messages.user.is_banned');
             }
         } else {

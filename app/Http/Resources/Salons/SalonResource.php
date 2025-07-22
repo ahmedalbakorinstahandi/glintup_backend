@@ -95,8 +95,7 @@ class SalonResource extends JsonResource
             'average_rating' => number_format($this->reviews->avg('rating'), 1),
             'is_most_booked' => $this->isMostBooked(),
             'bookings_count' => $this->when($is_salon_or_admin,  $this->bookings->where('status', 'completed')->count()),
-            //TODO اجمالي الايرادات 
-            'total_revenue' => $this->when($is_salon_or_admin,  5000),
+            'total_revenue' => $this->when($is_salon_or_admin,  $this->getRevenueAttribute()),
             'can_review' => $this->when($is_customer, $this->canUserReview()),
             'total_reviews'   => $this->reviews->count(),
             'owner'           => new UserResource($this->whenLoaded('owner')),

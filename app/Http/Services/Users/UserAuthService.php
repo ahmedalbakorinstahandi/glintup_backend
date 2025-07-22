@@ -263,4 +263,32 @@ class UserAuthService
 
         return $personalAccessToken->delete();
     }
+
+    public function requestDeleteAccount(User $user)
+    {
+        $otp = rand(100000, 999999);
+        $otpExpideAt = Carbon::now()->addMinutes(30);
+
+        $user->update([
+            'otp' => $otp,
+            'otp_expide_at' => $otpExpideAt,
+        ]);
+
+        WhatsappMessageService::send(
+            $user->phone_code . $user->phone,
+            trans("messages.delete_account_code_message", ['verifyCode' => $otp])
+        );
+    }
+
+    public function confirmDeleteAccount(User $user, $code)
+    {
+        if ($user->otp !== $code || Carbon::now()->greaterThan($user->otp_expide_at)) {
+            return false;
+        }
+
+        $user->tokens()->delete();
+        $user->delete();
+
+        return true;
+    }
 }

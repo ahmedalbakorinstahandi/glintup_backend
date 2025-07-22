@@ -138,8 +138,14 @@ return [
         'is_banned' => 'المستخدم محظور',
         'already_registered' => 'المستخدم مسجل بالفعل',
         'registered_but_not_verified' => 'المستخدم مسجل ولكن غير مفعل',
+        'delete_account_code_message' => 'رمز حذف الحساب الخاص بك في GlintUp هو: :verifyCode. يرجى استخدام هذا الرمز لإلغاء حسابك. سينتهي صلاحية هذا الرمز خلال 30 دقيقة.',
+        'delete_account_successfully' => 'تم إلغاء الحساب بنجاح',
+        'code_invalid' => 'رمز التحقق غير صالح.',
+        'account_deleted_successfully' => 'تم حذف الحساب بنجاح.',
     ],
 
+
+    
     'promotion_ad' => [
         'item_created_successfully' => 'تم إنشاء الإعلان الترويجي بنجاح',
         'item_updated_successfully' => 'تم تحديث الإعلان الترويجي بنجاح',
@@ -278,6 +284,8 @@ Android: :android_link",
     'gift_card_service_details' => "الخدمات المشمولة في بطاقة الهدية:\n:services",
 
 
+
+    'phone_is_required' => 'رقم الهاتف مطلوب',
     'setting' => [
         'item_created_successfully' => 'تم إنشاء الإعداد بنجاح',
         'item_updated_successfully' => 'تم تحديث الإعداد بنجاح',

@@ -10,7 +10,8 @@ class RestPasswordRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:8|confirmed',
+            'device_token' => 'nullable|string',
         ];
     }
 }

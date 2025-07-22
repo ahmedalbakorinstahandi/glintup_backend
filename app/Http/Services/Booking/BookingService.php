@@ -147,7 +147,7 @@ class BookingService
                 'is_active' => 1,
             ]);
         } else {
-            // TODO :: send notification to user
+            BookingNotification::newBookingForUser($user);
         }
 
 
@@ -229,7 +229,7 @@ class BookingService
                 'is_active' => 1,
             ]);
         } else {
-            // TODO :: send notification to user
+            BookingNotification::newBookingForUser($user);
         }
 
 

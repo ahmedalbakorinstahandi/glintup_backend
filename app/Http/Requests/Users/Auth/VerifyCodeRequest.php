@@ -12,6 +12,7 @@ class VerifyCodeRequest extends BaseFormRequest
         return [
             'phone' => ['required', 'phone:AUTO'],
             'verify_code' => 'required|string|max:6',
+            'device_token' => 'nullable|string',
         ];
     }
 }
