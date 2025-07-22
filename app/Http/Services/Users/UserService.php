@@ -16,16 +16,6 @@ class UserService
     {
         $query = User::query();
 
-        // البحث بالهاتف أولًا
-        if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']);
-            $query->whereRaw(
-                "REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?",
-                ["%{$search}%"]
-            );
-        }
-
-        // بعدها فلترة الدور وغيره
         $query = FilterService::applyFilters(
             $query,
             $data,
@@ -36,6 +26,16 @@ class UserService
             ['id'],
             false
         );
+
+        if (!empty($data['search'])) {
+            $search = preg_replace('/[^0-9]/', '', str_replace(' ', '', $data['search']));
+
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            });
+        }
+
+        $query->where('role', 'customer');
 
         $users = $query->get();
 
