@@ -73,7 +73,7 @@ class PromotionAdLogger
                 $user->id,
                 'promotion_ad.updated',
                 $description,
-                PromotionAd::class,
+                'PromotionAd',
                 $new->id,
                 'salon-' . $new->salon_id,
             );
@@ -93,7 +93,7 @@ class PromotionAdLogger
             $user->id,
             'promotion_ad.created',
             $description,
-            PromotionAd::class,
+            'PromotionAd',
             $ad->id,
             'salon-' . $ad->salon_id
         );
