@@ -7,7 +7,7 @@ git pull
 
 // setup laravel 11 project on vps server
 
-1 . cloen the project
+1 .cloen the project
 2. install composer
 3. create database and user
 4. create .env file

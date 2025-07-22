@@ -28,6 +28,15 @@ class UserAuthService
             ->where('role', 'customer')
             ->first();
 
+        if ($user && $user->is_active == 0) {
+            MessageService::abort(422, 'messages.user.is_banned');
+        }
+
+        if ($user && $user->is_verified == 0) {
+            MessageService::abort(422, 'messages.user.registered_but_not_verified');
+        }
+
+
 
         if (!$user || !Hash::check($loginUserData['password'], $user->password)) {
             return null;
