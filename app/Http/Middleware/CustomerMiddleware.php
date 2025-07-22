@@ -24,6 +24,10 @@ class CustomerMiddleware
             MessageService::abort(503, 'message.permission_error');
         }
 
+        if ($user->is_active == 0) {
+            MessageService::abort(422, 'messages.user.is_banned');
+        }
+
 
         return $next($request);
     }
