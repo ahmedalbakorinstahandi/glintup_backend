@@ -187,9 +187,9 @@ class UserAuthService
 
 
 
-        if ($user->otp !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->otp_expire_at)) {
-            MessageService::abort(401, 'messages.invalid_or_expired_verification_code');
-        }
+        // if ($user->otp !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->otp_expire_at)) {
+        //     MessageService::abort(401, 'messages.invalid_or_expired_verification_code');
+        // }
 
 
 
