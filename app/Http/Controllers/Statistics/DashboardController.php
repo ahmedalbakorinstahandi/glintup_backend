@@ -17,9 +17,7 @@ class DashboardController extends Controller
     // statistics dashboard end point
     public function index()
     {
-
         PermissionHelper::checkAdminPermission('dashboard');
-
 
         // daily,weekly,monthly,yearly,custom
         $date = request('date', 'daily');
@@ -70,7 +68,7 @@ class DashboardController extends Controller
             ->when(is_array($date), function ($query) use ($date) {
                 return $query->whereBetween('date', $date);
             })
-            ->sum('total_amount');
+            ->sum('amount'); // Changed from total_amount to amount
 
 
         // Get total complaints
@@ -110,10 +108,6 @@ class DashboardController extends Controller
                 return $query->whereBetween('created_at', $date);
             })
             ->count();
-
-
-
-
 
         switch ($date) {
             case 'daily':
