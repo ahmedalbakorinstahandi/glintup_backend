@@ -5,6 +5,7 @@ namespace App\Http\Loggers;
 use App\Models\Services\Service;
 use App\Models\Users\User;
 use App\Services\ActivityLogHelper;
+use Illuminate\Support\Facades\Log;
 
 class ServiceLogger
 {
@@ -54,11 +55,19 @@ class ServiceLogger
             $changesEn[] = "Capacity changed from {$old->capacity} to {$new->capacity}";
         }
 
+        Log::info('changesAr', [
+            'changesAr' => $changesAr,
+        ]);
+
         if (!empty($changesAr)) {
             $description = [
                 'ar' => "تم تعديل الخدمة: {$old->name['ar']}\n- " . implode("\n- ", $changesAr),
                 'en' => "Service updated: {$old->name['en']}\n- " . implode("\n- ", $changesEn),
             ];
+
+            Log::info('description', [
+                'description' => $description,
+            ]);
 
             ActivityLogHelper::createActivityLog(
                 $user->id,
