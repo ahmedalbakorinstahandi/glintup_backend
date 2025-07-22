@@ -220,7 +220,7 @@ class DashboardController extends Controller
         $bset_salons = $salonService->index([
             'filter_provider' => 'trending',
             'limit' => 5,
-        ]);
+        ])->items();
 
 
         // Monthly salons revenue
