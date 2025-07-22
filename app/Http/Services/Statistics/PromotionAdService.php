@@ -161,6 +161,11 @@ class PromotionAdService
             'status' => 'draft',
         ]);
 
+        if ($ad->salon_id != null) {
+            PromotionAdLogger::logCreation($ad);
+        }
+
+        
         $stripe_data = null;
 
         if ($action == 'send_to_review') {

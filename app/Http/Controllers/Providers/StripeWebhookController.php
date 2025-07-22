@@ -76,7 +76,7 @@ class StripeWebhookController extends Controller
                     $ad->update(['status' => 'in_review']);
                     AdNotification::newAd($ad);
 
-                    PromotionAdLogger::logCreation($ad);
+                    // PromotionAdLogger::logCreation($ad);
                 }
 
 
