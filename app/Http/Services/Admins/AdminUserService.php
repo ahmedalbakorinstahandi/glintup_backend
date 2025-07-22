@@ -19,12 +19,6 @@ class AdminUserService
                 ? $data['permissions']
                 : explode(',', $data['permissions']);
 
-            abort(response()->json([
-                'success' => false,
-                'message' => 'permissions',
-                'data' => $permissionIds,
-            ]));
-
             $query->whereHas('adminPermissions', function ($query) use ($permissionIds) {
                 $query->whereIn('permission_id', $permissionIds);
             });
