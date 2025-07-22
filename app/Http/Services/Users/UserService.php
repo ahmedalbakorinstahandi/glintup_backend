@@ -20,13 +20,19 @@ class UserService
 
         if (!empty($data['search'])) {
             $searchRaw = trim($data['search']);
-            $searchDigits = preg_replace('/[^0-9]/', '', $searchRaw); // فقط أرقام للرقم
+            $searchDigits = preg_replace('/[^0-9]/', '', $searchRaw);
 
             $query->where(function ($q) use ($searchRaw, $searchDigits) {
-                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchDigits}%"])
-                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchRaw}%"]);
+                // إذا كان البحث كله أرقام → بحث بالهاتف فقط
+                if (is_numeric($searchDigits) && $searchDigits !== '') {
+                    $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchDigits}%"]);
+                } else {
+                    // إذا كان في حروف → بحث باسم كامل فقط
+                    $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchRaw}%"]);
+                }
             });
         }
+
 
 
 
