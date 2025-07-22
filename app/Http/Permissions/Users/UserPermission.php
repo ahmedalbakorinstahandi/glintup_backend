@@ -11,14 +11,12 @@ class UserPermission
     {
 
 
-        $user = User::auth();
 
-        if ($user->isAdmin()) {
-            $query->where('role', 'customer')
-                // ->where('is_active', 1)
-            ;
-            return $query;
-        }
+        $query->where('role', 'customer')
+            // ->where('is_active', 1)
+        ;
+
+
 
         // if ($user->isSalonOwner()) {
         //     $salon = $user->salon();
