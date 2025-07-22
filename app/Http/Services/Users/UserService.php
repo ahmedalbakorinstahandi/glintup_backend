@@ -23,6 +23,12 @@ class UserService
         if (!empty($data['search'])) {
             $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط أرقام
 
+            abort(response()->json([
+                'success' => false,
+                'message' => 'search',
+                'data' => $search,
+            ]));
+
             $query->where(function ($q) use ($search) {
                 $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
             });
