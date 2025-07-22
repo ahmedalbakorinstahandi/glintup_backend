@@ -14,15 +14,15 @@ use App\Services\ResponseService;
 
 class AdminUserController extends Controller
 {
-    public function __construct(protected AdminUserService $service)
+    protected $service;
+    public function __construct(AdminUserService $service)
     {
-        PermissionHelper::checkAdminPermission('admin-users');
-
         $this->service = $service;
     }
 
     public function index()
     {
+        PermissionHelper::checkAdminPermission('users');
         $items = $this->service->index(request()->all());
         return response()->json([
             'success' => true,
@@ -33,6 +33,7 @@ class AdminUserController extends Controller
 
     public function show($id)
     {
+        PermissionHelper::checkAdminPermission('users');
         $item = $this->service->show($id);
         return response()->json([
             'success' => true,
@@ -42,8 +43,9 @@ class AdminUserController extends Controller
 
     public function create(CreateRequest $request)
     {
+        PermissionHelper::checkAdminPermission('users');
         $item = $this->service->create($request->validated());
-        
+
         return response()->json([
             'success' => true,
             'message' => trans('messages.admin_users.item_created_successfully'),
@@ -53,6 +55,7 @@ class AdminUserController extends Controller
 
     public function update($id, UpdateRequest $request)
     {
+        PermissionHelper::checkAdminPermission('users');
         $item = $this->service->show($id);
         $item = $this->service->update($item, $request->validated());
         return response()->json([
@@ -64,6 +67,7 @@ class AdminUserController extends Controller
 
     public function destroy($id)
     {
+        PermissionHelper::checkAdminPermission('users');
         $item = $this->service->show($id);
 
         $deleted = $this->service->destroy($item);
@@ -78,6 +82,7 @@ class AdminUserController extends Controller
 
     public function updatePermissions($id, UpdatePermissionsRequest $request)
     {
+        PermissionHelper::checkAdminPermission('users');
         $item = $this->service->show($id);
 
         $this->service->updatePermissions($item, $request->validated());
