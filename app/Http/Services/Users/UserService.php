@@ -18,13 +18,15 @@ class UserService
 
         $query->where('role', 'customer');
 
-        if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] = str_replace(' ', '', $data['search']);
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط أرقام
+        // بحث برقم الهاتف المجمع
+        if (!empty($data['search'])) {
+            $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط الأرقام
 
-            $query->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            $query->whereRaw(
+                "REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?",
+                ["%{$search}%"]
+            );
         }
-
 
         $query = FilterService::applyFilters(
             $query,
@@ -39,7 +41,6 @@ class UserService
 
         $users = $query->get();
 
-        // حساب متوسط الإنفاق
         $transactions = WalletTransaction::whereIn('user_id', $users->pluck('id'))
             ->where('direction', 'out')
             ->where('status', 'completed')
@@ -62,6 +63,7 @@ class UserService
             'info' => $users_status_count,
         ];
     }
+
 
 
     public function show($id)
