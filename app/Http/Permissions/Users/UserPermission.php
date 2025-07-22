@@ -10,11 +10,13 @@ class UserPermission
     public static function filterIndex($query)
     {
 
-        
+
         $user = User::auth();
-        
+
         if ($user->isAdmin()) {
-            $query->where('role', 'customer')->where('is_active', 1);
+            $query->where('role', 'customer')
+                // ->where('is_active', 1)
+            ;
             return $query;
         }
 
