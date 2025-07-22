@@ -16,9 +16,19 @@ class UserService
     {
         $query = User::query();
 
-        $query->where('role', 'customer');
+        $query->where('role', 'customer'); // أولاً، حصر المستخدمين بالعملاء فقط
 
+        // بحث بالأرقام (رقم الهاتف)
+        if (isset($data['search']) && $data['search'] != '') {
+            $data['search'] = str_replace(' ', '', $data['search']);
+            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
 
+            $query->where(function ($q) use ($search) {
+                $q->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            });
+        }
+
+        // فلترة الحقول الأخرى
         $query = FilterService::applyFilters(
             $query,
             $data,
@@ -30,32 +40,18 @@ class UserService
             false
         );
 
-        if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] =  str_replace(' ', '', $data['search']);
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
-            $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
-        }
-
-        // $query = UserPermission::filterIndex($query);
-
-
-
-
         $users = $query->get();
 
-        // status "pending", "confirmed", "completed", "cancelled"
-
-        // حساب متوسط الانفاق لكل مستخدم
+        // حساب متوسط الإنفاق
         $transactions = WalletTransaction::whereIn('user_id', $users->pluck('id'))
             ->where('direction', 'out')
             ->where('status', 'completed')
             ->where('is_refund', 0)
             ->get();
 
-        $total_spending = $transactions->sum('amount'); // مجموع المبالغ المدفوعة
-        $active_users_count = $transactions->groupBy('user_id')->count(); // عدد المستخدمين الذين اشتروا
-        $average_spending = $active_users_count > 0 ? $total_spending / $active_users_count : 0; // متوسط الانفاق
-
+        $total_spending = $transactions->sum('amount');
+        $active_users_count = $transactions->groupBy('user_id')->count();
+        $average_spending = $active_users_count > 0 ? $total_spending / $active_users_count : 0;
 
         $users_status_count = [
             'all_count' => $users->count(),
@@ -69,6 +65,7 @@ class UserService
             'info' => $users_status_count,
         ];
     }
+
 
     public function show($id)
     {
