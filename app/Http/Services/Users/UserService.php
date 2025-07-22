@@ -18,9 +18,8 @@ class UserService
 
         $query->where('role', 'customer');
 
-        // بحث برقم الهاتف المجمع
         if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط الأرقام
+            $search = preg_replace('/[^0-9]/', '', $data['search']);
 
             $query->whereRaw(
                 "REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?",
@@ -28,6 +27,7 @@ class UserService
             );
         }
 
+        // حط الفلترة بعد البحث، مش قبله
         $query = FilterService::applyFilters(
             $query,
             $data,
