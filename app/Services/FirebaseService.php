@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
+use Kreait\Firebase\Messaging\Notification;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -502,7 +502,7 @@ class FirebaseService
         $messaging = self::getFirebaseMessaging()->createMessaging();
 
         // Build common notification + data part once
-        $notification = FirebaseNotification::create($title, $body);
+        $notification = Notification::create($title, $body);
 
         $androidConfig = null;
         if ($channelId) {

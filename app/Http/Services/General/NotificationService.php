@@ -20,7 +20,22 @@ class NotificationService
 
         $query = NotificationPermission::filterIndex($query);
 
-        return FilterService::applyFilters($query, $data, ['title', 'message'], [], ['created_at'], ['user_id'], ['id']);
+        if (isset($data['is_read']) && $data['is_read'] == 1) {
+            $query->whereNotNull('read_at');
+        } else if (isset($data['is_read']) && $data['is_read'] == 0) {
+            $query->whereNull('read_at');
+        }
+
+
+        return FilterService::applyFilters(
+            $query,
+            $data,
+            ['title', 'message'],
+            [],
+            ['created_at'],
+            ['user_id'],
+            ['id']
+        );
     }
 
     public function show($id)
