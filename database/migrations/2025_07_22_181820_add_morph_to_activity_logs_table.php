@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('activity_logs', function (Blueprint $table) {
             $table->string('activityable_type', 255)->nullable()->after('description');
             $table->unsignedBigInteger('activityable_id')->nullable()->after('activityable_type');
+            $table->string('refrence', 255)->nullable()->after('activityable_id');
         });
     }
 

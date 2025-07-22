@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Statistics;
 
+use App\Http\Loggers\PromotionAdLogger;
 use App\Http\Notifications\AdNotification;
 use App\Models\Statistics\PromotionAd;
 use App\Services\FilterService;
@@ -63,18 +64,25 @@ class PromotionAdService
         $validatedData['clicks'] = 0;
         $validatedData['views'] = 0;
 
-        return PromotionAd::create($validatedData);
+        $ad = PromotionAd::create($validatedData);
+
+        if ($ad->salon_id != null) {
+            PromotionAdLogger::logCreation($ad);
+        }
+
+        return $ad;
     }
 
     public function update($ad, $validatedData)
     {
         $validatedData = LanguageService::prepareTranslatableData($validatedData, $ad);
 
-        $adStatus = $ad->status;
+
+        $oldAd = $ad->replicate();
 
         $ad->update($validatedData);
 
-        if ($adStatus != $ad->status) {
+        if ($oldAd->status != $ad->status) {
             if ($ad->status == 'approved') {
                 AdNotification::approveAd($ad);
             }
@@ -82,6 +90,10 @@ class PromotionAdService
             if ($ad->status == 'rejected') {
                 AdNotification::rejectAd($ad);
             }
+        }
+
+        if ($ad->salon_id  != null) {
+            PromotionAdLogger::logChanges($oldAd, $ad);
         }
 
 

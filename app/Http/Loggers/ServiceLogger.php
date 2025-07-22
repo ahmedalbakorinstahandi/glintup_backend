@@ -54,7 +54,8 @@ class ServiceLogger
                 'service.updated',
                 $description,
                 'Service',
-                $new->id
+                $new->id,
+                'salon-' . $new->salon_id,
             );
         }
     }

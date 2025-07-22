@@ -20,6 +20,7 @@ class ActivityLog extends Model
         'description',
         'activityable_type',
         'activityable_id',
+        'refrence',
     ];
 
     public $translatable = [
