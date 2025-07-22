@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking\Booking;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPayment;
+use App\Models\Services\Review;
 use App\Models\Statistics\PromotionAd;
 use App\Models\Users\User;
 use App\Services\PermissionHelper;
@@ -273,20 +274,27 @@ class DashboardController extends Controller
             ->count();
 
         // Revenue Overview
-        $monthlyData = [
-            ['name' => 'Jan', 'income' => 4000, 'expenses' => 2400],
-            ['name' => 'Feb', 'income' => 5000, 'expenses' => 3000],
-            ['name' => 'Mar', 'income' => 6000, 'expenses' => 3200],
-            ['name' => 'Apr', 'income' => 5500, 'expenses' => 3500],
-            ['name' => 'May', 'income' => 7000, 'expenses' => 4000],
-            ['name' => 'Jun', 'income' => 6500, 'expenses' => 3800],
-            ['name' => 'Jul', 'income' => 7500, 'expenses' => 4200],
-            ['name' => 'Aug', 'income' => 8000, 'expenses' => 4800],
-            ['name' => 'Sep', 'income' => 7000, 'expenses' => 4300],
-            ['name' => 'Oct', 'income' => 7500, 'expenses' => 4500],
-            ['name' => 'Nov', 'income' => 8000, 'expenses' => 5000],
-            ['name' => 'Dec', 'income' => 8500, 'expenses' => 5200],
-        ];
+        // Get monthly revenue data for the current year
+        $monthlyData = collect(range(1, 12))->map(function($month) use ($salonId) {
+            $date = now()->setMonth($month)->startOfMonth();
+            
+            // Get income from confirmed payments
+            $income = SalonPayment::where('salon_id', $salonId)
+                ->where('status', 'confirm')
+                ->where('is_refund', false)
+                ->whereYear('created_at', now()->year)
+                ->whereMonth('created_at', $month)
+                ->sum('amount');
+
+            // Get expenses (could be expanded to include actual expense tracking)
+            $expenses = 0;
+            
+            return [
+                'name' => $date->format('M'),
+                'income' => $income,
+                'expenses' => $expenses
+            ];
+        })->toArray();
 
         // Appointments Completed Count with percentage
         $completedAppointmentsCount = Booking::where('salon_id', $salonId)
@@ -310,7 +318,7 @@ class DashboardController extends Controller
             ->get();
 
         // Last 7 Reviews
-        $last7Reviews = Booking::where('salon_id', $salonId)
+        $last7Reviews = Review::where('salon_id', $salonId)
             ->orderBy('created_at', 'desc')
             ->take(7)
             ->get();
