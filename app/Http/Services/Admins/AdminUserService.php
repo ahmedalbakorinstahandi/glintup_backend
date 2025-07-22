@@ -19,12 +19,11 @@ class AdminUserService
                 ? $data['permissions']
                 : explode(',', $data['permissions']);
 
-            $query->whereHas('adminPermissions', function ($query) use ($permissionIds) {
-                $query->select('user_id')
-                    ->whereIn('permission_id', $permissionIds)
-                    ->groupBy('user_id', 'permission_id')
-                    ->havingRaw('COUNT(DISTINCT permission_id) = ?', [count($permissionIds)]);
-            });
+            foreach ($permissionIds as $permissionId) {
+                $query->whereHas('adminPermissions', function ($q) use ($permissionId) {
+                    $q->where('permission_id', $permissionId);
+                });
+            }
         }
 
         return FilterService::applyFilters(
@@ -37,6 +36,7 @@ class AdminUserService
             ['id']
         );
     }
+
 
     public function show($id)
     {
