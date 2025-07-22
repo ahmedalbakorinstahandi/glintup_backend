@@ -16,18 +16,16 @@ class UserService
     {
         $query = User::query();
 
-        $query->where('role', 'customer');
-
+        // البحث بالهاتف أولًا
         if (!empty($data['search'])) {
             $search = preg_replace('/[^0-9]/', '', $data['search']);
-
             $query->whereRaw(
                 "REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?",
                 ["%{$search}%"]
             );
         }
 
-        // حط الفلترة بعد البحث، مش قبله
+        // بعدها فلترة الدور وغيره
         $query = FilterService::applyFilters(
             $query,
             $data,
@@ -63,6 +61,7 @@ class UserService
             'info' => $users_status_count,
         ];
     }
+
 
 
 
