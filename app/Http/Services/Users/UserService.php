@@ -23,28 +23,28 @@ class UserService
         if (!empty($data['search'])) {
             $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط أرقام
 
-            abort(response()->json([
-                'success' => false,
-                'message' => 'search',
-                'data' => $search,
-            ]));
+            // abort(response()->json([
+            //     'success' => false,
+            //     'message' => 'search',
+            //     'data' => $search,
+            // ]));
 
             $query->where(function ($q) use ($search) {
                 $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
             });
         }
 
-        // تطبيق باقي الفلاتر
-        $query = FilterService::applyFilters(
-            $query,
-            $data,
-            [['first_name', 'last_name']],
-            [],
-            ['created_at'],
-            ['is_active'], // ما في داعي نفلتر role لأنه مسبقًا داخل الشرط
-            ['id'],
-            false
-        );
+        // // تطبيق باقي الفلاتر
+        // $query = FilterService::applyFilters(
+        //     $query,
+        //     $data,
+        //     [['first_name', 'last_name']],
+        //     [],
+        //     ['created_at'],
+        //     ['is_active'], // ما في داعي نفلتر role لأنه مسبقًا داخل الشرط
+        //     ['id'],
+        //     false
+        // );
 
         // جلب النتائج
         $users = $query->get();
