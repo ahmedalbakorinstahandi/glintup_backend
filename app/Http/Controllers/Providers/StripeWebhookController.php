@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Providers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Loggers\PromotionAdLogger;
 use App\Http\Notifications\AdNotification;
 use App\Http\Notifications\MenuRequestNotification;
 use App\Models\Booking\SalonMenuRequest;
@@ -74,7 +75,11 @@ class StripeWebhookController extends Controller
                 if ($ad) {
                     $ad->update(['status' => 'in_review']);
                     AdNotification::newAd($ad);
+
+                    PromotionAdLogger::logCreation($ad);
                 }
+
+
                 break;
 
             case 'menu_request':
