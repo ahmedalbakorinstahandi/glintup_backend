@@ -55,9 +55,6 @@ class ServiceLogger
             $changesEn[] = "Capacity changed from {$old->capacity} to {$new->capacity}";
         }
 
-        Log::info('changesAr', [
-            'changesAr' => $changesAr,
-        ]);
 
         if (!empty($changesAr)) {
             $description = [
@@ -65,9 +62,6 @@ class ServiceLogger
                 'en' => "Service updated: {$old->name['en']}\n- " . implode("\n- ", $changesEn),
             ];
 
-            Log::info('description', [
-                'description' => $description,
-            ]);
 
             ActivityLogHelper::createActivityLog(
                 $user->id,
