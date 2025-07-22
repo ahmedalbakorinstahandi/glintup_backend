@@ -24,11 +24,10 @@ class UserService
 
             $query->where(function ($q) use ($searchRaw, $searchDigits) {
                 $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchDigits}%"])
-                    ->orWhere('first_name', 'like', "%{$searchRaw}%")
-                    ->orWhere('last_name', 'like', "%{$searchRaw}%")
                     ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchRaw}%"]);
             });
         }
+
 
 
         $users = $query->get();
