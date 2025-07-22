@@ -187,6 +187,7 @@ class UserAuthService
 
 
 
+        // TODO: remove this after testing
         // if ($user->otp !== $requestData['verify_code'] || Carbon::now()->greaterThan($user->otp_expire_at)) {
         //     MessageService::abort(401, 'messages.invalid_or_expired_verification_code');
         // }
@@ -289,9 +290,11 @@ class UserAuthService
 
     public function confirmDeleteAccount(User $user, $code)
     {
-        if ($user->otp !== $code || Carbon::now()->greaterThan($user->otp_expide_at)) {
-            return false;
-        }
+        // TODO: remove this after testing
+
+        // if ($user->otp !== $code || Carbon::now()->greaterThan($user->otp_expide_at)) {
+        //     return false;
+        // }
 
         $user->tokens()->delete();
         $user->delete();

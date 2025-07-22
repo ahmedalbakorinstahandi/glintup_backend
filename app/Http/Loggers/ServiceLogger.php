@@ -36,20 +36,6 @@ class ServiceLogger
             $changesEn[] = "Status changed from " . ($old->is_active ? 'active' : 'inactive') . " to " . ($new->is_active ? 'active' : 'inactive');
         }
 
-        // if ($old->is_home_service != $new->is_home_service) {
-        //     $fromAr = $old->is_home_service ? 'نعم' : 'لا';
-        //     $toAr   = $new->is_home_service ? 'نعم' : 'لا';
-        //     $changesAr[] = "الخدمة المنزلية تغيرت من {$fromAr} إلى {$toAr}";
-        //     $changesEn[] = "Home service changed from " . ($old->is_home_service ? 'yes' : 'no') . " to " . ($new->is_home_service ? 'yes' : 'no');
-        // }
-
-        // if ($old->is_beautician != $new->is_beautician) {
-        //     $fromAr = $old->is_beautician ? 'نعم' : 'لا';
-        //     $toAr   = $new->is_beautician ? 'نعم' : 'لا';
-        //     $changesAr[] = "التجميل من قبل beautician تغير من {$fromAr} إلى {$toAr}";
-        //     $changesEn[] = "Beautician changed from " . ($old->is_beautician ? 'yes' : 'no') . " to " . ($new->is_beautician ? 'yes' : 'no');
-        // }
-
         if ($old->capacity != $new->capacity) {
             $changesAr[] = "الطاقة الاستيعابية تغيرت من {$old->capacity} إلى {$new->capacity}";
             $changesEn[] = "Capacity changed from {$old->capacity} to {$new->capacity}";
