@@ -4,24 +4,23 @@ namespace App\Http\Controllers\Salons;
 
 use App\Http\Controllers\Controller;
 use App\Http\Permissions\Salons\SalonPermission;
-use App\Http\Requests\Salons\Salon\CreateRequest;
 use App\Http\Requests\Salons\Salon\UpdateRequest;
 use App\Http\Resources\Salons\SalonPermissionResource;
 use App\Http\Resources\Salons\SalonResource;
 use App\Http\Services\Salons\SalonService;
 use App\Models\Users\User;
 use App\Services\BookingAvailabilityService;
-use App\Services\MessageService;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
-use Illuminate\Http\Request;
 
 class SalonController extends Controller
 {
     protected $salonService;
 
     public function __construct(SalonService $salonService)
-
     {
+        PermissionHelper::checkAdminPermission('salons');
+        
         $this->salonService = $salonService;
     }
 
@@ -57,7 +56,7 @@ class SalonController extends Controller
         ]);
     }
 
-    
+
 
     public function show($id)
     {

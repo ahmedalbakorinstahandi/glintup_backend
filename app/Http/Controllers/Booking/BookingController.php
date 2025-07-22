@@ -13,6 +13,7 @@ use App\Http\Resources\Booking\BookingResource;
 use App\Http\Resources\Rewards\FreeServiceResource;
 use App\Http\Resources\Services\ServiceResource;
 use App\Http\Services\Booking\BookingService;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class BookingController extends Controller
@@ -21,6 +22,8 @@ class BookingController extends Controller
 
     public function __construct(BookingService $bookingService)
     {
+        PermissionHelper::checkAdminPermission('appointments');
+
         $this->bookingService = $bookingService;
     }
 

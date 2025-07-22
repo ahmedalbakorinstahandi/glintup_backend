@@ -11,6 +11,7 @@ use App\Http\Permissions\Services\GroupPermission;
 use App\Http\Requests\Services\Group\ReOrderRequest;
 use App\Models\Rewards\FreeService;
 use App\Models\Users\User;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class GroupController extends Controller
@@ -19,6 +20,8 @@ class GroupController extends Controller
 
     public function __construct(GroupService $groupService)
     {
+        PermissionHelper::checkAdminPermission('services');
+
         $this->groupService = $groupService;
     }
 

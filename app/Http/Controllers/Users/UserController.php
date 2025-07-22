@@ -12,12 +12,10 @@ use App\Http\Resources\Statistics\PromotionAdResource;
 use App\Http\Services\Users\UserService;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Services\Salons\SalonService;
-use App\Http\Services\Statistics\PromotionAdService;
 use App\Models\General\Setting;
-use App\Models\Salons\Salon;
 use App\Models\Statistics\PromotionAd;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -25,6 +23,8 @@ class UserController extends Controller
 
     public function __construct(UserService $userService)
     {
+        PermissionHelper::checkAdminPermission('users');
+
         $this->userService = $userService;
     }
 

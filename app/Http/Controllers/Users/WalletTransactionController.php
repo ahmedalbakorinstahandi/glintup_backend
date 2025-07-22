@@ -7,6 +7,7 @@ use App\Http\Permissions\Users\WalletTransactionPermission;
 use App\Http\Resources\Users\WalletTransactionResource;
 use App\Http\Services\Services\WalletTransactionService;
 use App\Models\Users\User;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,8 @@ class WalletTransactionController extends Controller
 
     public function __construct(WalletTransactionService $walletService)
     {
+        PermissionHelper::checkAdminPermission('payments');
+
         $this->transactionService = $walletService;
     }
 

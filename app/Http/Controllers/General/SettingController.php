@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\General\Settings\UpdateRequest;
 use App\Http\Resources\General\SettingResource;
 use App\Http\Services\General\SettingService;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,8 @@ class SettingController extends Controller
     protected $settingService;
     public function __construct(SettingService $settingService)
     {
+        PermissionHelper::checkAdminPermission('settings');
+
         $this->settingService = $settingService;
     }
 

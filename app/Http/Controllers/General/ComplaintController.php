@@ -8,11 +8,19 @@ use App\Http\Requests\General\Complaints\UpdateRequest;
 use App\Http\Permissions\General\ComplaintPermission;
 use App\Http\Services\General\ComplaintService;
 use App\Http\Resources\General\ComplaintResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class ComplaintController extends Controller
 {
-    public function __construct(protected ComplaintService $service) {}
+    protected $service;
+    public function __construct(ComplaintService $service)
+    {
+
+        PermissionHelper::checkAdminPermission('complaints');
+
+        $this->service = $service;
+    }
 
     public function index()
     {
@@ -53,7 +61,7 @@ class ComplaintController extends Controller
         $item = $this->service->show($id);
 
         // ComplaintPermission::canUpdate($item, $request->validated());
-        
+
         $item = $this->service->update($item, $request->validated());
         return response()->json([
             'success' => true,

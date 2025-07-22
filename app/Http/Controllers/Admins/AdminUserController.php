@@ -9,12 +9,15 @@ use App\Http\Resources\Users\UserResource;
 use App\Http\Services\Admins\AdminUserService;
 use App\Models\Admins\AdminPermission;
 use App\Models\User;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class AdminUserController extends Controller
 {
     public function __construct(protected AdminUserService $service)
     {
+        PermissionHelper::checkAdminPermission('admin-users');
+
         $this->service = $service;
     }
 

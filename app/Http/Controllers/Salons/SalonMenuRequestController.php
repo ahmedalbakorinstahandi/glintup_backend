@@ -8,6 +8,7 @@ use App\Http\Requests\Salons\SalonMenuRequest\CreateRequest;
 use App\Http\Requests\Salons\SalonMenuRequest\UpdateRequest;
 use App\Http\Resources\Salons\SalonMenuRequestResource;
 use App\Http\Services\Salons\SalonMenuRequestService;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,8 @@ class SalonMenuRequestController extends Controller
 
     public function __construct(SalonMenuRequestService $salonMenuRequestService)
     {
+        PermissionHelper::checkAdminPermission('salon-menu-requests');
+
         $this->salonMenuRequestService = $salonMenuRequestService;
     }
 

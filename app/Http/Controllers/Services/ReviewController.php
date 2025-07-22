@@ -10,6 +10,7 @@ use App\Http\Requests\Services\Review\ReplayRequest;
 use App\Http\Requests\Services\Review\ReportRequest;
 use App\Http\Services\Services\ReviewService;
 use App\Http\Resources\Services\ReviewResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class ReviewController extends Controller
@@ -18,6 +19,8 @@ class ReviewController extends Controller
 
     public function __construct(ReviewService $reviewService)
     {
+        PermissionHelper::checkAdminPermission('reviews');
+
         $this->reviewService = $reviewService;
     }
 

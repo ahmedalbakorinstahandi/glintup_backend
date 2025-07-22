@@ -13,6 +13,7 @@ use App\Http\Services\Services\ServiceService;
 use App\Models\Services\Service;
 use App\Services\BookingAvailabilityService;
 use App\Services\MessageService;
+use App\Services\PermissionHelper;
 use Carbon\Carbon;
 
 class ServiceController extends Controller
@@ -22,6 +23,8 @@ class ServiceController extends Controller
 
     public function __construct(ServiceService $serviceService)
     {
+        PermissionHelper::checkAdminPermission('services');
+
         $this->serviceService = $serviceService;
     }
 

@@ -10,6 +10,7 @@ use App\Http\Requests\Rewards\GiftCard\CreateByUserRequest;
 use App\Http\Services\Rewards\GiftCardService;
 use App\Http\Resources\Rewards\GiftCardResource;
 use App\Models\Users\User;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class GiftCardController extends Controller
@@ -18,6 +19,8 @@ class GiftCardController extends Controller
 
     public function __construct(GiftCardService $giftCardService)
     {
+        PermissionHelper::checkAdminPermission('gift-cards');
+
         $this->giftCardService = $giftCardService;
     }
 

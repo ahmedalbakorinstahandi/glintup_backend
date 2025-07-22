@@ -8,13 +8,17 @@ use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPayment;
 use App\Models\Statistics\PromotionAd;
 use App\Models\Users\User;
-use Illuminate\Http\Request;
+use App\Services\PermissionHelper;
 
 class DashboardController extends Controller
 {
     // statistics dashboard end point
     public function index()
     {
+
+        PermissionHelper::checkAdminPermission('dashboard');
+
+
         // daily,weekly,monthly,yearly,custom
         $date = request('date', 'daily');
 

@@ -11,6 +11,7 @@ use App\Http\Requests\Statistics\PromotionAd\PostAdRequest;
 use App\Http\Resources\Statistics\AdStatisicResource;
 use App\Http\Services\Statistics\PromotionAdService;
 use App\Http\Resources\Statistics\PromotionAdResource;
+use App\Services\PermissionHelper;
 use App\Services\ResponseService;
 
 class PromotionAdController extends Controller
@@ -19,6 +20,8 @@ class PromotionAdController extends Controller
 
     public function __construct(PromotionAdService $promotionAdService)
     {
+        PermissionHelper::checkAdminPermission('advertisements');
+
         $this->promotionAdService = $promotionAdService;
     }
 
