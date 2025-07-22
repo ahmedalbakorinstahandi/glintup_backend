@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Statistics;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Salons\SalonService;
 use App\Models\Booking\Booking;
 use App\Models\General\Complaint;
 use App\Models\Salons\Salon;
@@ -212,7 +213,14 @@ class DashboardController extends Controller
         $last_bookings = Booking::orderBy('created_at', 'desc')->take(5)->with(['salon', 'user'])->get();
 
         // last 5 salons
-        $bset_salons = Salon::orderBy('created_at', 'desc')->take(5)->get();
+        // $bset_salons = Salon::orderBy('created_at', 'desc')->take(5)->get();
+
+        $salonService = new SalonService();
+
+        $bset_salons = $salonService->index([
+            'filter_provider' => 'trending',
+            'limit' => 5,
+        ]);
 
 
         // Monthly salons revenue
