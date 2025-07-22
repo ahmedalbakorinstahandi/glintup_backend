@@ -16,26 +16,21 @@ class UserService
     {
         $query = User::query();
 
-        // حصر النتائج على العملاء فقط
         $query->where('role', 'customer');
 
-        // بحث بالاسم أو الرقم بعد تنظيفه
         if (!empty($data['search'])) {
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط أرقام
+            $searchRaw = $data['search'];
+            $search = preg_replace('/[^0-9]/', '', $searchRaw); // فقط الأرقام للبحث بالهاتف
 
-
-            $query->where(function ($q) use ($search) {
+            $query->where(function ($q) use ($search, $searchRaw) {
                 $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"])
-                    ->orWhere('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%");
+                    ->orWhere('first_name', 'like', "%{$searchRaw}%")
+                    ->orWhere('last_name', 'like', "%{$searchRaw}%");
             });
         }
 
-
-        // جلب النتائج
         $users = $query->get();
 
-        // حساب متوسط الإنفاق
         $transactions = WalletTransaction::whereIn('user_id', $users->pluck('id'))
             ->where('direction', 'out')
             ->where('status', 'completed')
@@ -46,7 +41,6 @@ class UserService
         $active_users_count = $transactions->groupBy('user_id')->count();
         $average_spending = $active_users_count > 0 ? $total_spending / $active_users_count : 0;
 
-        // ملخص الحالة
         $users_status_count = [
             'all_count' => $users->count(),
             'active_count' => $users->where('is_active', 1)->count(),
@@ -59,6 +53,7 @@ class UserService
             'info' => $users_status_count,
         ];
     }
+
 
 
 
