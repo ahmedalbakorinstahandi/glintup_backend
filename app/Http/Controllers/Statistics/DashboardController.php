@@ -52,7 +52,7 @@ class DashboardController extends Controller
         $canceled_booking_count = 0;
 
         // Get total revenue from completed bookings
-        $total_revenue = Booking::where('status', 'completed')
+        $completed_bookings = Booking::where('status', 'completed')
             ->when($date === 'daily', function ($query) {
                 return $query->whereDate('date', now()->toDateString());
             })
@@ -68,7 +68,9 @@ class DashboardController extends Controller
             ->when(is_array($date), function ($query) use ($date) {
                 return $query->whereBetween('date', $date);
             })
-            ->sum('amount'); // Changed from total_amount to amount
+            ->get(); // Changed from total_amount to amount
+
+        $total_revenue = $completed_bookings->sum('total_price');
 
 
         // Get total complaints
