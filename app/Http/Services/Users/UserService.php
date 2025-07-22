@@ -19,15 +19,17 @@ class UserService
         $query->where('role', 'customer');
 
         if (!empty($data['search'])) {
-            $searchRaw = $data['search'];
-            $search = preg_replace('/[^0-9]/', '', $searchRaw); // فقط الأرقام للبحث بالهاتف
+            $searchRaw = trim($data['search']);
+            $searchDigits = preg_replace('/[^0-9]/', '', $searchRaw); // فقط أرقام للرقم
 
-            $query->where(function ($q) use ($search, $searchRaw) {
-                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"])
+            $query->where(function ($q) use ($searchRaw, $searchDigits) {
+                $q->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$searchDigits}%"])
                     ->orWhere('first_name', 'like', "%{$searchRaw}%")
-                    ->orWhere('last_name', 'like', "%{$searchRaw}%");
+                    ->orWhere('last_name', 'like', "%{$searchRaw}%")
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchRaw}%"]);
             });
         }
+
 
         $users = $query->get();
 
