@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Statistics;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking\Booking;
+use App\Models\General\Complaint;
 use App\Models\Salons\Salon;
 use App\Models\Salons\SalonPayment;
 use App\Models\Services\Review;
@@ -51,13 +52,64 @@ class DashboardController extends Controller
         $confirmed_booking_count = 0;
         $completed_booking_count = 0;
         $canceled_booking_count = 0;
-        // TODO: get the total revenue 
-        $total_revenue = 5000;
-        // TODO: get the total complaints
-        $new_complaints_count = 4;
-        //إعلانات للمراجعة
-        $ads_count = 0;
 
+        // Get total revenue from completed bookings
+        $total_revenue = Booking::where('status', 'completed')
+            ->when($date === 'daily', function ($query) {
+                return $query->whereDate('date', now()->toDateString());
+            })
+            ->when($date === 'weekly', function ($query) {
+                return $query->where('date', '>=', now()->subWeek());
+            })
+            ->when($date === 'monthly', function ($query) {
+                return $query->where('date', '>=', now()->subMonth());
+            })
+            ->when($date === 'yearly', function ($query) {
+                return $query->where('date', '>=', now()->subYear());
+            })
+            ->when(is_array($date), function ($query) use ($date) {
+                return $query->whereBetween('date', $date);
+            })
+            ->sum('total_amount');
+
+
+        // Get total complaints
+        $new_complaints_count = Complaint::where('reviewed_by', null)
+            ->when($date === 'daily', function ($query) {
+                return $query->whereDate('created_at', now()->toDateString());
+            })
+            ->when($date === 'weekly', function ($query) {
+                return $query->where('created_at', '>=', now()->subWeek());
+            })
+            ->when($date === 'monthly', function ($query) {
+                return $query->where('created_at', '>=', now()->subMonth());
+            })
+            ->when($date === 'yearly', function ($query) {
+                return $query->where('created_at', '>=', now()->subYear());
+            })
+            ->when(is_array($date), function ($query) use ($date) {
+                return $query->whereBetween('created_at', $date);
+            })
+            ->count();
+
+
+        $ads_count = PromotionAd::where('status', 'approved')
+            ->when($date === 'daily', function ($query) {
+                return $query->whereDate('created_at', now()->toDateString());
+            })
+            ->when($date === 'weekly', function ($query) {
+                return $query->where('created_at', '>=', now()->subWeek());
+            })
+            ->when($date === 'monthly', function ($query) {
+                return $query->where('created_at', '>=', now()->subMonth());
+            })
+            ->when($date === 'yearly', function ($query) {
+                return $query->where('created_at', '>=', now()->subYear());
+            })
+            ->when(is_array($date), function ($query) use ($date) {
+                return $query->whereBetween('created_at', $date);
+            })
+            ->count();
 
 
 
@@ -133,12 +185,12 @@ class DashboardController extends Controller
         $total_ads_today = PromotionAd::whereDate('created_at', now()->toDateString())->count();
         $review_percentage = $total_ads_today > 0 ? ($ads_review_count / $total_ads_today) * 100 : 0;
 
-        // TODO task 2 : complaints 
-        $complaints_review_count = 0;
-        $total_complaints_today = 0;
+        // task 2 : complaints 
+        $complaints_review_count = Complaint::whereDate('created_at', now()->toDateString())->where('reviewed_by', null)->count();
+        $total_complaints_today = Complaint::whereDate('created_at', now()->toDateString())->count();
         $complaints_review_percentage = $total_complaints_today > 0 ? ($complaints_review_count / $total_complaints_today) * 100 : 0;
 
-        //   task 3 : تفعيل صالونات 
+        //   task 3 : salons 
         $salons_review_count = Salon::whereDate('created_at', now()->toDateString())->where('is_approved', false)->count();
         $total_salons_today = Salon::whereDate('created_at', now()->toDateString())->count();
         $salons_review_percentage = $total_salons_today > 0 ? ($salons_review_count / $total_salons_today) * 100 : 0;
@@ -168,36 +220,20 @@ class DashboardController extends Controller
 
 
         // Monthly salons revenue
-        $monthlySalonsRevenue = [
-            [
-                'name' => 'يناير',
-                'total' => 2400,
-            ],
-            [
-                'name' => 'فبراير',
-                'total' => 1398,
-            ],
-            [
-                'name' => 'مارس',
-                'total' => 9800,
-            ],
-            [
-                'name' => 'أبريل',
-                'total' => 3908,
-            ],
-            [
-                'name' => 'مايو',
-                'total' => 4800,
-            ],
-            [
-                'name' => 'يونيو',
-                'total' => 3800,
-            ],
-            [
-                'name' => 'يوليو',
-                'total' => 4300,
-            ],
-        ];
+        $monthlySalonsRevenue = collect();
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $revenue = SalonPayment::whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->where('status', 'confirm')
+                ->where('is_refund', false)
+                ->sum('amount');
+
+            $monthlySalonsRevenue->push([
+                'name' => $date->locale('ar')->monthName,
+                'total' => $revenue
+            ]);
+        }
 
 
         return response()->json([
@@ -274,11 +310,11 @@ class DashboardController extends Controller
         $salonId = $user->salon->id;
 
         // Build date filter query
-        $dateQuery = function($query) use ($date) {
+        $dateQuery = function ($query) use ($date) {
             if (is_array($date)) {
                 $query->whereBetween('created_at', $date);
             } else {
-                switch($date) {
+                switch ($date) {
                     case 'daily':
                         $query->whereDate('created_at', today());
                         break;
@@ -317,8 +353,8 @@ class DashboardController extends Controller
         $newClientsCount = User::whereHas('bookings', function ($query) use ($salonId) {
             $query->where('salon_id', $salonId);
         })
-        ->tap($dateQuery)
-        ->count();
+            ->tap($dateQuery)
+            ->count();
 
         // Invoices not paid with date filter
         $unpaidInvoicesCount = Booking::where('salon_id', $salonId)
@@ -328,9 +364,9 @@ class DashboardController extends Controller
 
         // Revenue Overview
         // Get monthly revenue data for the current year
-        $monthlyData = collect(range(1, 12))->map(function($month) use ($salonId) {
+        $monthlyData = collect(range(1, 12))->map(function ($month) use ($salonId) {
             $date = now()->setMonth($month)->startOfMonth();
-            
+
             // Get income from confirmed payments
             $income = SalonPayment::where('salon_id', $salonId)
                 ->where('status', 'confirm')
@@ -341,7 +377,7 @@ class DashboardController extends Controller
 
             // Get expenses (could be expanded to include actual expense tracking)
             $expenses = 0;
-            
+
             return [
                 'name' => $date->format('M'),
                 'income' => $income,
