@@ -23,13 +23,14 @@ class UserController extends Controller
 
     public function __construct(UserService $userService)
     {
-        PermissionHelper::checkAdminPermission('users');
 
         $this->userService = $userService;
     }
 
     public function index()
     {
+
+        PermissionHelper::checkAdminPermission('users');
         $data = $this->userService->index(request()->all());
 
         return response()->json([
@@ -42,6 +43,7 @@ class UserController extends Controller
 
     public function show($id)
     {
+        PermissionHelper::checkAdminPermission('users');
         $user = $this->userService->show($id);
 
         UserPermission::canShow($user);
@@ -54,6 +56,7 @@ class UserController extends Controller
 
     public function create(CreateRequest $request)
     {
+        PermissionHelper::checkAdminPermission('users');
         $data = UserPermission::create($request->validated());
 
         $user = $this->userService->create($data);
@@ -67,6 +70,7 @@ class UserController extends Controller
 
     public function update($id, UpdateRequest $request)
     {
+        PermissionHelper::checkAdminPermission('users');
         $user = $this->userService->show($id);
 
         UserPermission::canUpdate($user, $request->validated());
@@ -82,6 +86,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        PermissionHelper::checkAdminPermission('users');
         $user = $this->userService->show($id);
 
         UserPermission::canDelete($user);
