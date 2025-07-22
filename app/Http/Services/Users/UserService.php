@@ -38,6 +38,8 @@ class UserService
             $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
         }
 
+        $query->where('role', 'customer');
+
         $users = $query->get();
 
         // status "pending", "confirmed", "completed", "cancelled"
