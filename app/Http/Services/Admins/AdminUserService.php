@@ -14,9 +14,13 @@ class AdminUserService
     {
         $query = User::where('role', 'admin')->with(['adminPermissions']);
 
-        if (isset($data['permissions']) && is_array($data['permissions'])) {
-            $query->whereHas('adminPermissions', function ($query) use ($data) {
-                $query->whereIn('permission_id', $data['permissions']);
+        if (!empty($data['permissions'])) {
+            $permissionIds = is_array($data['permissions']) 
+                ? $data['permissions']
+                : explode(',', $data['permissions']);
+                
+            $query->whereHas('adminPermissions', function ($query) use ($permissionIds) {
+                $query->whereIn('permission_id', $permissionIds);
             });
         }
 
