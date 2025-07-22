@@ -19,10 +19,12 @@ class UserService
         $query->where('role', 'customer');
 
         if (isset($data['search']) && $data['search'] != '') {
-            $data['search'] =  str_replace(' ', '', $data['search']);
-            $search = preg_replace('/[^0-9]/', '', $data['search']); // خليها أرقام فقط
-            $query->orWhereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
+            $data['search'] = str_replace(' ', '', $data['search']);
+            $search = preg_replace('/[^0-9]/', '', $data['search']); // فقط أرقام
+
+            $query->whereRaw("REPLACE(CONCAT(REPLACE(phone_code, '+', ''), phone), ' ', '') LIKE ?", ["%{$search}%"]);
         }
+
 
         $query = FilterService::applyFilters(
             $query,
