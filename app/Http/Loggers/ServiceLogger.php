@@ -56,8 +56,8 @@ class ServiceLogger
 
         if (!empty($changesAr)) {
             $description = [
-                'ar' => "تم تعديل الخدمة: {$old->name}\n- " . implode("\n- ", $changesAr),
-                'en' => "Service updated: {$old->name}\n- " . implode("\n- ", $changesEn),
+                'ar' => "تم تعديل الخدمة: {$old->name['ar']}\n- " . implode("\n- ", $changesAr),
+                'en' => "Service updated: {$old->name['en']}\n- " . implode("\n- ", $changesEn),
             ];
 
             ActivityLogHelper::createActivityLog(
