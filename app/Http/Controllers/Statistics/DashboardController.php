@@ -414,7 +414,7 @@ class DashboardController extends Controller
 
         // Last 7 Reviews with date filter
         $last7Reviews = Review::where('salon_id', $salonId)
-            ->tap($dateQuery)
+            // ->tap($dateQuery)
             ->orderBy('created_at', 'desc')
             ->take(7)
             ->get();
