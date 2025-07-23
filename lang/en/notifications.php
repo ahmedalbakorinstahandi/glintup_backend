@@ -84,6 +84,13 @@ return [
             ],
         ],
 
+        'booking_service' => [
+            'completed' => [
+                'title' => 'Service #:service_name completed in booking #:booking_id',
+                'body' => 'Service #:service_name completed in booking #:booking_id at :salon_name',
+            ],
+        ],
+
         'loyalty_point' => [
             'added_one_point' => [
                 'title' => 'You have a new loyalty point',
@@ -94,6 +101,9 @@ return [
                 'body' => 'You have won a reward from :salon_name',
             ],
         ],
+
+
+
 
     ],
 ];

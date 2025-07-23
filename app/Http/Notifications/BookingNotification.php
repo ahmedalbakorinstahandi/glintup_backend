@@ -140,5 +140,30 @@ class BookingNotification
         );
     }
 
-    
+    public static function bookingServiceCompleted($booking, $service)
+    {
+        $user = $booking->user;
+        $salon = $booking->salon;
+
+        $title = 'notifications.user.booking.service_completed.title';
+        $body = 'notifications.user.booking.service_completed.body';
+
+        $data = [
+            'booking_id' => $booking->id,
+            'salon_name' => $salon->merchant_commercial_name,
+            'service_name' => $service->name,
+        ];
+
+        FirebaseService::sendToTokensAndStorage(
+            [$user->id],
+            [
+                'id' => $booking->id,
+                'type' => 'Booking',
+            ],
+            $title,
+            $body,
+            $data,
+            $data
+        );
+    }
 }

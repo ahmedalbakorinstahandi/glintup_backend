@@ -1416,9 +1416,9 @@ class BookingService
 
         $bookingService->save();
 
-        $bookingService = $booking->bookingServices()->whereIn('statues', ['pending', 'confirmed'])->first();
+        $foundServicesNotCompleted = $booking->bookingServices()->whereIn('statues', ['pending', 'confirmed'])->first();
 
-        if (!$bookingService) {
+        if (!$foundServicesNotCompleted) {
             $booking->status = 'completed';
             $booking->save();
 
@@ -1429,9 +1429,9 @@ class BookingService
                 'created_by' => User::auth()->id,
             ]);
 
-            #TODO send notification to user that booking is completed
+            BookingNotification::bookingCompleted($booking);
         } else {
-            #TODO send notification to user that booking service is completed
+            BookingNotification::bookingServiceCompleted($booking, $bookingService);
         }
 
 

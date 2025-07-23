@@ -83,6 +83,14 @@ return [
                 'body' => 'تم إنشاء حجز جديد في صالون :salon_name',
             ],
         ],
+
+        'booking_service' => [
+            'completed' => [
+                'title' => 'تم إكمال خدمة #:service_name في حجز #:booking_id',
+                'body' => 'تم إكمال خدمة #:service_name في حجز #:booking_id في صالون :salon_name',
+            ],
+        ],
+
         'loyalty_point' => [
             'added_one_point' => [
                 'title' => 'لقد حصلت على نقطة ولاء جديدة',
