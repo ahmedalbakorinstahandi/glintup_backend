@@ -49,6 +49,10 @@ class FirebaseService
 
         $deviceToken = $request->device_token;
 
+        if (empty($deviceToken)) {
+            return;
+        }
+
         Log::info('device_token' . $deviceToken);
 
         $latestToken = $user->tokens()->latest()->first();
