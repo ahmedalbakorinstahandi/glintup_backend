@@ -47,7 +47,7 @@ class SendScheduledNotifications extends Command
             ->with(['booking.user', 'service', 'booking.salon']);
 
         if ($type === '24h') {
-            $$query->whereHas('booking.salon', function ($q) {
+            $query->whereHas('booking.salon', function ($q) {
                 $q->where('type', 'beautician');
             });
         }
