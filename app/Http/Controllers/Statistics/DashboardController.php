@@ -412,11 +412,12 @@ class DashboardController extends Controller
             ->whereDate('date', now()->toDateString())
             ->get();
 
-        // Last 7 Reviews with date filter
+        // Last 7 Reviews with date filter // load user relationship
         $last7Reviews = Review::where('salon_id', $salonId)
             // ->tap($dateQuery)
             ->orderBy('created_at', 'desc')
             ->take(7)
+            ->with('user')
             ->get();
 
         // Ads Active Count with date filter
