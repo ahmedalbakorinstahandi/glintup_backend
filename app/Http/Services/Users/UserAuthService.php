@@ -29,7 +29,7 @@ class UserAuthService
             ->first();
 
         if ($user && $user->is_active == 0) {
-            MessageService::abort(422, 'messages.user.is_banned');
+            MessageService::abort(503, 'messages.user.is_banned');
         }
 
         if ($user && $user->is_verified == 0) {
@@ -86,7 +86,7 @@ class UserAuthService
         $codeExpiry = Carbon::now()->addMinutes(10);
 
         if ($user && $user->is_active == 0) {
-            MessageService::abort(422, 'messages.user.is_banned');
+            MessageService::abort(503, 'messages.user.is_banned');
         } elseif ($user && $user->is_verified == 1) {
             MessageService::abort(422, 'messages.user.already_registered');
         } elseif ($user && $user->added_by == 'salon') {

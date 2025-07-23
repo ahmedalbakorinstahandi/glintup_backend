@@ -25,7 +25,7 @@ class CustomerMiddleware
         }
 
         if ($user->is_active == 0) {
-            MessageService::abort(422, 'messages.user.is_banned');
+            MessageService::abort(503, 'messages.user.is_banned');
         }
 
 
