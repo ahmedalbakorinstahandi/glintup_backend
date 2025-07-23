@@ -20,7 +20,7 @@ class SendScheduledNotifications extends Command
     public function handle()
     {
         Log::info('Sending scheduled notifications');
-        
+
         $now = Carbon::now();
         $nowFormatted = $now->format('Y-m-d H:i');
 
@@ -47,7 +47,9 @@ class SendScheduledNotifications extends Command
             ->with(['booking.user', 'service', 'booking.salon']);
 
         if ($type === '24h') {
-            $query->where('type', 'beautician'); // فقط خبيرات التجميل
+            $$query->whereHas('booking.salon', function ($q) {
+                $q->where('type', 'beautician');
+            });
         }
 
         $services = $query->get();
