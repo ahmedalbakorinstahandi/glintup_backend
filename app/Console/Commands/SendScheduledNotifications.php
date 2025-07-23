@@ -9,6 +9,7 @@ use App\Services\FirebaseService;
 use App\Services\LanguageService;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SendScheduledNotifications extends Command
 {
@@ -18,6 +19,8 @@ class SendScheduledNotifications extends Command
 
     public function handle()
     {
+        Log::info('Sending scheduled notifications');
+        
         $now = Carbon::now();
         $nowFormatted = $now->format('Y-m-d H:i');
 
