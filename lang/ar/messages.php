@@ -109,6 +109,10 @@ return [
         'cannot_reschedule_rejected_booking' => 'لا يمكن إعادة جدولة حجز مرفوض',
         'service_not_found_or_invalid' => 'الخدمة غير موجودة أو غير صالحة',
         'services_rescheduled_successfully' => 'تم إعادة جدولة الخدمات بنجاح',
+        'service_completed_successfully' => 'تم إكمال الخدمة بنجاح',
+        'service_already_completed' => 'الخدمة مكتملة بالفعل',
+        'service_already_cancelled' => 'الخدمة ملغية بالفعل',
+        'service_already_rejected' => 'الخدمة مرفوضة بالفعل',
 
 
 
@@ -146,7 +150,7 @@ return [
     ],
 
 
-    
+
     'promotion_ad' => [
         'item_created_successfully' => 'تم إنشاء الإعلان الترويجي بنجاح',
         'item_updated_successfully' => 'تم تحديث الإعلان الترويجي بنجاح',

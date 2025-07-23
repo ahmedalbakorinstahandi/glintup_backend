@@ -108,6 +108,10 @@ return [
         'cannot_reschedule_rejected_booking' => 'Cannot reschedule a rejected booking',
         'service_not_found_or_invalid' => 'Service not found or invalid',
         'services_rescheduled_successfully' => 'Services rescheduled successfully',
+        'service_completed_successfully' => 'Service completed successfully',
+        'service_already_completed' => 'Service already completed',
+        'service_already_cancelled' => 'Service already cancelled',
+        'service_already_rejected' => 'Service already rejected',
 
     ],
 
