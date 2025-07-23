@@ -142,6 +142,7 @@ return [
         'delete_account_successfully' => 'تم إلغاء الحساب بنجاح',
         'code_invalid' => 'رمز التحقق غير صالح.',
         'account_deleted_successfully' => 'تم حذف الحساب بنجاح.',
+        'phone_already_exists' => 'رقم الهاتف موجود بالفعل',
     ],
 
 

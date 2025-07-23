@@ -141,6 +141,8 @@ return [
         'delete_account_code_message' => 'Your GlintUp account deletion code is: :verifyCode. Please use this code to delete your account. This code will expire in 30 minutes.',
         'code_invalid' => 'The verify code is invalid.',
         'account_deleted_successfully' => 'Your account has been deleted successfully.',
+        'account_deleted' => 'Your account has been deleted.',
+        'phone_already_exists' => 'Phone number already exists',
     ],
 
     'promotion_ad' => [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Services;
 
+use App\Http\Loggers\ReviewLogger;
 use App\Http\Notifications\ReviewNotification;
 use App\Models\Services\Review;
 use App\Services\FilterService;
@@ -70,6 +71,10 @@ class ReviewService
     public function update($review, $validatedData)
     {
         $review->update($validatedData);
+
+        ReviewLogger::logReply($review);
+
+        
         return $review;
     }
 

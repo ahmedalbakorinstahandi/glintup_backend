@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Http\Loggers\WorkingHourLogger;
 use App\Models\Salons\WorkingHour;
 use App\Services\FilterService;
 use App\Services\MessageService;
@@ -76,7 +77,11 @@ class WorkingHourService
             $validated['break_end'] = null;
         }
 
+        $oldWorkingHour = $item->replicate();
+
         $item->update($validated);
+
+        WorkingHourLogger::logChanges($oldWorkingHour, $item);
 
         return $item;
     }

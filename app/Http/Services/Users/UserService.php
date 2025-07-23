@@ -9,6 +9,7 @@ use App\Services\MessageService;
 use App\Http\Permissions\Users\UserPermission;
 use App\Models\Users\WalletTransaction;
 use App\Services\LocationService;
+use App\Services\PhoneService;
 
 class UserService
 {
@@ -80,15 +81,21 @@ class UserService
     public function create($validatedData)
     {
 
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
+        $phoneParts = PhoneService::parsePhoneParts($validatedData['phone']);
+        $countryCode = $phoneParts['country_code'];
+        $phoneNumber = $phoneParts['national_number'];
+
+        $user = User::where('phone', $phoneNumber)
+            ->where('phone_code', $countryCode)
+            ->where('role', 'customer')
+            ->first();
+
+        if ($user) {
+            MessageService::abort(400, 'messages.user.phone_already_exists');
         }
 
-        if (isset($validatedData['phone'])) {
-            $validatedData['phone'] = str_replace(' ', '', $validatedData['phone']);
-        }
-        if (isset($validatedData['phone_code'])) {
-            $validatedData['phone_code'] = str_replace(' ', '', $validatedData['phone_code']);
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
         }
 
         // role 
@@ -96,6 +103,9 @@ class UserService
 
         // added by admin
         $validatedData['added_by'] = 'admin';
+
+        $validatedData['phone'] = $phoneNumber;
+        $validatedData['phone_code'] = $countryCode;
 
         $user = User::create($validatedData);
 

@@ -57,6 +57,7 @@ class UserController extends Controller
     public function create(CreateRequest $request)
     {
         PermissionHelper::checkAdminPermission('users');
+        
         $data = UserPermission::create($request->validated());
 
         $user = $this->userService->create($data);
