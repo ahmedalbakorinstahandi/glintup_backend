@@ -82,6 +82,16 @@ return [
                 'title' => 'New booking created for you',
                 'body' => 'A new booking has been created for you at :salon_name',
             ],
+
+            'reminder' => [
+                'title' => 'Reminder 💫 Your appointment at :salon_name in ' . (':time' === '24h' ? 'day' : '2 hours'),
+                'body' => 'Hi :user_name! We want to remind you about your upcoming appointment at :salon_name for :service_name (booking #:booking_id). We are excited to see you! ✨',
+            ],
+
+            'live' => [
+                'title' => '🎉 Your beauty appointment is here at :salon_name',
+                'body' => 'Hi :user_name! Your beauty appointment is here at :salon_name for :service_name (booking #:booking_id). We are excited to see you! ✨',
+            ],
         ],
 
         'booking_service' => [
