@@ -1416,7 +1416,7 @@ class BookingService
 
         $bookingService->save();
 
-        $foundServicesNotCompleted = $booking->bookingServices()->whereIn('statues', ['pending', 'confirmed'])->first();
+        $foundServicesNotCompleted = $booking->bookingServices()->whereIn('status', ['pending', 'confirmed'])->first();
 
         if (!$foundServicesNotCompleted) {
             $booking->status = 'completed';
