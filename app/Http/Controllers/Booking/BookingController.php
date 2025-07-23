@@ -193,6 +193,20 @@ class BookingController extends Controller
         ]);
     }
 
+     //completed service
+     public function completedService($bookingId, $serviceId)
+     {
+        $booking = $this->bookingService->show($bookingId);
+
+        $booking = $this->bookingService->completedService($booking, $serviceId);
+
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.booking.service_completed_successfully'),
+            'data' => new BookingResource($booking),
+        ]);
+     }
+
 
     
 }

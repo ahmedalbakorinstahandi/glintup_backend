@@ -15,7 +15,7 @@ class SettingController extends Controller
     protected $settingService;
     public function __construct(SettingService $settingService)
     {
-        // PermissionHelper::checkAdminPermission('settings');
+        PermissionHelper::checkAdminPermission('settings');
 
         $this->settingService = $settingService;
     }

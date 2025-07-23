@@ -1383,7 +1383,61 @@ class BookingService
         return  $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
     }
 
+    // completed service
+    public function completedService(Booking $booking, int $bookingServiceId)
+    {
+        $bookingService = $booking->bookingServices()->where('id', $bookingServiceId)->first();
 
+        if (!$bookingService) {
+            MessageService::abort(422, 'messages.booking.service_not_found');
+        }
+
+        if ($bookingService->status === 'completed') {
+            MessageService::abort(422, 'messages.booking.service_already_completed');
+        }
+
+        if ($bookingService->status === 'cancelled') {
+            MessageService::abort(422, 'messages.booking.service_already_cancelled');
+        }
+
+        if ($bookingService->status === 'rejected') {
+            MessageService::abort(422, 'messages.booking.service_already_rejected');
+        }
+
+
+        $bookingService->status = 'completed';
+
+        Status::create([
+            'name' => 'completed',
+            'statusable_id' => $bookingService->id,
+            'statusable_type' => BookingService::class,
+            'created_by' => User::auth()->id,
+        ]);
+
+        $bookingService->save();
+
+        $bookingService = $booking->bookingServices()->whereIn('statues', ['pending', 'confirmed'])->first();
+
+        if (!$bookingService) {
+            $booking->status = 'completed';
+            $booking->save();
+
+            Status::create([
+                'name' => 'completed',
+                'statusable_id' => $booking->id,
+                'statusable_type' => Booking::class,
+                'created_by' => User::auth()->id,
+            ]);
+
+            #TODO send notification to user that booking is completed
+        } else {
+            #TODO send notification to user that booking service is completed
+        }
+
+
+
+        return $booking->load(['user', 'salon', 'bookingServices.service', 'bookingDates', 'transactions', 'couponUsage', 'payments', 'invoice']);
+    }
     public function cancelBookingFully(Booking $booking)
     {
         if ($booking->status === 'cancelled') {

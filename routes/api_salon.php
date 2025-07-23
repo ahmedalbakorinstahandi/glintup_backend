@@ -89,6 +89,7 @@ Route::prefix('salon')->group(function () {
             Route::post('{id}/cancel-service/{serviceId}', 'cancelBookingService');
             Route::post('{id}/cancel-fully', 'cancelBookingFully');
             Route::post('{id}/reschedule-services', [BookingNewController::class, 'rescheduleBookingServices']);
+            Route::post('{id}/completed-service/{serviceId}', 'completedService');
         });
 
         Route::prefix('working-hours')->controller(WorkingHourController::class)->group(function () {
