@@ -69,6 +69,36 @@ class Group extends Model
         // return $this->hasMany(GroupService::class);
     }
 
+
+    public function getGroupServices()
+    {
+        if (Auth::check()) {
+            $user = User::auth();
+
+            $salon_id = 0;
+            if ($user->isUserSalon()) {
+                $salon_id = $user->salon->id;
+            } else {
+                $salon_id = request()->salon_id;
+            }
+        } else {
+            $salon_id = request()->salon_id ?? null;
+        }
+
+        $query = GroupService::where('group_id', $this->id)
+            ->where('salon_id', $salon_id)
+            ->with('service');
+
+        if ($this->key == 'new') {
+            $query->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->with('service')
+                ->where('salon_id', $salon_id);
+        }
+
+        return $query->get();
+    }
+
     // ✅ accessors
     protected function name(): Attribute
     {
