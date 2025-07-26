@@ -46,6 +46,7 @@ class Group extends Model
 
     public function groupServices()
     {
+
         if (Auth::check()) {
             $user = User::auth();
 
@@ -59,17 +60,13 @@ class Group extends Model
             $salon_id = request()->salon_id;
         }
 
-        $query = GroupService::where('group_id', $this->id)
-            ->where('salon_id', $salon_id)
-            ->with('service');
 
-        if ($this->key == 'new') {
-            $query->orderBy('created_at', 'desc')
-                ->limit(10)
-                ->with('service');
-        }
 
-        return $query->get();
+
+        return $this->hasMany(GroupService::class)->where('salon_id', $salon_id);
+
+
+        // return $this->hasMany(GroupService::class);
     }
 
     // ✅ accessors
