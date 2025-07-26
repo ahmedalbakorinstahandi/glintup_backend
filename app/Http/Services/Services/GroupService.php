@@ -47,6 +47,11 @@ class GroupService
         $data['sort_field'] = 'orders';
         $data['sort_order'] = 'asc';
 
+
+        // if group key = new  // return group with group_services last service 
+        
+        
+
         return FilterService::applyFilters(
             $query,
             $data,
