@@ -85,15 +85,18 @@ class Group extends Model
             $salon_id = request()->salon_id ?? null;
         }
 
-        $query = GroupService::where('group_id', $this->id)
-            ->where('salon_id', $salon_id)
-            ->with('service');
+
 
         if ($this->key == 'new') {
-            $query->orderBy('created_at', 'desc')
+            $query = GroupService::where('group_id', $this->id)
+                ->where('salon_id', $salon_id)
+                ->orderBy('created_at', 'desc')
                 ->limit(10)
-                ->with('service')
-                ->where('salon_id', $salon_id);
+                ->with('service');
+        } else {
+            $query = GroupService::where('group_id', $this->id)
+                ->where('salon_id', $salon_id)
+                ->with('service');
         }
 
         return $query->get();
