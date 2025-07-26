@@ -73,7 +73,7 @@ class ReviewService
         $review->update($validatedData);
 
         ReviewLogger::logReply($review);
-
+        ReviewLogger::logReport($review);
 
         return $review;
     }

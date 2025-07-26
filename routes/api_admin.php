@@ -202,6 +202,15 @@ Route::prefix('admin')->group(function () {
         });
 
 
+        Route::prefix('gift-cards')->controller(GiftCardController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'show');
+            Route::post('/', 'create');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+        });
+
+
         // settings
         Route::prefix('settings')->group(function () {
             Route::get('/', [SettingController::class, 'index']);

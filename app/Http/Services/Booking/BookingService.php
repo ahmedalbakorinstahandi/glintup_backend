@@ -14,7 +14,7 @@ use App\Models\General\Address;
 use App\Models\General\Setting;
 use App\Models\General\Status;
 use App\Models\Rewards\FreeService;
-use App\Models\Rewards\LoyaltyPoint;
+use App\Models\Rewards\LoyaltyPoint; 
 use App\Models\Salons\SalonCustomer;
 use App\Models\Salons\SalonPayment;
 use App\Models\Services\Service;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Salons;
 
+use App\Http\Loggers\SalonLogger;
 use App\Http\Permissions\Salons\SalonPermission;
 use App\Http\Resources\Services\GroupResource;
 use App\Models\Salons\Salon;
@@ -256,6 +257,8 @@ class SalonService
                 'city' => '',
             ]
         );
+
+        SalonLogger::logLoyaltyChanges($salon);
 
         $salon->load(['salonSocialMediaSites.socialMediaSite', 'images', 'workingHours', 'owner', 'latestReviews', 'loyaltyService']);
 
