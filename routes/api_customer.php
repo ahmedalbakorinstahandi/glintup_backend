@@ -57,6 +57,9 @@ Route::prefix('guests')->group(function () {
 
 Route::prefix('customer')->group(function () {
 
+    Route::get('{id}/available-dates', 'getAvailableDates');
+
+
     Route::prefix('auth')->group(function () {
         Route::post('/login', [UserAuthController::class, 'login']);
         Route::post('/register', [UserAuthController::class, 'register']);
@@ -96,7 +99,6 @@ Route::prefix('customer')->group(function () {
         Route::prefix('salons')->controller(SalonController::class)->group(function () {
             Route::get('/', 'index');
             Route::get('{id}', 'show');
-            Route::get('{id}/available-dates', 'getAvailableDates');
         });
 
 
