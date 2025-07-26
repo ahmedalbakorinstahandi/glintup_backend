@@ -46,7 +46,6 @@ class Group extends Model
 
     public function groupServices()
     {
-
         if (Auth::check()) {
             $user = User::auth();
 
@@ -60,22 +59,19 @@ class Group extends Model
             $salon_id = request()->salon_id;
         }
 
-
+        // إذا كانت المجموعة من نوع 'new' - تحمل آخر 10 خدمات للصالون
         if ($this->key == 'new') {
-            return $this->hasMany(GroupService::class)->where('salon_id', $salon_id)->orderBy('created_at', 'desc')->limit(10);
+            return $this->hasMany(GroupService::class)
+                ->where('salon_id', $salon_id)
+                ->with('service')
+                ->orderBy('created_at', 'desc')
+                ->limit(10);
         }
 
-        // if ($this->key == 'popular') {
-        //     return $this->groupServices()->where('salon_id', $salon_id)->orderBy('order', 'desc')->limit(10)->get();
-        // }
-
-
-
-
-        return $this->hasMany(GroupService::class)->where('salon_id', $salon_id);
-
-
-        // return $this->hasMany(GroupService::class);
+        // إذا كانت من نوع آخر - تحمل حسب العلاقة العادية
+        return $this->hasMany(GroupService::class)
+            ->where('salon_id', $salon_id)
+            ->with('service');
     }
 
     // ✅ accessors
