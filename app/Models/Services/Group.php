@@ -61,9 +61,9 @@ class Group extends Model
         }
 
 
-        // if ($this->key == 'new') {
-        //     return $this->groupServices()->where('salon_id', $salon_id)->orderBy('order', 'desc')->limit(10)->get();
-        // }
+        if ($this->key == 'new') {
+            return $this->hasMany(GroupService::class)->where('salon_id', $salon_id)->orderBy('created_at', 'desc')->limit(10);
+        }
 
         // if ($this->key == 'popular') {
         //     return $this->groupServices()->where('salon_id', $salon_id)->orderBy('order', 'desc')->limit(10)->get();
