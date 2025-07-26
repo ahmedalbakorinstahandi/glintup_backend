@@ -59,19 +59,17 @@ class Group extends Model
             $salon_id = request()->salon_id;
         }
 
-        // إذا كانت المجموعة من نوع 'new' - تحمل آخر 10 خدمات للصالون
-        if ($this->key == 'new') {
-            return $this->hasMany(GroupService::class)
-                ->where('salon_id', $salon_id)
-                ->with('service')
-                ->orderBy('created_at', 'desc')
-                ->limit(10);
-        }
-
-        // إذا كانت من نوع آخر - تحمل حسب العلاقة العادية
-        return $this->hasMany(GroupService::class)
+        $query = GroupService::where('group_id', $this->id)
             ->where('salon_id', $salon_id)
             ->with('service');
+
+        if ($this->key == 'new') {
+            $query->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->with('service');
+        }
+
+        return $query->get();
     }
 
     // ✅ accessors
