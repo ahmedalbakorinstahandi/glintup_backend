@@ -88,11 +88,10 @@ class Group extends Model
 
 
         if ($this->key == 'new') {
-            $query = GroupService::where('group_id', $this->id);
-                // ->where('salon_id', $salon_id)
-                // ->orderBy('created_at', 'desc')
-                // ->limit(10)
-                // ->with('service');
+            $query = GroupService::where('salon_id', $salon_id)
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->with('service');
         } else {
             $query = GroupService::where('group_id', $this->id)
                 ->where('salon_id', $salon_id)
