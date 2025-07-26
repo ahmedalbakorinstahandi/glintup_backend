@@ -20,8 +20,8 @@ class GroupResource extends JsonResource
 
             // العلاقات
             'salon'          => new SalonResource($this->whenLoaded('salon')),
-            'group_services' => GroupServiceResource::collection($this->whenLoaded('groupServices')),
-            'get_group_services' => GroupServiceResource::collection($this->getGroupServices()),
+            // 'group_services' => GroupServiceResource::collection($this->whenLoaded('groupServices')),
+            'group_services' => GroupServiceResource::collection($this->getGroupServices()),
 
             // الوقت
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
